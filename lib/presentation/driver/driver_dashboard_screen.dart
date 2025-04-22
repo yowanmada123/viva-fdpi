@@ -6,6 +6,7 @@ import '../../bloc/auth/logout/logout_bloc.dart';
 import '../../data/repository/auth_repository.dart';
 import '../booking/booking_screen.dart';
 import '../fdpi/fdpi_residences_screen.dart';
+import '../widgets/logout_button.dart';
 
 class DriverDashboardScreen extends StatelessWidget {
   const DriverDashboardScreen({super.key});
@@ -58,6 +59,7 @@ class MyGridLayout extends StatelessWidget {
             fontFamily: 'Poppins',
           ),
         ),
+        actions: [const LogOutButton()],
       ),
       body: SafeArea(
         child: Container(
