@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/auth/authentication/authentication_bloc.dart';
 import '../../bloc/auth/logout/logout_bloc.dart';
 import '../../data/repository/auth_repository.dart';
 import '../booking/booking_screen.dart';
@@ -72,17 +73,36 @@ class MyGridLayout extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      children: const [
-                        Icon(Icons.waving_hand_rounded, color: Colors.orange),
-                        SizedBox(width: 8),
-                        Text(
-                          'Hi, John Doe',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFF2F80ED),
-                            fontFamily: 'Poppins',
-                          ),
+                      children: [
+                        const Icon(
+                          Icons.waving_hand_rounded,
+                          color: Colors.orange,
+                        ),
+                        const SizedBox(width: 8),
+                        BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                          builder: (context, authState) {
+                            if (authState is Authenticated &&
+                                authState.user.username.isNotEmpty) {
+                              return Text(
+                                'Hi, ${authState.user.username}',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xFF2F80ED),
+                                  fontFamily: 'Poppins',
+                                ),
+                              );
+                            }
+                            return const Text(
+                              'Hi, Guess',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF2F80ED),
+                                fontFamily: 'Poppins',
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -103,6 +123,14 @@ class MyGridLayout extends StatelessWidget {
                       topLeft: Radius.circular(24),
                       topRight: Radius.circular(24),
                     ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromARGB(157, 158, 158, 158),
+                        blurRadius: 10,
+                        spreadRadius: 2,
+                        offset: Offset(0, 4), // changes position of shadow
+                      ),
+                    ],
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
