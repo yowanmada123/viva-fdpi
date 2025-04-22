@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 import '../../models/fdpi/house.dart';
 
@@ -117,7 +118,13 @@ class FDPIDetailUnitView extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 4),
-                      Text(selectedHouse.dateBuild),
+                      Text(
+                        selectedHouse.dateBuild != null
+                            ? DateFormat(
+                              "dd MMM yyyy",
+                            ).format(selectedHouse.dateBuild!)
+                            : 'Not sold yet',
+                      ),
                     ],
                   ),
                 ),
@@ -133,7 +140,13 @@ class FDPIDetailUnitView extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 4),
-                      Text(selectedHouse.dateFinish),
+                      Text(
+                        selectedHouse.dateFinish != null
+                            ? DateFormat(
+                              "dd MMM yyyy",
+                            ).format(selectedHouse.dateFinish!)
+                            : 'Not sold yet',
+                      ),
                     ],
                   ),
                 ),
@@ -170,7 +183,13 @@ class FDPIDetailUnitView extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 4),
-                      Text(selectedHouse.dateSold),
+                      Text(
+                        selectedHouse.dateSold != null
+                            ? DateFormat(
+                              "dd MMM yyyy",
+                            ).format(selectedHouse.dateSold!)
+                            : 'Not sold yet',
+                      ),
                     ],
                   ),
                 ),

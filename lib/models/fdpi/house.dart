@@ -11,10 +11,10 @@ class House {
   final String buildingArea;
   final String landArea;
   final String statName;
-  final String dateBuild;
-  final String dateFinish;
+  final DateTime? dateBuild;
+  final DateTime? dateFinish;
   final String soldStatName;
-  final String dateSold;
+  final DateTime? dateSold;
   final List<LatLng>? coordinates;
   final String color;
   final String colorName;
@@ -47,10 +47,10 @@ class House {
     String? buildingArea,
     String? landArea,
     String? statName,
-    String? dateBuild,
-    String? dateFinish,
+    DateTime? dateBuild,
+    DateTime? dateFinish,
     String? soldStatName,
-    String? dateSold,
+    DateTime? dateSold,
     List<LatLng>? coordinates,
     String? color,
     String? colorName,
@@ -90,6 +90,14 @@ class House {
     }
   }
 
+  static DateTime? _parseDateTime(String dateTimeString) {
+    try {
+      return DateTime.parse(dateTimeString);
+    } catch (e) {
+      return null;
+    }
+  }
+
   // In case in the future feature, the coordinates needs to be parse to String and multiply with 1000
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -121,10 +129,10 @@ class House {
       buildingArea: map['building_area'] as String,
       landArea: map['land_area'] as String,
       statName: map['stat_name'] as String,
-      dateBuild: map['date_build'] as String,
-      dateFinish: map['date_finish'] as String,
+      dateBuild: _parseDateTime(map['date_build'] ?? ""),
+      dateFinish: _parseDateTime(map['date_finish'] ?? ""),
       soldStatName: map['sold_stat_name'] as String,
-      dateSold: map['date_sold'] as String,
+      dateSold: _parseDateTime(map['date_sold'] ?? ""),
       coordinates: _parseCoordinates(map['coordinates'] as String),
       color: map['color'] as String,
       colorName: map['color_name'] as String,
