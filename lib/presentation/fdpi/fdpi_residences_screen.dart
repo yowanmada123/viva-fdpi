@@ -1,0 +1,81 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+
+import '../../bloc/auth/authentication/authentication_bloc.dart';
+import '../../bloc/fdpi/residence/residence_bloc.dart';
+import '../../data/repository/fdpi_repository.dart';
+import '../../models/errors/custom_exception.dart';
+import '../widgets/residence_card.dart';
+
+class FDPIResidencesScreen extends StatelessWidget {
+  const FDPIResidencesScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final fdpiRepository = context.read<FdpiRepository>();
+
+    return BlocProvider(
+      create: (context) {
+        return ResidenceBloc(fdpiRepository: fdpiRepository)
+          ..add(LoadResidence("", "", ""));
+      },
+      child: ResidenceListView(),
+    );
+  }
+}
+
+class ResidenceListView extends StatelessWidget {
+  const ResidenceListView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xff1E4694),
+        title: const Text('FDPI', style: TextStyle(color: Colors.white)),
+        iconTheme: const IconThemeData(
+          color: Colors.white, // This makes back button white
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: BlocConsumer<ResidenceBloc, ResidenceState>(
+          listener: (context, state) {
+            if (state is ResidenceLoadFailure) {
+              if (state is UnauthorizedException) {
+                context.read<AuthenticationBloc>().add(
+                  SetAuthenticationStatus(isAuthenticated: false),
+                );
+              }
+
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+            }
+          },
+          builder: (context, state) {
+            if (state is ResidenceLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is ResidenceLoadSuccess) {
+              return MasonryGridView.count(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                shrinkWrap: true,
+                itemCount: state.residences.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ResidenceCard(
+                    detailResidence: state.residences[index],
+                  );
+                },
+              );
+            }
+
+            return Container();
+          },
+        ),
+      ),
+    );
+  }
+}
