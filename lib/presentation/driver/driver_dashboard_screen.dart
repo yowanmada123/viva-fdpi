@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../bloc/auth/authentication/authentication_bloc.dart';
 import '../../bloc/auth/logout/logout_bloc.dart';
@@ -50,10 +53,10 @@ class MyGridLayout extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFBFD9FF),
-        title: const Text(
+        title: Text(
           'Fasindo App',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 20.sp,
             fontWeight: FontWeight.w600,
             color: Color(0xFF1C3FAA),
             fontFamily: 'Poppins',
@@ -67,10 +70,7 @@ class MyGridLayout extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 16,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -87,18 +87,18 @@ class MyGridLayout extends StatelessWidget {
                                 authState.user.username.isNotEmpty) {
                               return Text(
                                 'Hi, ${authState.user.username}',
-                                style: const TextStyle(
-                                  fontSize: 16,
+                                style: TextStyle(
+                                  fontSize: max(24.sp, 24.0),
                                   fontWeight: FontWeight.w500,
                                   color: Color(0xFF2F80ED),
                                   fontFamily: 'Poppins',
                                 ),
                               );
                             }
-                            return const Text(
+                            return Text(
                               'Hi, Guess',
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: max(24.sp, 24.0),
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xFF2F80ED),
                                 fontFamily: 'Poppins',
@@ -115,11 +115,11 @@ class MyGridLayout extends StatelessWidget {
               Expanded(
                 child: Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 32,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24.w,
+                    vertical: 32.h,
                   ),
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Color(0xFFEAF1FF),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(24),
@@ -130,7 +130,7 @@ class MyGridLayout extends StatelessWidget {
                         color: Color.fromARGB(157, 158, 158, 158),
                         blurRadius: 10,
                         spreadRadius: 2,
-                        offset: Offset(0, 4), // changes position of shadow
+                        offset: Offset(0.w, 4.h), // changes position of shadow
                       ),
                     ],
                   ),
@@ -138,16 +138,19 @@ class MyGridLayout extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Featured Menu',
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: max(16.sp, 16.0),
+                        ),
                       ),
-                      SizedBox(height: 16),
+                      SizedBox(height: 16.h),
                       Expanded(
                         child: ListView.separated(
                           itemCount: buttons.length,
                           separatorBuilder:
-                              (context, index) => const SizedBox(height: 16),
+                              (context, index) => SizedBox(height: 16.h),
                           itemBuilder:
                               (context, index) =>
                                   _buildMenuCard(context, buttons[index]),
@@ -169,7 +172,7 @@ class MyGridLayout extends StatelessWidget {
       child: GestureDetector(
         onTap: () => _navigateToScreen(context, button),
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -182,9 +185,13 @@ class MyGridLayout extends StatelessWidget {
                   color: Color(0xFFEAF1FF),
                   borderRadius: BorderRadius.all(Radius.circular(4)),
                 ),
-                child: Icon(button['icon'], color: Color(0xFF2F80ED), size: 32),
+                child: Icon(
+                  button['icon'],
+                  color: Color(0xFF2F80ED),
+                  size: 48.w,
+                ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,14 +199,17 @@ class MyGridLayout extends StatelessWidget {
                     Text(
                       button['text'],
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: max(16.sp, 16.0),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       button['description'],
-                      style: TextStyle(fontSize: 10, color: Colors.grey),
+                      style: TextStyle(
+                        fontSize: max(14.sp, 14.0),
+                        color: Colors.grey[600],
+                      ),
                     ),
                   ],
                 ),

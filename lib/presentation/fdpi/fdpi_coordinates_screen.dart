@@ -56,19 +56,6 @@ class MapCoordinatsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          clusterName,
-          style: TextStyle(
-            fontFamily: "Poppins",
-            color: Color(0xFF1C3FAA),
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        iconTheme: const IconThemeData(color: Color(0xFF1C3FAA), weight: 3),
-        backgroundColor: Color(0xFFBFD9FF),
-        centerTitle: true,
-      ),
       body: Container(
         color: Colors.black,
         child: BlocConsumer<MapBloc, MapState>(
@@ -181,7 +168,7 @@ class _MapViewState extends State<MapView> {
         backgroundColor: Colors.black.withOpacity(0.1),
         crs: const CrsSimple(), // Required for custom coordinates
         initialCenter: _imageBounds.center,
-        initialZoom: 0,
+        initialZoom: 0.5,
         minZoom: 0,
         maxZoom: 2,
         onTap: (_, __) => _handlePolygonTap(),

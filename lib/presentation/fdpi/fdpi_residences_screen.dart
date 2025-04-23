@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../../bloc/auth/authentication/authentication_bloc.dart';
@@ -43,7 +44,7 @@ class ResidenceListView extends StatelessWidget {
         iconTheme: const IconThemeData(color: Color(0xFF1C3FAA), weight: 3),
       ),
       body: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
         color: const Color(0xFFEAF1FF),
         child: BlocConsumer<ResidenceBloc, ResidenceState>(
           listener: (context, state) {
