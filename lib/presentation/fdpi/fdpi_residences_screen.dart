@@ -52,6 +52,8 @@ class ResidenceListView extends StatelessWidget {
                 context.read<AuthenticationBloc>().add(
                   SetAuthenticationStatus(isAuthenticated: false),
                 );
+                Navigator.popUntil(context, ModalRoute.withName('/'));
+                return;
               }
 
               ScaffoldMessenger.of(
