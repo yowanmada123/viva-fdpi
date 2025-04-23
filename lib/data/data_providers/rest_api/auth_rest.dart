@@ -50,6 +50,8 @@ class AuthRest {
       } else {
         return Left(NetUtils.parseErrorResponse(response: response.data));
       }
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
     } on Exception catch (e) {
       return Future.value(Left(CustomException(message: e.toString())));
     } catch (e) {

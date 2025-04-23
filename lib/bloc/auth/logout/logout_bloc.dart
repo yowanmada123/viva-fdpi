@@ -17,7 +17,7 @@ class LogoutBloc extends Bloc<LogoutEvent, LogoutState> {
 
       result.fold(
         (error) {
-          emit(LogoutFailure());
+          emit(LogoutFailure(errorMessage: error.message!, exception: error));
         },
         (_) {
           emit(LogoutSuccess());

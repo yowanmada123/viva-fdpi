@@ -34,7 +34,7 @@ class ResidenceListView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xFFBFD9FF),
         title: const Text(
-          'FDPI',
+          'Fasindo App',
           style: TextStyle(
             color: Color(0xFF1C3FAA),
             fontWeight: FontWeight.w600,
@@ -48,9 +48,22 @@ class ResidenceListView extends StatelessWidget {
         child: BlocConsumer<ResidenceBloc, ResidenceState>(
           listener: (context, state) {
             if (state is ResidenceLoadFailure) {
-              if (state is UnauthorizedException) {
+              if (state.exception is UnauthorizedException) {
                 context.read<AuthenticationBloc>().add(
                   SetAuthenticationStatus(isAuthenticated: false),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "Session Anda telah habis. Silakan login kembali",
+                    ),
+                    duration: Duration(seconds: 5),
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    backgroundColor: Color(0xffEB5757),
+                  ),
                 );
                 Navigator.popUntil(context, ModalRoute.withName('/'));
                 return;
