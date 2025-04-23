@@ -16,17 +16,22 @@ class LoginFormScreen extends StatelessWidget {
 
     return BlocProvider(
       create: (context) => LoginFormBloc(authRepository),
-      child: LoginFormView(),
+      child: LoginForm(),
     );
   }
 }
 
-class LoginFormView extends StatelessWidget {
+class LoginForm extends StatefulWidget {
+  @override
+  _LoginFormState createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController shifController = TextEditingController();
 
-  LoginFormView({super.key});
+  bool _obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -46,43 +51,77 @@ class LoginFormView extends StatelessWidget {
                     height: 200.w,
                   ),
                 ),
-                TextField(
+                TextFormField(
                   controller: usernameController,
+                  style: TextStyle(fontSize: 14),
                   decoration: InputDecoration(
                     hintText: 'Username',
-                    hintStyle: TextStyle(fontSize: 14),
-                    isCollapsed: true,
+                    prefixIcon: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 0),
+                      child: Icon(Icons.person, size: 16),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 12,
+                    ),
+                    isDense: true,
+                    alignLabelWithHint: true,
                   ),
                 ),
                 SizedBox(height: 20.w),
-                TextField(
+                TextFormField(
                   controller: passwordController,
+                  style: TextStyle(fontSize: 14),
                   decoration: InputDecoration(
                     hintText: 'Password',
-                    hintStyle: TextStyle(fontSize: 14),
-                    isCollapsed: true,
+                    prefixIcon: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 0),
+                      child: Icon(Icons.lock, size: 16),
+                    ),
+                    suffixIcon: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 0),
+                      child: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          size: 16,
+                        ),
+                        onPressed:
+                            () => setState(
+                              () => _obscurePassword = !_obscurePassword,
+                            ),
+                        padding: EdgeInsets.zero,
+                        constraints: BoxConstraints(),
+                        splashRadius: 14,
+                      ),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 12,
+                    ),
+                    isDense: true,
+                    alignLabelWithHint: true,
                   ),
-                  obscureText: true,
+                  obscureText: _obscurePassword,
                 ),
-                // SizedBox(height: 20.w),
-                // TextField(
-                //   controller: shifController,
-                //   decoration: InputDecoration(
-                //     hintText: 'Shift',
-                //     hintStyle: TextStyle(fontSize: 14),
-                //     isCollapsed: true,
-                //   ),
-                // ),
                 SizedBox(height: 30.w),
                 BlocConsumer<LoginFormBloc, LoginFormState>(
                   listener: (context, state) {
                     if (state is LoginFormError) {
                       usernameController.clear();
                       passwordController.clear();
-                      // shifController.clear();
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(state.message)));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Username atau Password salah"),
+                          duration: Duration(seconds: 2),
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          backgroundColor: Color(0xffEB5757),
+                        ),
+                      );
                     } else if (state is LoginFormSuccess) {
                       print("masuk Sini login success");
                       BlocProvider.of<AuthenticationBloc>(context).add(
@@ -99,12 +138,26 @@ class LoginFormView extends StatelessWidget {
                         if (state is! LoginFormLoading) {
                           final username = usernameController.text;
                           final password = passwordController.text;
-                          // final shif = shifController.text;
+
+                          if (username.isEmpty || password.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Please fill in all fields.'),
+                                duration: Duration(seconds: 2),
+                                behavior: SnackBarBehavior.floating,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                backgroundColor: Color(0xffEB5757),
+                              ),
+                            );
+                            return;
+                          }
+
                           context.read<LoginFormBloc>().add(
                             LoginFormSubmitted(
                               username: username,
                               password: password,
-                              // shif: "1",
                             ),
                           );
                         }

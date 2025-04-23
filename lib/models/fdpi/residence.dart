@@ -169,42 +169,44 @@ class Residence {
 
   factory Residence.fromMap(Map<String, dynamic> map) {
     return Residence(
-      idCluster: map['id_cluster'] ,
-      idSite: map['id_site'] ,
-      clusterName: map['cluster_name'] ,
-      houseType: map['house_type'] ,
-      houseQty: map['house_qty'] ,
-      remark: map['remark'] ,
-      stat: map['stat'] ,
-      dateCreated: map['date_created'] ,
-      createdBy: map['created_by'] ,
-      dateModified: map['date_modified'] ,
-      modifiedBy: map['modified_by'] ,
-      imgCluster: map['img_cluster'] ,
-      imgClusterThumbnail: map['img_cluster_tmb'],
-      siteName: map['site_name'] ,
-      siteAddress: map['site_address'] != "-" ? map['site_address'] : "",
-      kelurahanDesa: map['kelurahan_desa'] ,
-      kecamatan: map['kecamatan'] ,
-      postalCode: map['postal_code'] ,
-      phone1: map['phone1'] ,
-      phone2: map['phone2'] ,
-      email: map['email'] ,
-      kaSite: map['ka_site'] ,
-      idProvCity: map['id_prov_city'] ,
-      cityName: map['city_name'] ,
-      idProvince: map['id_province'] ,
-      provinceName: map['province_name'] ,
-      houseName: map['house_name'],
+      idCluster: map['id_cluster'] ?? "",
+      idSite: map['id_site'] ?? "",
+      clusterName: map['cluster_name'] ?? "",
+      houseType: map['house_type'] ?? "",
+      houseQty: map['house_qty'] ?? "",
+      remark: map['remark'] ?? "",
+      stat: map['stat'] ?? "",
+      dateCreated: map['date_created'] ?? "",
+      createdBy: map['created_by'] ?? "",
+      dateModified: map['date_modified'] ?? "",
+      modifiedBy: map['modified_by'] ?? "",
+      imgCluster: map['img_cluster'] ?? "",
+      imgClusterThumbnail: map['img_cluster_tmb'] ?? "",
+      siteName: map['site_name'] ?? "",
+      siteAddress:
+          map['site_address'] != "-" ? (map['site_address'] ?? "") : "",
+      kelurahanDesa: map['kelurahan_desa'] ?? "",
+      kecamatan: map['kecamatan'] ?? "",
+      postalCode: map['postal_code'] ?? "",
+      phone1: map['phone1'] ?? "",
+      phone2: map['phone2'] ?? "",
+      email: map['email'] ?? "",
+      kaSite: map['ka_site'] ?? "",
+      idProvCity: map['id_prov_city'] ?? "",
+      cityName: map['city_name'] ?? "",
+      idProvince: map['id_province'] ?? "",
+      provinceName: map['province_name'] ?? "",
+      houseName: map['house_name'] ?? "",
       buildingArea: map['building_area'],
-      landArea: map['land_area'],
-      category: map['category'],
+      landArea: map['land_area'] ?? "",
+      category: map['category'] ?? "",
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Residence.fromJson(String source) => Residence.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Residence.fromJson(String source) =>
+      Residence.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -214,71 +216,70 @@ class Residence {
   @override
   bool operator ==(covariant Residence other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.idCluster == idCluster &&
-      other.idSite == idSite &&
-      other.clusterName == clusterName &&
-      other.houseType == houseType &&
-      other.houseQty == houseQty &&
-      other.remark == remark &&
-      other.stat == stat &&
-      other.dateCreated == dateCreated &&
-      other.createdBy == createdBy &&
-      other.dateModified == dateModified &&
-      other.modifiedBy == modifiedBy &&
-      other.imgCluster == imgCluster &&
-      other.imgClusterThumbnail == imgClusterThumbnail &&
-      other.siteName == siteName &&
-      other.siteAddress == siteAddress &&
-      other.kelurahanDesa == kelurahanDesa &&
-      other.kecamatan == kecamatan &&
-      other.postalCode == postalCode &&
-      other.phone1 == phone1 &&
-      other.phone2 == phone2 &&
-      other.email == email &&
-      other.kaSite == kaSite &&
-      other.idProvCity == idProvCity &&
-      other.cityName == cityName &&
-      other.idProvince == idProvince &&
-      other.provinceName == provinceName &&
-      other.houseName == houseName &&
-      other.buildingArea == buildingArea &&
-      other.landArea == landArea &&
-      other.category == category;
+
+    return other.idCluster == idCluster &&
+        other.idSite == idSite &&
+        other.clusterName == clusterName &&
+        other.houseType == houseType &&
+        other.houseQty == houseQty &&
+        other.remark == remark &&
+        other.stat == stat &&
+        other.dateCreated == dateCreated &&
+        other.createdBy == createdBy &&
+        other.dateModified == dateModified &&
+        other.modifiedBy == modifiedBy &&
+        other.imgCluster == imgCluster &&
+        other.imgClusterThumbnail == imgClusterThumbnail &&
+        other.siteName == siteName &&
+        other.siteAddress == siteAddress &&
+        other.kelurahanDesa == kelurahanDesa &&
+        other.kecamatan == kecamatan &&
+        other.postalCode == postalCode &&
+        other.phone1 == phone1 &&
+        other.phone2 == phone2 &&
+        other.email == email &&
+        other.kaSite == kaSite &&
+        other.idProvCity == idProvCity &&
+        other.cityName == cityName &&
+        other.idProvince == idProvince &&
+        other.provinceName == provinceName &&
+        other.houseName == houseName &&
+        other.buildingArea == buildingArea &&
+        other.landArea == landArea &&
+        other.category == category;
   }
 
   @override
   int get hashCode {
     return idCluster.hashCode ^
-      idSite.hashCode ^
-      clusterName.hashCode ^
-      houseType.hashCode ^
-      houseQty.hashCode ^
-      remark.hashCode ^
-      stat.hashCode ^
-      dateCreated.hashCode ^
-      createdBy.hashCode ^
-      dateModified.hashCode ^
-      modifiedBy.hashCode ^
-      imgCluster.hashCode ^
-      imgClusterThumbnail.hashCode ^
-      siteName.hashCode ^
-      siteAddress.hashCode ^
-      kelurahanDesa.hashCode ^
-      kecamatan.hashCode ^
-      postalCode.hashCode ^
-      phone1.hashCode ^
-      phone2.hashCode ^
-      email.hashCode ^
-      kaSite.hashCode ^
-      idProvCity.hashCode ^
-      cityName.hashCode ^
-      idProvince.hashCode ^
-      provinceName.hashCode ^
-      houseName.hashCode ^
-      buildingArea.hashCode ^
-      landArea.hashCode ^
-      category.hashCode;
+        idSite.hashCode ^
+        clusterName.hashCode ^
+        houseType.hashCode ^
+        houseQty.hashCode ^
+        remark.hashCode ^
+        stat.hashCode ^
+        dateCreated.hashCode ^
+        createdBy.hashCode ^
+        dateModified.hashCode ^
+        modifiedBy.hashCode ^
+        imgCluster.hashCode ^
+        imgClusterThumbnail.hashCode ^
+        siteName.hashCode ^
+        siteAddress.hashCode ^
+        kelurahanDesa.hashCode ^
+        kecamatan.hashCode ^
+        postalCode.hashCode ^
+        phone1.hashCode ^
+        phone2.hashCode ^
+        email.hashCode ^
+        kaSite.hashCode ^
+        idProvCity.hashCode ^
+        cityName.hashCode ^
+        idProvince.hashCode ^
+        provinceName.hashCode ^
+        houseName.hashCode ^
+        buildingArea.hashCode ^
+        landArea.hashCode ^
+        category.hashCode;
   }
 }

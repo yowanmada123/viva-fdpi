@@ -78,6 +78,8 @@ class MapCoordinatsView extends StatelessWidget {
                 context.read<AuthenticationBloc>().add(
                   SetAuthenticationStatus(isAuthenticated: false),
                 );
+                Navigator.of(context).popUntil((route) => route.isFirst);
+                return;
               }
               ScaffoldMessenger.of(
                 context,
