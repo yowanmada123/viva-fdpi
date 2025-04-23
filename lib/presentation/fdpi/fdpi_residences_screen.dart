@@ -32,14 +32,19 @@ class ResidenceListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff1E4694),
-        title: const Text('FDPI', style: TextStyle(color: Colors.white)),
-        iconTheme: const IconThemeData(
-          color: Colors.white, // This makes back button white
+        backgroundColor: const Color(0xFFBFD9FF),
+        title: const Text(
+          'FDPI',
+          style: TextStyle(
+            color: Color(0xFF1C3FAA),
+            fontWeight: FontWeight.w600,
+          ),
         ),
+        iconTheme: const IconThemeData(color: Color(0xFF1C3FAA), weight: 3),
       ),
-      body: Padding(
+      body: Container(
         padding: const EdgeInsets.all(16.0),
+        color: const Color(0xFFEAF1FF),
         child: BlocConsumer<ResidenceBloc, ResidenceState>(
           listener: (context, state) {
             if (state is ResidenceLoadFailure) {

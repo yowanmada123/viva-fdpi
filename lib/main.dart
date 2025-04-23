@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
             title: 'Viva Kencana Ekspedisi',
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-              primaryColor: Color(0xff1E4694),
+              primaryColor: Color(0xFF1C3FAA),
               hintColor: Color(0xffF1F1F1),
               disabledColor: Color(0xff808186),
               secondaryHeaderColor: Color(0xff575353),
@@ -100,6 +100,7 @@ class MyApp extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
+              iconTheme: IconThemeData(color: Color(0xFF1C3FAA)),
             ),
 
             home: BlocBuilder<AuthenticationBloc, AuthenticationState>(

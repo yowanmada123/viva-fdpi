@@ -59,10 +59,14 @@ class MapCoordinatsView extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           clusterName,
-          style: TextStyle(fontFamily: "Poppins", color: Colors.white),
+          style: TextStyle(
+            fontFamily: "Poppins",
+            color: Color(0xFF1C3FAA),
+            fontWeight: FontWeight.w600,
+          ),
         ),
-        iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor: Colors.blue[900],
+        iconTheme: const IconThemeData(color: Color(0xFF1C3FAA), weight: 3),
+        backgroundColor: Color(0xFFBFD9FF),
         centerTitle: true,
       ),
       body: Container(

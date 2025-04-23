@@ -28,10 +28,17 @@ class FDPIDetailUnitView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff1E4694),
-        title: Text("Detail Unit", style: TextStyle(color: Colors.white)),
+        backgroundColor: const Color(0xFFBFD9FF),
+        title: Text(
+          "Detail Unit",
+          style: TextStyle(
+            color: Color(0xFF1C3FAA),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         iconTheme: const IconThemeData(
-          color: Colors.white, // This makes back button white
+          color: Color(0xFF1C3FAA),
+          weight: 3, // This makes back button white
         ),
       ),
       body: SingleChildScrollView(
