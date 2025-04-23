@@ -51,7 +51,7 @@ class MyGridLayout extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xFFBFD9FF),
         title: const Text(
-          'FDPI',
+          'Fasindo App',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w600,

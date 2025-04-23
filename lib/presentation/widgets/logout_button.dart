@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/auth/authentication/authentication_bloc.dart';
 import '../../bloc/auth/logout/logout_bloc.dart';
+import '../../models/errors/custom_exception.dart';
 import 'base_pop_up.dart';
 
 class LogOutButton extends StatelessWidget {
@@ -18,6 +19,27 @@ class LogOutButton extends StatelessWidget {
           child: BlocConsumer<LogoutBloc, LogoutState>(
             listener: (context, state) {
               if (state is LogoutFailure) {
+                print(state.exception);
+                if (state.exception is UnauthorizedException) {
+                  BlocProvider.of<AuthenticationBloc>(
+                    context,
+                  ).add(SetAuthenticationStatus(isAuthenticated: false));
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        "Session Anda telah habis. Silakan login kembali",
+                      ),
+                      duration: Duration(seconds: 5),
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      backgroundColor: Color(0xffEB5757),
+                    ),
+                  );
+                  return;
+                }
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(SnackBar(content: Text("Logout Not Success")));
@@ -25,6 +47,8 @@ class LogOutButton extends StatelessWidget {
                 BlocProvider.of<AuthenticationBloc>(
                   context,
                 ).add(SetAuthenticationStatus(isAuthenticated: false));
+                Navigator.of(context).popUntil((route) => route.isFirst);
+                return;
               }
             },
             builder: (context, state) {

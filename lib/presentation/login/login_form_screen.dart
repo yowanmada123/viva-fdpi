@@ -123,7 +123,6 @@ class _LoginFormState extends State<LoginForm> {
                         ),
                       );
                     } else if (state is LoginFormSuccess) {
-                      print("masuk Sini login success");
                       BlocProvider.of<AuthenticationBloc>(context).add(
                         SetAuthenticationStatus(
                           isAuthenticated: true,

@@ -78,6 +78,19 @@ class MapCoordinatsView extends StatelessWidget {
                 context.read<AuthenticationBloc>().add(
                   SetAuthenticationStatus(isAuthenticated: false),
                 );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "Session Anda telah habis. Silakan login kembali",
+                    ),
+                    duration: Duration(seconds: 5),
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    backgroundColor: Color(0xffEB5757),
+                  ),
+                );
                 Navigator.of(context).popUntil((route) => route.isFirst);
                 return;
               }

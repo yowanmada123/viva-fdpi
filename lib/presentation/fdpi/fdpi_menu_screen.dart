@@ -63,7 +63,7 @@ class FDPIMenuView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff1E4694),
-        title: const Text('FDPI', style: TextStyle(color: Colors.white)),
+        title: const Text('Fasindo App', style: TextStyle(color: Colors.white)),
         iconTheme: const IconThemeData(
           color: Colors.white, // This makes back button white
         ),
@@ -77,7 +77,6 @@ class FDPIMenuView extends StatelessWidget {
                     context,
                   ).showSnackBar(SnackBar(content: Text("Logout Not Success")));
                 } else if (state is LogoutSuccess) {
-                  print("Logout Success");
                   context.read<AuthenticationBloc>().add(
                     SetAuthenticationStatus(isAuthenticated: false),
                   );
