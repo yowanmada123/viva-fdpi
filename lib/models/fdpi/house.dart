@@ -121,21 +121,21 @@ class House {
 
   factory House.fromMap(Map<String, dynamic> map) {
     return House(
-      idHouse: map['id_house'] as String,
-      name: map['name'] as String,
+      idHouse: map['id_house'] ?? "",
+      name: map['name'] ?? "",
       description: map['description'] ?? "",
-      clusterName: map['cluster_name'] as String,
+      clusterName: map['cluster_name'] ?? "",
       commonName: map['common_name'] ?? "",
-      buildingArea: map['building_area'] as String,
-      landArea: map['land_area'] as String,
-      statName: map['stat_name'] as String,
+      buildingArea: map['building_area'] ?? "",
+      landArea: map['land_area'] ?? "",
+      statName: map['stat_name'] ?? "",
       dateBuild: _parseDateTime(map['date_build'] ?? ""),
       dateFinish: _parseDateTime(map['date_finish'] ?? ""),
-      soldStatName: map['sold_stat_name'] as String,
+      soldStatName: map['sold_stat_name'] ?? "",
       dateSold: _parseDateTime(map['date_sold'] ?? ""),
-      coordinates: _parseCoordinates(map['coordinates'] as String),
-      color: map['color'] as String,
-      colorName: map['color_name'] as String,
+      coordinates: _parseCoordinates(map['coordinates'] ?? ""),
+      color: map['color'] ?? "",
+      colorName: map['color_name'] ?? "",
     );
   }
 
