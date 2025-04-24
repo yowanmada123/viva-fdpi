@@ -80,7 +80,7 @@ class MyGridLayout extends StatelessWidget {
                           Icons.waving_hand_rounded,
                           color: Colors.orange,
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8.w),
                         BlocBuilder<AuthenticationBloc, AuthenticationState>(
                           builder: (context, authState) {
                             if (authState is Authenticated &&
@@ -108,7 +108,7 @@ class MyGridLayout extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24.w),
                   ],
                 ),
               ),
@@ -145,12 +145,12 @@ class MyGridLayout extends StatelessWidget {
                           fontSize: max(16.sp, 16.0),
                         ),
                       ),
-                      SizedBox(height: 16.h),
+                      SizedBox(height: 16.w),
                       Expanded(
                         child: ListView.separated(
                           itemCount: buttons.length,
                           separatorBuilder:
-                              (context, index) => SizedBox(height: 16.h),
+                              (context, index) => SizedBox(height: 16.w),
                           itemBuilder:
                               (context, index) =>
                                   _buildMenuCard(context, buttons[index]),
@@ -203,7 +203,7 @@ class MyGridLayout extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4.w),
                     Text(
                       button['description'],
                       style: TextStyle(
