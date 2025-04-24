@@ -66,7 +66,7 @@ class ResidenceCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                   ),
-                  SizedBox(height: 4),
+                  SizedBox(height: 4.w),
                   if (detailResidence.siteAddress.isNotEmpty) ...[
                     Text(
                       detailResidence.siteAddress,

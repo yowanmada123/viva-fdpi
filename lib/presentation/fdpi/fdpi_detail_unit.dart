@@ -56,12 +56,12 @@ class FDPIDetailUnitView extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 4),
+            SizedBox(height: 4.w),
             Text(
               selectedHouse.clusterName,
               style: TextStyle(fontSize: max(14.sp, 14.0)),
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 8.w),
             Text(
               'House Name:',
               style: TextStyle(
@@ -69,12 +69,12 @@ class FDPIDetailUnitView extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 4),
+            SizedBox(height: 4.w),
             Text(
               selectedHouse.name,
               style: TextStyle(fontSize: max(14.sp, 14.0)),
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 8.w),
             Text(
               'Common Name:',
               style: TextStyle(
@@ -82,12 +82,12 @@ class FDPIDetailUnitView extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 4),
+            SizedBox(height: 4.w),
             Text(
               selectedHouse.commonName,
               style: TextStyle(fontSize: max(14.sp, 14.0)),
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 8.w),
             Row(
               children: [
                 Expanded(
@@ -101,7 +101,7 @@ class FDPIDetailUnitView extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 4),
+                      SizedBox(height: 4.w),
                       Text(
                         selectedHouse.buildingArea,
                         style: TextStyle(fontSize: max(14.sp, 14.0)),
@@ -120,7 +120,7 @@ class FDPIDetailUnitView extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 4),
+                      SizedBox(height: 4.w),
                       Text(
                         selectedHouse.landArea,
                         style: TextStyle(fontSize: max(14.sp, 14.0)),
@@ -130,7 +130,7 @@ class FDPIDetailUnitView extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 8.w),
             Text(
               'Status:',
               style: TextStyle(
@@ -138,12 +138,12 @@ class FDPIDetailUnitView extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 4),
+            SizedBox(height: 4.w),
             Text(
               selectedHouse.statName,
               style: TextStyle(fontSize: max(14.sp, 14.0)),
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 8.w),
             Row(
               children: [
                 Expanded(
@@ -157,13 +157,13 @@ class FDPIDetailUnitView extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 4),
+                      SizedBox(height: 4.w),
                       Text(
                         selectedHouse.dateBuild != null
                             ? DateFormat(
                               "dd MMM yyyy",
                             ).format(selectedHouse.dateBuild!)
-                            : 'Not sold yet',
+                            : 'Not built yet',
                         style: TextStyle(fontSize: max(14.sp, 14.0)),
                       ),
                     ],
@@ -180,13 +180,13 @@ class FDPIDetailUnitView extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 4),
+                      SizedBox(height: 4.w),
                       Text(
                         selectedHouse.dateFinish != null
                             ? DateFormat(
                               "dd MMM yyyy",
                             ).format(selectedHouse.dateFinish!)
-                            : 'Not sold yet',
+                            : 'Not finished yet',
                         style: TextStyle(fontSize: max(14.sp, 14.0)),
                       ),
                     ],
@@ -194,7 +194,7 @@ class FDPIDetailUnitView extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 8.w),
             Row(
               children: [
                 Expanded(
@@ -208,7 +208,7 @@ class FDPIDetailUnitView extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 4),
+                      SizedBox(height: 4.w),
                       Text(
                         selectedHouse.soldStatName,
                         style: TextStyle(fontSize: max(14.sp, 14.0)),
@@ -227,7 +227,7 @@ class FDPIDetailUnitView extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 4),
+                      SizedBox(height: 4.w),
                       Text(
                         selectedHouse.dateSold != null
                             ? DateFormat(
@@ -241,7 +241,7 @@ class FDPIDetailUnitView extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 8.w),
             Text(
               'Deskripsi:',
               style: TextStyle(
@@ -249,7 +249,7 @@ class FDPIDetailUnitView extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 4),
+            SizedBox(height: 4.w),
             Text(
               selectedHouse.description,
               style: TextStyle(fontSize: max(14.sp, 14.0)),
