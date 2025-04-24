@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +10,7 @@ import '../../bloc/auth/logout/logout_bloc.dart';
 import '../../data/repository/auth_repository.dart';
 import '../booking/booking_screen.dart';
 import '../fdpi/fdpi_residences_screen.dart';
+import '../widgets/bottom_navigator.dart';
 import '../widgets/logout_button.dart';
 
 class DriverDashboardScreen extends StatelessWidget {
@@ -41,6 +43,14 @@ class MyGridLayout extends StatelessWidget {
     },
   ];
 
+  final List<String> imagesCaraousel = [
+    'assets/images/foto-awards.webp',
+    'assets/images/foto-awards-1.webp',
+    'assets/images/foto-awards-2.webp',
+    'assets/images/foto-awards-3.webp',
+    'assets/images/foto-awards-4.webp',
+  ];
+
   void _navigateToScreen(BuildContext context, Map<String, dynamic> button) {
     Navigator.push(
       context,
@@ -53,24 +63,28 @@ class MyGridLayout extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFBFD9FF),
-        title: Text(
-          'Fasindo App',
-          style: TextStyle(
-            fontSize: 20.sp,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF1C3FAA),
-            fontFamily: 'Poppins',
+        title: Container(
+          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.w),
+          child: Text(
+            'Fasindo App',
+            style: TextStyle(
+              fontSize: 20.sp,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1C3FAA),
+              fontFamily: 'Poppins',
+            ),
           ),
         ),
         actions: [const LogOutButton()],
       ),
+      bottomNavigationBar: const CustomBottomNavigationBar(currentIndex: 0),
       body: SafeArea(
         child: Container(
           decoration: const BoxDecoration(color: Color(0xFFBFD9FF)),
           child: Column(
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.w),
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 4.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -108,10 +122,36 @@ class MyGridLayout extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 24.w),
                   ],
                 ),
               ),
+              SizedBox(height: 12.w),
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: 155.w,
+                  autoPlay: true,
+                  autoPlayCurve: Curves.fastOutSlowIn,
+                  autoPlayAnimationDuration: Duration(milliseconds: 1000),
+                  enlargeCenterPage: true,
+                ),
+                items:
+                    imagesCaraousel.map((element) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 155.w,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            clipBehavior: Clip.hardEdge,
+                            child: Image.asset(element, fit: BoxFit.cover),
+                          );
+                        },
+                      );
+                    }).toList(),
+              ),
+              SizedBox(height: 24.w),
               Expanded(
                 child: Container(
                   width: double.infinity,

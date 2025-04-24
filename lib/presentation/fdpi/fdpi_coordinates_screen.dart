@@ -65,7 +65,7 @@ class MapCoordinatsView extends StatelessWidget {
             clusterName,
             style: TextStyle(
               color: Color(0xFF1C3FAA),
-              fontSize: 12.sp,
+              fontSize: 8.sp,
               fontWeight: FontWeight.w600,
             ),
           ),
