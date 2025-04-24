@@ -1,15 +1,16 @@
 import 'dart:math';
 
+import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 
 import '../../bloc/auth/authentication/authentication_bloc.dart';
 import '../../bloc/auth/logout/logout_bloc.dart';
 import '../../data/repository/auth_repository.dart';
 import '../booking/booking_screen.dart';
 import '../fdpi/fdpi_residences_screen.dart';
+import '../widgets/bottom_navigator.dart';
 import '../widgets/logout_button.dart';
 
 class DriverDashboardScreen extends StatelessWidget {
@@ -76,6 +77,7 @@ class MyGridLayout extends StatelessWidget {
         ),
         actions: [const LogOutButton()],
       ),
+      bottomNavigationBar: const CustomBottomNavigationBar(currentIndex: 0),
       body: SafeArea(
         child: Container(
           decoration: const BoxDecoration(color: Color(0xFFBFD9FF)),
@@ -140,7 +142,6 @@ class MyGridLayout extends StatelessWidget {
                             width: MediaQuery.of(context).size.width,
                             height: 155.w,
                             decoration: BoxDecoration(
-                              color: Colors.amber,
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             clipBehavior: Clip.hardEdge,

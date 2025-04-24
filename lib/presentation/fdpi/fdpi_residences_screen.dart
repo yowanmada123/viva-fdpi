@@ -7,6 +7,7 @@ import '../../bloc/auth/authentication/authentication_bloc.dart';
 import '../../bloc/fdpi/residence/residence_bloc.dart';
 import '../../data/repository/fdpi_repository.dart';
 import '../../models/errors/custom_exception.dart';
+import '../widgets/bottom_navigator.dart';
 import '../widgets/residence_card.dart';
 
 class FDPIResidencesScreen extends StatelessWidget {
@@ -43,6 +44,7 @@ class ResidenceListView extends StatelessWidget {
         ),
         iconTheme: const IconThemeData(color: Color(0xFF1C3FAA), weight: 3),
       ),
+      bottomNavigationBar: const CustomBottomNavigationBar(currentIndex: 0),
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
         color: const Color(0xFFEAF1FF),
