@@ -92,6 +92,7 @@ class House {
 
   static DateTime? _parseDateTime(String dateTimeString) {
     try {
+      if (dateTimeString == "1900-01-01 00:00:00.000") return null;
       return DateTime.parse(dateTimeString);
     } catch (e) {
       return null;

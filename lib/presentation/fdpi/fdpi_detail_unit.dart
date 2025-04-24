@@ -163,7 +163,7 @@ class FDPIDetailUnitView extends StatelessWidget {
                             ? DateFormat(
                               "dd MMM yyyy",
                             ).format(selectedHouse.dateBuild!)
-                            : 'Not sold yet',
+                            : 'Not built yet',
                         style: TextStyle(fontSize: max(14.sp, 14.0)),
                       ),
                     ],
@@ -186,7 +186,7 @@ class FDPIDetailUnitView extends StatelessWidget {
                             ? DateFormat(
                               "dd MMM yyyy",
                             ).format(selectedHouse.dateFinish!)
-                            : 'Not sold yet',
+                            : 'Not finished yet',
                         style: TextStyle(fontSize: max(14.sp, 14.0)),
                       ),
                     ],

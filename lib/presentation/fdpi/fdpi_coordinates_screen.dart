@@ -60,8 +60,7 @@ class MapCoordinatsView extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(50.h),
         child: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
+          backgroundColor: Color(0xFFBFD9FF),
           title: Text(
             clusterName,
             style: TextStyle(
