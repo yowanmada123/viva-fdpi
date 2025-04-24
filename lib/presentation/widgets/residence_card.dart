@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../models/fdpi/residence.dart';
 import '../fdpi/fdpi_coordinates_screen.dart';
@@ -54,9 +57,9 @@ class ResidenceCard extends StatelessWidget {
                   Text(
                     detailResidence.siteName,
                     textAlign: TextAlign.left,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: "Poppins",
-                      fontSize: 11,
+                      fontSize: max(16.sp, 16.0),
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
                     ),
@@ -68,9 +71,9 @@ class ResidenceCard extends StatelessWidget {
                     Text(
                       detailResidence.siteAddress,
                       textAlign: TextAlign.left,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: "Poppins",
-                        fontSize: 9,
+                        fontSize: max(12.sp, 12.0),
                         color: Colors.grey,
                         fontWeight: FontWeight.w500,
                       ),
@@ -81,9 +84,9 @@ class ResidenceCard extends StatelessWidget {
                   Text(
                     detailResidence.remark,
                     textAlign: TextAlign.left,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: "Poppins",
-                      fontSize: 9,
+                      fontSize: max(12.sp, 12),
                       color: Colors.grey,
                       fontWeight: FontWeight.w500,
                     ),

@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 import '../../models/fdpi/house.dart';
@@ -48,24 +51,42 @@ class FDPIDetailUnitView extends StatelessWidget {
           children: [
             Text(
               'Cluster Name:',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: max(16.sp, 16.0),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: 4),
-            Text(selectedHouse.clusterName),
+            Text(
+              selectedHouse.clusterName,
+              style: TextStyle(fontSize: max(14.sp, 14.0)),
+            ),
             SizedBox(height: 8),
             Text(
               'House Name:',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: max(16.sp, 16.0),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: 4),
-            Text(selectedHouse.name),
+            Text(
+              selectedHouse.name,
+              style: TextStyle(fontSize: max(14.sp, 14.0)),
+            ),
             SizedBox(height: 8),
             Text(
               'Common Name:',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: max(16.sp, 16.0),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: 4),
-            Text(selectedHouse.commonName),
+            Text(
+              selectedHouse.commonName,
+              style: TextStyle(fontSize: max(14.sp, 14.0)),
+            ),
             SizedBox(height: 8),
             Row(
               children: [
@@ -76,12 +97,15 @@ class FDPIDetailUnitView extends StatelessWidget {
                       Text(
                         'Luas Bangunan(m²):',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: max(16.sp, 16.0),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       SizedBox(height: 4),
-                      Text(selectedHouse.buildingArea),
+                      Text(
+                        selectedHouse.buildingArea,
+                        style: TextStyle(fontSize: max(14.sp, 14.0)),
+                      ),
                     ],
                   ),
                 ),
@@ -92,12 +116,15 @@ class FDPIDetailUnitView extends StatelessWidget {
                       Text(
                         'Luas Tanah(m²):',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: max(16.sp, 16.0),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       SizedBox(height: 4),
-                      Text(selectedHouse.landArea),
+                      Text(
+                        selectedHouse.landArea,
+                        style: TextStyle(fontSize: max(14.sp, 14.0)),
+                      ),
                     ],
                   ),
                 ),
@@ -106,10 +133,16 @@ class FDPIDetailUnitView extends StatelessWidget {
             SizedBox(height: 8),
             Text(
               'Status:',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: max(16.sp, 16.0),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: 4),
-            Text(selectedHouse.statName),
+            Text(
+              selectedHouse.statName,
+              style: TextStyle(fontSize: max(14.sp, 14.0)),
+            ),
             SizedBox(height: 8),
             Row(
               children: [
@@ -120,7 +153,7 @@ class FDPIDetailUnitView extends StatelessWidget {
                       Text(
                         'Tanggal Pembangunan:',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: max(16.sp, 16.0),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -131,6 +164,7 @@ class FDPIDetailUnitView extends StatelessWidget {
                               "dd MMM yyyy",
                             ).format(selectedHouse.dateBuild!)
                             : 'Not sold yet',
+                        style: TextStyle(fontSize: max(14.sp, 14.0)),
                       ),
                     ],
                   ),
@@ -142,7 +176,7 @@ class FDPIDetailUnitView extends StatelessWidget {
                       Text(
                         'Tanggal Selesai:',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: max(16.sp, 16.0),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -153,6 +187,7 @@ class FDPIDetailUnitView extends StatelessWidget {
                               "dd MMM yyyy",
                             ).format(selectedHouse.dateFinish!)
                             : 'Not sold yet',
+                        style: TextStyle(fontSize: max(14.sp, 14.0)),
                       ),
                     ],
                   ),
@@ -169,12 +204,15 @@ class FDPIDetailUnitView extends StatelessWidget {
                       Text(
                         'Status Penjualan:',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: max(16.sp, 16.0),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       SizedBox(height: 4),
-                      Text(selectedHouse.soldStatName),
+                      Text(
+                        selectedHouse.soldStatName,
+                        style: TextStyle(fontSize: max(14.sp, 14.0)),
+                      ),
                     ],
                   ),
                 ),
@@ -185,7 +223,7 @@ class FDPIDetailUnitView extends StatelessWidget {
                       Text(
                         'Tanggal Penjualan:',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: max(16.sp, 16.0),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -196,6 +234,7 @@ class FDPIDetailUnitView extends StatelessWidget {
                               "dd MMM yyyy",
                             ).format(selectedHouse.dateSold!)
                             : 'Not sold yet',
+                        style: TextStyle(fontSize: max(14.sp, 14.0)),
                       ),
                     ],
                   ),
@@ -205,10 +244,16 @@ class FDPIDetailUnitView extends StatelessWidget {
             SizedBox(height: 8),
             Text(
               'Deskripsi:',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: max(16.sp, 16.0),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: 4),
-            Text(selectedHouse.description),
+            Text(
+              selectedHouse.description,
+              style: TextStyle(fontSize: max(14.sp, 14.0)),
+            ),
           ],
         ),
       ),
