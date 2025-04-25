@@ -61,12 +61,6 @@ void main() async {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(lazy: false, create: (context) => AuthenticationBloc()),
-          BlocProvider(
-            create:
-                (context) => AccessMenuBloc(
-                  authorizationRepository: authorizationRepository,
-                ),
-          ),
         ],
         child: const MyApp(),
       ),
@@ -118,12 +112,7 @@ class MyApp extends StatelessWidget {
               iconTheme: IconThemeData(color: Color(0xFF1C3FAA)),
             ),
 
-            home: BlocConsumer<AuthenticationBloc, AuthenticationState>(
-              listener: (context, state) {
-                if (state is Authenticated) {
-                  context.read<AccessMenuBloc>().add(LoadAccessMenu());
-                }
-              },
+            home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (context, state) {
                 if (state is Authenticated) {
                   if (true) {

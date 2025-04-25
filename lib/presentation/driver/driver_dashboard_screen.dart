@@ -30,6 +30,12 @@ class DriverDashboardScreen extends StatelessWidget {
           lazy: false,
           create: (context) => LogoutBloc(authRepository),
         ),
+        BlocProvider(
+          create:
+              (context) => AccessMenuBloc(
+                authorizationRepository: authorizationRepository,
+              )..add(LoadAccessMenu()),
+        ),
       ],
       child: MyGridLayout(),
     );
