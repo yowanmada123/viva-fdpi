@@ -10,6 +10,14 @@ sealed class AuthenticationEvent extends Equatable {
 class SetAuthenticationStatus extends AuthenticationEvent {
   final bool isAuthenticated;
   final User? user;
+  final String? token;
 
-  const SetAuthenticationStatus({required this.isAuthenticated, this.user});
+  const SetAuthenticationStatus({
+    required this.isAuthenticated,
+    this.user,
+    this.token,
+  });
+
+  @override
+  List<Object> get props => [isAuthenticated, user!, token!];
 }

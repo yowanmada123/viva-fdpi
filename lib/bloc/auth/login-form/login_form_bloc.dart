@@ -25,7 +25,7 @@ class LoginFormBloc extends Bloc<LoginFormEvent, LoginFormState> {
           emit(LoginFormError(message: error.message!));
         },
         (auth) {
-          emit(LoginFormSuccess(user: auth.user));
+          emit(LoginFormSuccess(user: auth.user, token: auth.accessToken));
         },
       );
     });

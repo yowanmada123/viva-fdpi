@@ -1,6 +1,9 @@
 import 'dart:math';
 
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
+import 'package:fdpi_app/bloc/authorization/access_menu/access_menu_bloc.dart';
+import 'package:fdpi_app/data/repository/authorization_repository.dart';
+import 'package:fdpi_app/models/authorization/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,29 +22,49 @@ class DriverDashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authRepository = context.read<AuthRepository>();
+    final authorizationRepository = context.read<AuthorizationRepository>();
 
-    return BlocProvider(
-      create: (context) => LogoutBloc(authRepository),
+    final String token;
+
+    if (context.read<AuthenticationBloc>().state is Authenticated) {
+      final authState =
+          context.watch<AuthenticationBloc>().state as Authenticated;
+      token = authState.token;
+    }
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          lazy: false,
+          create: (context) => LogoutBloc(authRepository),
+        ),
+      ],
       child: MyGridLayout(),
     );
   }
 }
 
 class MyGridLayout extends StatelessWidget {
-  final List<Map<String, dynamic>> buttons = [
-    {
+  final Map<String, Map<String, dynamic>> buttons = {
+    'booking': {
       'icon': Icons.map,
       'text': 'Siteplan',
       'description': 'Lihat dan interaksi dengan layout cluster',
       'route': FDPIResidencesScreen(),
     },
-    {
+    'site': {
       'icon': Icons.book,
       'text': 'Booking',
       'description': 'Pesan atau negosiasi transaksi',
-      'route': BookingScreen(),
+      'route': null,
     },
-  ];
+    'sales': {
+      'icon': Icons.real_estate_agent,
+      'text': 'Sales',
+      'description': 'Menu untuk sales',
+      'route': null,
+    },
+  };
 
   final List<String> imagesCaraousel = [
     'assets/images/foto-awards.webp',
@@ -52,6 +75,12 @@ class MyGridLayout extends StatelessWidget {
   ];
 
   void _navigateToScreen(BuildContext context, Map<String, dynamic> button) {
+    if (button['route'] == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Fitur belum tersedia")));
+      return;
+    }
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => button['route']),
@@ -174,29 +203,13 @@ class MyGridLayout extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Featured Menu',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: max(16.sp, 16.0),
-                        ),
-                      ),
-                      SizedBox(height: 16.w),
-                      Expanded(
-                        child: ListView.separated(
-                          itemCount: buttons.length,
-                          separatorBuilder:
-                              (context, index) => SizedBox(height: 16.w),
-                          itemBuilder:
-                              (context, index) =>
-                                  _buildMenuCard(context, buttons[index]),
-                        ),
-                      ),
-                    ],
+                  child: BlocBuilder<AccessMenuBloc, AccessMenuState>(
+                    builder: (context, state) {
+                      if (state is AccessMenuLoadSuccess) {
+                        return _buildGroupMenu(context, state.menus);
+                      }
+                      return Text("Tidak ada menu yang dapat diakses");
+                    },
                   ),
                 ),
               ),
@@ -207,7 +220,38 @@ class MyGridLayout extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuCard(BuildContext context, Map<String, dynamic> button) {
+  Widget _buildGroupMenu(BuildContext context, List<Menu> menus) {
+    return ListView(
+      children:
+          menus.map<Widget>((menu) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  menu.menu_header_caption,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: max(16.sp, 16.0),
+                  ),
+                ),
+                SizedBox(height: 16.w),
+                ...menu.submenus.map((item) {
+                  return Column(
+                    children: [
+                      _buildMenuCard(context, buttons[item.menu_id]),
+                      SizedBox(height: 16.w),
+                    ],
+                  );
+                }),
+              ],
+            );
+          }).toList(),
+    );
+  }
+
+  Widget _buildMenuCard(BuildContext context, Map<String, dynamic>? button) {
+    if (button == null) return Container();
     return Container(
       child: GestureDetector(
         onTap: () => _navigateToScreen(context, button),

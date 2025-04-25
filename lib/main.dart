@@ -1,4 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:fdpi_app/bloc/authorization/access_menu/access_menu_bloc.dart';
+import 'package:fdpi_app/data/data_providers/rest_api/authorization/authorization_rest.dart';
+import 'package:fdpi_app/data/repository/authorization_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,22 +40,33 @@ void main() async {
 
   final authRest = AuthRest(dioClient);
   final fdpiRest = FdpiRest(dioClient);
+  final authorizationRest = AuthorizationRest(dioClient);
 
   final authRepository = AuthRepository(
     authRest: authRest,
     authSharedPref: authSharedPref,
   );
   final fdpiRepository = FdpiRepository(fdpiRest: fdpiRest);
+  final authorizationRepository = AuthorizationRepository(
+    authorizationRest: authorizationRest,
+  );
 
   runApp(
     MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: authRepository),
         RepositoryProvider.value(value: fdpiRepository),
+        RepositoryProvider.value(value: authorizationRepository),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider(lazy: false, create: (context) => AuthenticationBloc()),
+          BlocProvider(
+            create:
+                (context) => AccessMenuBloc(
+                  authorizationRepository: authorizationRepository,
+                ),
+          ),
         ],
         child: const MyApp(),
       ),
@@ -103,7 +117,14 @@ class MyApp extends StatelessWidget {
               iconTheme: IconThemeData(color: Color(0xFF1C3FAA)),
             ),
 
-            home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+            home: BlocConsumer<AuthenticationBloc, AuthenticationState>(
+              listener: (context, state) {
+                if (state is Authenticated) {
+                  context.read<AccessMenuBloc>().add(
+                    LoadAccessMenu(token: state.token),
+                  );
+                }
+              },
               builder: (context, state) {
                 if (state is Authenticated) {
                   if (true) {
