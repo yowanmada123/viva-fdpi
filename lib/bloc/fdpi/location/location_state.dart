@@ -67,6 +67,7 @@ class LocationState extends Equatable {
 class LocationProvinceLoading extends LocationState {}
 
 class LocationProvinceLoadSuccess extends LocationState {
+  @override
   final List<Province> provinces;
 
   const LocationProvinceLoadSuccess(this.provinces);
@@ -77,6 +78,7 @@ class LocationProvinceLoadSuccess extends LocationState {
 
 class LocationLoadFailed extends LocationState {
   final String message;
+  @override
   final Exception exception;
 
   const LocationLoadFailed(this.message, this.exception);

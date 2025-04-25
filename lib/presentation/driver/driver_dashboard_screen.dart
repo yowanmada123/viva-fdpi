@@ -28,7 +28,7 @@ class DriverDashboardScreen extends StatelessWidget {
 }
 
 class MyGridLayout extends StatelessWidget {
-  final List<Map<String, dynamic>> buttons = [
+  final List<Map<String, dynamic>> _masterMenu = [
     {
       'icon': Icons.map,
       'text': 'Siteplan',
@@ -50,6 +50,8 @@ class MyGridLayout extends StatelessWidget {
     'assets/images/foto-awards-3.webp',
     'assets/images/foto-awards-4.webp',
   ];
+
+  MyGridLayout({super.key});
 
   void _navigateToScreen(BuildContext context, Map<String, dynamic> button) {
     Navigator.push(
@@ -188,12 +190,12 @@ class MyGridLayout extends StatelessWidget {
                       SizedBox(height: 16.w),
                       Expanded(
                         child: ListView.separated(
-                          itemCount: buttons.length,
+                          itemCount: _masterMenu.length,
                           separatorBuilder:
                               (context, index) => SizedBox(height: 16.w),
                           itemBuilder:
                               (context, index) =>
-                                  _buildMenuCard(context, buttons[index]),
+                                  _buildMenuCard(context, _masterMenu[index]),
                         ),
                       ),
                     ],
@@ -239,7 +241,7 @@ class MyGridLayout extends StatelessWidget {
                     Text(
                       button['text'],
                       style: TextStyle(
-                        fontSize: max(16.sp, 16.0),
+                        fontSize: max(14.sp, 14.0),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -247,7 +249,7 @@ class MyGridLayout extends StatelessWidget {
                     Text(
                       button['description'],
                       style: TextStyle(
-                        fontSize: max(14.sp, 14.0),
+                        fontSize: max(12.sp, 12.0),
                         color: Colors.grey[600],
                       ),
                     ),

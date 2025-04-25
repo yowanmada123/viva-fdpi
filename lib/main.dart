@@ -73,11 +73,32 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Viva Kencana Ekspedisi',
             theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
               primaryColor: Color(0xFF1C3FAA),
               hintColor: Color(0xffF1F1F1),
               disabledColor: Color(0xff808186),
               secondaryHeaderColor: Color(0xff575353),
+              scaffoldBackgroundColor: Color(0xffEAF1FF),
+              appBarTheme: AppBarTheme(
+                backgroundColor: Color(0xffEAF1FF),
+                titleTextStyle: TextStyle(
+                  color: Color(0xFF1C3FAA),
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: "Poppins",
+                ),
+                iconTheme: IconThemeData(color: Color(0xFF1C3FAA)),
+              ),
+              bottomSheetTheme: BottomSheetThemeData(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20.r),
+                    topRight: Radius.circular(20.r),
+                  ),
+                ),
+                modalBackgroundColor: const Color.fromARGB(52, 255, 255, 255),
+              ),
               fontFamily: "Poppins",
               textTheme: TextTheme(
                 labelSmall: const TextStyle(
