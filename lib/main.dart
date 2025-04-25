@@ -17,7 +17,7 @@ import 'data/data_providers/shared-preferences/shared_preferences_manager.dart';
 import 'data/repository/auth_repository.dart';
 import 'data/repository/fdpi_repository.dart';
 import 'environment.dart';
-import 'presentation/driver/driver_dashboard_screen.dart';
+import 'presentation/dashboard_screen.dart';
 import 'presentation/login/login_form_screen.dart';
 import 'utils/interceptors/dio_request_token_interceptor.dart';
 

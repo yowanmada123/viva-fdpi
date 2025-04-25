@@ -8,13 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../bloc/auth/authentication/authentication_bloc.dart';
-import '../../bloc/auth/logout/logout_bloc.dart';
-import '../../data/repository/auth_repository.dart';
-import '../booking/booking_screen.dart';
-import '../fdpi/fdpi_residences_screen.dart';
-import '../widgets/bottom_navigator.dart';
-import '../widgets/logout_button.dart';
+import '../bloc/auth/authentication/authentication_bloc.dart';
+import '../bloc/auth/logout/logout_bloc.dart';
+import '../data/repository/auth_repository.dart';
+import 'booking/booking_screen.dart';
+import 'fdpi/fdpi_residences_screen.dart';
+import 'widgets/bottom_navigator.dart';
+import 'widgets/logout_button.dart';
 
 class DriverDashboardScreen extends StatelessWidget {
   const DriverDashboardScreen({super.key});
