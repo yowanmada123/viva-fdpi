@@ -130,7 +130,6 @@ class _LoginFormState extends State<LoginForm> {
                         SetAuthenticationStatus(
                           isAuthenticated: true,
                           user: state.user,
-                          token: state.token,
                         ),
                       );
                     }

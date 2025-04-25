@@ -10,14 +10,9 @@ sealed class AccessMenuEvent extends Equatable {
 class LoadAccessMenu extends AccessMenuEvent {
   final String entityId;
   final String applId;
-  final String token;
 
-  const LoadAccessMenu({
-    this.entityId = "FDPI",
-    this.applId = "MOBILE",
-    required this.token,
-  });
+  const LoadAccessMenu({this.entityId = "FDPI", this.applId = "MOBILE"});
 
   @override
-  List<Object> get props => [entityId, applId, token];
+  List<Object> get props => [entityId, applId];
 }

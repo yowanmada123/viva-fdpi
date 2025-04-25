@@ -13,12 +13,11 @@ final class LoginFormLoading extends LoginFormState {}
 
 final class LoginFormSuccess extends LoginFormState {
   final User user;
-  final String token;
 
-  const LoginFormSuccess({required this.user, required this.token});
+  const LoginFormSuccess({required this.user});
 
   @override
-  List<Object> get props => [user, token];
+  List<Object> get props => [user];
 }
 
 final class LoginFormError extends LoginFormState {

@@ -9,12 +9,11 @@ sealed class AuthenticationState extends Equatable {
 
 final class Authenticated extends AuthenticationState {
   final User user;
-  final String token;
 
-  const Authenticated({required this.user, required this.token});
+  const Authenticated({required this.user});
 
   @override
-  List<Object> get props => [user, token];
+  List<Object> get props => [user];
 }
 
 final class NotAuthenticated extends AuthenticationState {}

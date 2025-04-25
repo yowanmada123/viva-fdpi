@@ -91,6 +91,7 @@ class MyApp extends StatelessWidget {
               primaryColor: Color(0xFF1C3FAA),
               hintColor: Color(0xffF1F1F1),
               disabledColor: Color(0xff808186),
+              scaffoldBackgroundColor: Color(0xFFBFD9FF),
               secondaryHeaderColor: Color(0xff575353),
               fontFamily: "Poppins",
               textTheme: TextTheme(
@@ -120,9 +121,7 @@ class MyApp extends StatelessWidget {
             home: BlocConsumer<AuthenticationBloc, AuthenticationState>(
               listener: (context, state) {
                 if (state is Authenticated) {
-                  context.read<AccessMenuBloc>().add(
-                    LoadAccessMenu(token: state.token),
-                  );
+                  context.read<AccessMenuBloc>().add(LoadAccessMenu());
                 }
               },
               builder: (context, state) {

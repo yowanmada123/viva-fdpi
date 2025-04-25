@@ -17,7 +17,7 @@ class AuthenticationBloc
     Emitter<AuthenticationState> emit,
   ) {
     if (event.isAuthenticated && event.user != null) {
-      emit(Authenticated(user: event.user!, token: event.token!));
+      emit(Authenticated(user: event.user!));
     } else {
       emit(NotAuthenticated());
     }
@@ -26,10 +26,7 @@ class AuthenticationBloc
   @override
   AuthenticationState? fromJson(Map<String, dynamic> json) {
     if (json['authUser'] != null) {
-      return Authenticated(
-        user: User.fromJson(json['authUser']),
-        token: json['token'],
-      );
+      return Authenticated(user: User.fromJson(json['authUser']));
     }
     return NotAuthenticated();
   }
@@ -37,7 +34,7 @@ class AuthenticationBloc
   @override
   Map<String, dynamic>? toJson(AuthenticationState state) {
     if (state is Authenticated) {
-      return {'authUser': state.user.toJson(), 'token': state.token};
+      return {'authUser': state.user.toJson()};
     }
     return null;
   }

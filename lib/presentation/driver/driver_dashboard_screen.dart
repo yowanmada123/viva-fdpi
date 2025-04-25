@@ -82,6 +82,7 @@ class MyGridLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFEAF1FF),
       appBar: AppBar(
         backgroundColor: const Color(0xFFBFD9FF),
         title: Container(
@@ -101,7 +102,8 @@ class MyGridLayout extends StatelessWidget {
       bottomNavigationBar: const CustomBottomNavigationBar(currentIndex: 0),
       body: SafeArea(
         child: Container(
-          color: const Color(0xFFEAF1FF),
+          // height: MediaQuery.of(context).size.height,
+          color: const Color(0xFFBFD9FF),
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -195,14 +197,6 @@ class MyGridLayout extends StatelessWidget {
                       topLeft: Radius.circular(24),
                       topRight: Radius.circular(24),
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color.fromARGB(157, 158, 158, 158),
-                        blurRadius: 10,
-                        spreadRadius: 2,
-                        offset: Offset(0.w, 4.h),
-                      ),
-                    ],
                   ),
                   child: BlocBuilder<AccessMenuBloc, AccessMenuState>(
                     builder: (context, state) {
