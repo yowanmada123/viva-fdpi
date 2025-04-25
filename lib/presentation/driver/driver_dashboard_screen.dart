@@ -24,14 +24,6 @@ class DriverDashboardScreen extends StatelessWidget {
     final authRepository = context.read<AuthRepository>();
     final authorizationRepository = context.read<AuthorizationRepository>();
 
-    final String token;
-
-    if (context.read<AuthenticationBloc>().state is Authenticated) {
-      final authState =
-          context.watch<AuthenticationBloc>().state as Authenticated;
-      token = authState.token;
-    }
-
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -109,27 +101,41 @@ class MyGridLayout extends StatelessWidget {
       bottomNavigationBar: const CustomBottomNavigationBar(currentIndex: 0),
       body: SafeArea(
         child: Container(
-          decoration: const BoxDecoration(color: Color(0xFFBFD9FF)),
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 4.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.waving_hand_rounded,
-                          color: Colors.orange,
-                        ),
-                        SizedBox(width: 8.w),
-                        BlocBuilder<AuthenticationBloc, AuthenticationState>(
-                          builder: (context, authState) {
-                            if (authState is Authenticated &&
-                                authState.user.username.isNotEmpty) {
+          color: const Color(0xFFEAF1FF),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24.w,
+                    vertical: 4.w,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.waving_hand_rounded,
+                            color: Colors.orange,
+                          ),
+                          SizedBox(width: 8.w),
+                          BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                            builder: (context, authState) {
+                              if (authState is Authenticated &&
+                                  authState.user.username.isNotEmpty) {
+                                return Text(
+                                  'Hi, ${authState.user.username}',
+                                  style: TextStyle(
+                                    fontSize: max(24.sp, 24.0),
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xFF2F80ED),
+                                    fontFamily: 'Poppins',
+                                  ),
+                                );
+                              }
                               return Text(
-                                'Hi, ${authState.user.username}',
+                                'Hi, Guess',
                                 style: TextStyle(
                                   fontSize: max(24.sp, 24.0),
                                   fontWeight: FontWeight.w500,
@@ -137,52 +143,47 @@ class MyGridLayout extends StatelessWidget {
                                   fontFamily: 'Poppins',
                                 ),
                               );
-                            }
-                            return Text(
-                              'Hi, Guess',
-                              style: TextStyle(
-                                fontSize: max(24.sp, 24.0),
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF2F80ED),
-                                fontFamily: 'Poppins',
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 12.w),
+
+                // Carousel Section
+                Container(
+                  child: CarouselSlider(
+                    options: CarouselOptions(
+                      height: 155.w,
+                      autoPlay: true,
+                      autoPlayCurve: Curves.fastOutSlowIn,
+                      autoPlayAnimationDuration: Duration(milliseconds: 1000),
+                      enlargeCenterPage: true,
                     ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 12.w),
-              CarouselSlider(
-                options: CarouselOptions(
-                  height: 155.w,
-                  autoPlay: true,
-                  autoPlayCurve: Curves.fastOutSlowIn,
-                  autoPlayAnimationDuration: Duration(milliseconds: 1000),
-                  enlargeCenterPage: true,
-                ),
-                items:
-                    imagesCaraousel.map((element) {
-                      return Builder(
-                        builder: (BuildContext context) {
-                          return Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 155.w,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            clipBehavior: Clip.hardEdge,
-                            child: Image.asset(element, fit: BoxFit.cover),
+                    items:
+                        imagesCaraousel.map((element) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: 155.w,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                clipBehavior: Clip.hardEdge,
+                                child: Image.asset(element, fit: BoxFit.cover),
+                              );
+                            },
                           );
-                        },
-                      );
-                    }).toList(),
-              ),
-              SizedBox(height: 24.w),
-              Expanded(
-                child: Container(
+                        }).toList(),
+                  ),
+                ),
+                SizedBox(height: 24.w),
+
+                // Menu Section
+                Container(
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(
                     horizontal: 24.w,
@@ -199,7 +200,7 @@ class MyGridLayout extends StatelessWidget {
                         color: Color.fromARGB(157, 158, 158, 158),
                         blurRadius: 10,
                         spreadRadius: 2,
-                        offset: Offset(0.w, 4.h), // changes position of shadow
+                        offset: Offset(0.w, 4.h),
                       ),
                     ],
                   ),
@@ -212,8 +213,8 @@ class MyGridLayout extends StatelessWidget {
                     },
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -221,7 +222,7 @@ class MyGridLayout extends StatelessWidget {
   }
 
   Widget _buildGroupMenu(BuildContext context, List<Menu> menus) {
-    return ListView(
+    return Column(
       children:
           menus.map<Widget>((menu) {
             return Column(
@@ -252,54 +253,48 @@ class MyGridLayout extends StatelessWidget {
 
   Widget _buildMenuCard(BuildContext context, Map<String, dynamic>? button) {
     if (button == null) return Container();
-    return Container(
-      child: GestureDetector(
-        onTap: () => _navigateToScreen(context, button),
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(4),
-                decoration: const BoxDecoration(
-                  color: Color(0xFFEAF1FF),
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
-                ),
-                child: Icon(
-                  button['icon'],
-                  color: Color(0xFF2F80ED),
-                  size: 48.w,
-                ),
+    return GestureDetector(
+      onTap: () => _navigateToScreen(context, button),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(4),
+              decoration: const BoxDecoration(
+                color: Color(0xFFEAF1FF),
+                borderRadius: BorderRadius.all(Radius.circular(4)),
               ),
-              SizedBox(width: 16.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      button['text'],
-                      style: TextStyle(
-                        fontSize: max(16.sp, 16.0),
-                        fontWeight: FontWeight.w600,
-                      ),
+              child: Icon(button['icon'], color: Color(0xFF2F80ED), size: 48.w),
+            ),
+            SizedBox(width: 16.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    button['text'],
+                    style: TextStyle(
+                      fontSize: max(16.sp, 16.0),
+                      fontWeight: FontWeight.w600,
                     ),
-                    SizedBox(height: 4.w),
-                    Text(
-                      button['description'],
-                      style: TextStyle(
-                        fontSize: max(14.sp, 14.0),
-                        color: Colors.grey[600],
-                      ),
+                  ),
+                  SizedBox(height: 4.w),
+                  Text(
+                    button['description'],
+                    style: TextStyle(
+                      fontSize: max(14.sp, 14.0),
+                      color: Colors.grey[600],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
