@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../driver/driver_dashboard_screen.dart';
+import '../dashboard_screen.dart';
 import '../profile/profile_screen.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
