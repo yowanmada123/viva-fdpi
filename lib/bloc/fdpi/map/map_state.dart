@@ -14,7 +14,7 @@ class MapInitial extends MapState {}
 class MapLoading extends MapState {}
 
 class MapLoadSuccess extends MapState {
-  final List<House> units;
+  final List<Coordinates> units;
 
   const MapLoadSuccess({required this.units});
 

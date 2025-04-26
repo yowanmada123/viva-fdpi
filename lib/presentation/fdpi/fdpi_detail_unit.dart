@@ -8,23 +8,23 @@ import 'package:intl/intl.dart';
 import '../../models/fdpi/house.dart';
 
 class FDPIDetailUnitScreen extends StatelessWidget {
-  final House selectedHouse;
+  final Coordinates selectedCoordinates;
 
-  const FDPIDetailUnitScreen({Key? key, required this.selectedHouse})
+  const FDPIDetailUnitScreen({Key? key, required this.selectedCoordinates})
     : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return PortraitOrientationWrapper(
-      child: FDPIDetailUnitView(selectedHouse: selectedHouse),
+      child: FDPIDetailUnitView(selectedCoordinates: selectedCoordinates),
     );
   }
 }
 
 class FDPIDetailUnitView extends StatelessWidget {
-  final House selectedHouse;
+  final Coordinates selectedCoordinates;
 
-  const FDPIDetailUnitView({Key? key, required this.selectedHouse})
+  const FDPIDetailUnitView({Key? key, required this.selectedCoordinates})
     : super(key: key);
 
   @override
@@ -58,12 +58,12 @@ class FDPIDetailUnitView extends StatelessWidget {
             ),
             SizedBox(height: 4.w),
             Text(
-              selectedHouse.clusterName,
+              selectedCoordinates.clusterName,
               style: TextStyle(fontSize: max(14.sp, 14.0)),
             ),
             SizedBox(height: 8.w),
             Text(
-              'House Name:',
+              'Coordinates Name:',
               style: TextStyle(
                 fontSize: max(16.sp, 16.0),
                 fontWeight: FontWeight.bold,
@@ -71,7 +71,7 @@ class FDPIDetailUnitView extends StatelessWidget {
             ),
             SizedBox(height: 4.w),
             Text(
-              selectedHouse.name,
+              selectedCoordinates.name,
               style: TextStyle(fontSize: max(14.sp, 14.0)),
             ),
             SizedBox(height: 8.w),
@@ -84,7 +84,7 @@ class FDPIDetailUnitView extends StatelessWidget {
             ),
             SizedBox(height: 4.w),
             Text(
-              selectedHouse.commonName,
+              selectedCoordinates.commonName,
               style: TextStyle(fontSize: max(14.sp, 14.0)),
             ),
             SizedBox(height: 8.w),
@@ -103,7 +103,7 @@ class FDPIDetailUnitView extends StatelessWidget {
                       ),
                       SizedBox(height: 4.w),
                       Text(
-                        selectedHouse.buildingArea,
+                        selectedCoordinates.buildingArea,
                         style: TextStyle(fontSize: max(14.sp, 14.0)),
                       ),
                     ],
@@ -122,7 +122,7 @@ class FDPIDetailUnitView extends StatelessWidget {
                       ),
                       SizedBox(height: 4.w),
                       Text(
-                        selectedHouse.landArea,
+                        selectedCoordinates.landArea,
                         style: TextStyle(fontSize: max(14.sp, 14.0)),
                       ),
                     ],
@@ -140,7 +140,7 @@ class FDPIDetailUnitView extends StatelessWidget {
             ),
             SizedBox(height: 4.w),
             Text(
-              selectedHouse.statName,
+              selectedCoordinates.statName,
               style: TextStyle(fontSize: max(14.sp, 14.0)),
             ),
             SizedBox(height: 8.w),
@@ -159,10 +159,10 @@ class FDPIDetailUnitView extends StatelessWidget {
                       ),
                       SizedBox(height: 4.w),
                       Text(
-                        selectedHouse.dateBuild != null
+                        selectedCoordinates.dateBuild != null
                             ? DateFormat(
                               "dd MMM yyyy",
-                            ).format(selectedHouse.dateBuild!)
+                            ).format(selectedCoordinates.dateBuild!)
                             : 'Not built yet',
                         style: TextStyle(fontSize: max(14.sp, 14.0)),
                       ),
@@ -182,10 +182,10 @@ class FDPIDetailUnitView extends StatelessWidget {
                       ),
                       SizedBox(height: 4.w),
                       Text(
-                        selectedHouse.dateFinish != null
+                        selectedCoordinates.dateFinish != null
                             ? DateFormat(
                               "dd MMM yyyy",
-                            ).format(selectedHouse.dateFinish!)
+                            ).format(selectedCoordinates.dateFinish!)
                             : 'Not finished yet',
                         style: TextStyle(fontSize: max(14.sp, 14.0)),
                       ),
@@ -210,7 +210,7 @@ class FDPIDetailUnitView extends StatelessWidget {
                       ),
                       SizedBox(height: 4.w),
                       Text(
-                        selectedHouse.soldStatName,
+                        selectedCoordinates.soldStatName,
                         style: TextStyle(fontSize: max(14.sp, 14.0)),
                       ),
                     ],
@@ -229,10 +229,10 @@ class FDPIDetailUnitView extends StatelessWidget {
                       ),
                       SizedBox(height: 4.w),
                       Text(
-                        selectedHouse.dateSold != null
+                        selectedCoordinates.dateSold != null
                             ? DateFormat(
                               "dd MMM yyyy",
-                            ).format(selectedHouse.dateSold!)
+                            ).format(selectedCoordinates.dateSold!)
                             : 'Not sold yet',
                         style: TextStyle(fontSize: max(14.sp, 14.0)),
                       ),
@@ -251,7 +251,7 @@ class FDPIDetailUnitView extends StatelessWidget {
             ),
             SizedBox(height: 4.w),
             Text(
-              selectedHouse.description,
+              selectedCoordinates.description,
               style: TextStyle(fontSize: max(14.sp, 14.0)),
             ),
           ],

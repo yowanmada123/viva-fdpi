@@ -16,7 +16,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   Future<void> _onLoadMap(LoadMap event, Emitter<MapState> emit) async {
     emit(MapLoading());
-    final result = await fdpiRepository.getHouses(event.idCluster);
+    final result = await fdpiRepository.getCoordinatess(
+      event.idCluster,
+      event.idSite,
+    );
 
     result.fold(
       (failure) => emit(

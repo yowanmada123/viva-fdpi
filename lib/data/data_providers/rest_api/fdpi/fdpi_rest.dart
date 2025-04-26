@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import '../../../../models/errors/custom_exception.dart';
 import '../../../../models/fdpi/city.dart';
 import '../../../../models/fdpi/house.dart';
+import '../../../../models/fdpi/house_type.dart';
 import '../../../../models/fdpi/province.dart';
 import '../../../../models/fdpi/residence.dart';
 import '../../../../utils/net_utils.dart';
@@ -112,15 +113,16 @@ class FdpiRest {
     }
   }
 
-  Future<Either<CustomException, List<House>>> getHouses(
+  Future<Either<CustomException, List<Coordinates>>> getCoordinatess(
     String? idCluster,
+    String? idSite,
   ) async {
     try {
       http.options.headers['requiresToken'] = true;
       log(
         'Request to https://v2.kencana.org/api/fpi/houseUnit/getKoordinat (POST)',
       );
-      final body = {"id_site": idCluster};
+      final body = {"id_cluster": idCluster, "id_site": idSite};
       final response = await http.post(
         "api/fpi/houseUnit/getKoordinat",
         data: body,
@@ -128,12 +130,52 @@ class FdpiRest {
       if (response.statusCode == 200) {
         log('Response body: ${response.data}');
         final body = response.data;
-        final houses = List<House>.from(
+        final houses = List<Coordinates>.from(
           body['data'].map((e) {
-            return House.fromMap(e);
+            return Coordinates.fromMap(e);
           }),
         );
         return Right(houses);
+      } else {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
+  Future<Either<CustomException, List<HouseType>>> getHouseTypes(
+    String? idSite,
+    String? houseCategory,
+    String? status,
+  ) async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log(
+        'Request to https://v2.kencana.org/api/fpi/houseUnit/getKoordinat (POST)',
+      );
+      final body = {
+        "id_site": idSite,
+        "houses_category": houseCategory,
+        "status": status,
+      };
+      final response = await http.post(
+        "api/fpi/houseUnit/getKoordinat",
+        data: body,
+      );
+      if (response.statusCode == 200) {
+        log('Response body: ${response.data}');
+        final body = response.data;
+        final houseTypes = List<HouseType>.from(
+          body['data'].map((e) {
+            return HouseType.fromMap(e);
+          }),
+        );
+        return Right(houseTypes);
       } else {
         return Left(NetUtils.parseErrorResponse(response: response.data));
       }

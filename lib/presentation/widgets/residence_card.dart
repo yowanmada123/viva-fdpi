@@ -21,7 +21,8 @@ class ResidenceCard extends StatelessWidget {
             MaterialPageRoute(
               builder:
                   (context) => FDPICoordinatesScreen(
-                    idCluster: detailResidence.idSite,
+                    idCluster: detailResidence.idCluster,
+                    idSite: detailResidence.idSite,
                     clusterImg: detailResidence.imgCluster,
                     clusterName: detailResidence.siteName,
                   ),
