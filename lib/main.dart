@@ -139,9 +139,7 @@ class MyApp extends StatelessWidget {
             home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (context, state) {
                 if (state is Authenticated) {
-                  if (true) {
-                    return DriverDashboardScreen();
-                  }
+                  return DriverDashboardScreen();
                 }
                 return LoginFormScreen();
               },

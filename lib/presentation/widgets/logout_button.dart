@@ -21,10 +21,9 @@ class LogOutButton extends StatelessWidget {
               if (state is LogoutFailure) {
                 print(state.exception);
                 if (state.exception is UnauthorizedException) {
-                  BlocProvider.of<AuthenticationBloc>(
-                    context,
-                  ).add(SetAuthenticationStatus(isAuthenticated: false));
-                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  BlocProvider.of<AuthenticationBloc>(context).add(
+                    SetAuthenticationStatus(isAuthenticated: false, user: null),
+                  );
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
@@ -38,6 +37,7 @@ class LogOutButton extends StatelessWidget {
                       backgroundColor: Color(0xffEB5757),
                     ),
                   );
+                  Navigator.of(context).popUntil((route) => route.isFirst);
                   return;
                 }
                 ScaffoldMessenger.of(

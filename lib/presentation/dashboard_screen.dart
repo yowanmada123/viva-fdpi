@@ -1,16 +1,17 @@
 import 'dart:math';
 
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
-import 'package:fdpi_app/bloc/authorization/access_menu/access_menu_bloc.dart';
-import 'package:fdpi_app/data/repository/authorization_repository.dart';
-import 'package:fdpi_app/models/authorization/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../bloc/auth/authentication/authentication_bloc.dart';
 import '../bloc/auth/logout/logout_bloc.dart';
+import '../bloc/authorization/access_menu/access_menu_bloc.dart';
 import '../data/repository/auth_repository.dart';
+import '../data/repository/authorization_repository.dart';
+import '../models/authorization/menu.dart';
+import '../models/errors/custom_exception.dart';
 import 'booking/booking_screen.dart';
 import 'fdpi/fdpi_residences_screen.dart';
 import 'widgets/bottom_navigator.dart';
@@ -204,7 +205,19 @@ class MyGridLayout extends StatelessWidget {
                       topRight: Radius.circular(24),
                     ),
                   ),
-                  child: BlocBuilder<AccessMenuBloc, AccessMenuState>(
+                  child: BlocConsumer<AccessMenuBloc, AccessMenuState>(
+                    listener: (context, state) {
+                      if (state is AccessMenuLoadFailure) {
+                        if (state.exception is UnauthorizedException) {
+                          context.read<AuthenticationBloc>().add(
+                            SetAuthenticationStatus(isAuthenticated: false),
+                          );
+                          Navigator.of(
+                            context,
+                          ).popUntil((route) => route.isFirst);
+                        }
+                      }
+                    },
                     builder: (context, state) {
                       if (state is AccessMenuLoadSuccess) {
                         return _buildGroupMenu(context, state.menus);
