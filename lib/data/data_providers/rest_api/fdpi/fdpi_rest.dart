@@ -9,6 +9,7 @@ import '../../../../models/fdpi/house.dart';
 import '../../../../models/fdpi/house_type.dart';
 import '../../../../models/fdpi/province.dart';
 import '../../../../models/fdpi/residence.dart';
+import '../../../../models/fdpi/site.dart';
 import '../../../../utils/net_utils.dart';
 
 class FdpiRest {
@@ -71,9 +72,47 @@ class FdpiRest {
     }
   }
 
+  Future<Either<CustomException, List<Site>>> getSites(
+    String? idProv,
+    String? idCity,
+    String? status,
+  ) async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log('Request to https://v2.kencana.org/api/fpi/site/getSite (POST)');
+      final body = {
+        "id_site": "",
+        "category": "",
+        "id_province": idProv ?? "",
+        "id_prov_city": idCity ?? "",
+        "status": status ?? "Aktif",
+      };
+      final response = await http.post("api/fpi/site/getSite", data: body);
+      if (response.statusCode == 200) {
+        log('Response body: ${response.data}');
+        final body = response.data;
+        final sites = List<Site>.from(
+          body['data'].map((e) {
+            return Site.fromMap(e);
+          }),
+        );
+        return Right(sites);
+      } else {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
   Future<Either<CustomException, List<Residence>>> getResidences(
     String? idProv,
     String? idCity,
+    String? idSite,
     String? status,
   ) async {
     try {
@@ -82,7 +121,7 @@ class FdpiRest {
         'Request to https://v2.kencana.org/api/fpi/cluster/getCluster (POST)',
       );
       final body = {
-        "id_site": "",
+        "id_site": idSite ?? "",
         "category": "",
         "id_province": idProv ?? "",
         "id_prov_city": idCity ?? "",

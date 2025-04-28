@@ -54,7 +54,7 @@ class MyGridLayout extends StatelessWidget {
       'icon': Icons.book,
       'text': 'Booking',
       'description': 'Pesan atau negosiasi transaksi',
-      'route': null,
+      'route': BookingScreen(),
     },
     'sales': {
       'icon': Icons.real_estate_agent,

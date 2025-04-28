@@ -13,12 +13,7 @@ class GetBookings extends BookingEvent {
   final String startDate;
   final String endDate;
 
-  const GetBookings({
-    this.idSite = "",
-    this.idCluster = "",
-    this.startDate = "",
-    this.endDate = "",
-  });
+  const GetBookings(this.idSite, this.idCluster, this.startDate, this.endDate);
 
   @override
   List<Object> get props => [idSite, idCluster, startDate, endDate];

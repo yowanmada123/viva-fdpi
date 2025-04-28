@@ -6,6 +6,7 @@ import '../../models/fdpi/house.dart';
 import '../../models/fdpi/house_type.dart';
 import '../../models/fdpi/province.dart';
 import '../../models/fdpi/residence.dart';
+import '../../models/fdpi/site.dart';
 import '../data_providers/rest_api/fdpi/fdpi_rest.dart';
 
 class FdpiRepository {
@@ -21,12 +22,21 @@ class FdpiRepository {
     return fdpiRest.getCities(id);
   }
 
-  Future<Either<CustomException, List<Residence>>> getResidences(
+  Future<Either<CustomException, List<Site>>> getSites(
     String idProv,
     String idCity,
     String status,
   ) async {
-    return fdpiRest.getResidences(idProv, idCity, status);
+    return fdpiRest.getSites(idProv, idCity, status);
+  }
+
+  Future<Either<CustomException, List<Residence>>> getResidences(
+    String idProv,
+    String idCity,
+    String idSite,
+    String status,
+  ) async {
+    return fdpiRest.getResidences(idProv, idCity, idSite, status);
   }
 
   Future<Either<CustomException, List<Coordinates>>> getCoordinatess(

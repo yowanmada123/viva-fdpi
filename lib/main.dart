@@ -1,7 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:fdpi_app/bloc/authorization/access_menu/access_menu_bloc.dart';
-import 'package:fdpi_app/data/data_providers/rest_api/authorization/authorization_rest.dart';
-import 'package:fdpi_app/data/repository/authorization_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,10 +8,14 @@ import 'package:path_provider/path_provider.dart';
 
 import 'bloc/auth/authentication/authentication_bloc.dart';
 import 'data/data_providers/rest_api/auth_rest.dart';
+import 'data/data_providers/rest_api/authorization/authorization_rest.dart';
+import 'data/data_providers/rest_api/booking_rest.dart';
 import 'data/data_providers/rest_api/fdpi/fdpi_rest.dart';
 import 'data/data_providers/shared-preferences/shared_preferences_key.dart';
 import 'data/data_providers/shared-preferences/shared_preferences_manager.dart';
 import 'data/repository/auth_repository.dart';
+import 'data/repository/authorization_repository.dart';
+import 'data/repository/booking_repository.dart';
 import 'data/repository/fdpi_repository.dart';
 import 'environment.dart';
 import 'presentation/dashboard_screen.dart';
@@ -41,6 +42,7 @@ void main() async {
   final authRest = AuthRest(dioClient);
   final fdpiRest = FdpiRest(dioClient);
   final authorizationRest = AuthorizationRest(dioClient);
+  final bookingRest = BookingRest(dioClient);
 
   final authRepository = AuthRepository(
     authRest: authRest,
@@ -50,6 +52,7 @@ void main() async {
   final authorizationRepository = AuthorizationRepository(
     authorizationRest: authorizationRest,
   );
+  final bookingRepository = BookingRepository(bookingRest: bookingRest);
 
   runApp(
     MultiRepositoryProvider(
@@ -57,6 +60,7 @@ void main() async {
         RepositoryProvider.value(value: authRepository),
         RepositoryProvider.value(value: fdpiRepository),
         RepositoryProvider.value(value: authorizationRepository),
+        RepositoryProvider.value(value: bookingRepository),
       ],
       child: MultiBlocProvider(
         providers: [

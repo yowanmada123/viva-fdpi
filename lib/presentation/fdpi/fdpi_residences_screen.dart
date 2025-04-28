@@ -20,7 +20,7 @@ class FDPIResidencesScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) {
         return ResidenceBloc(fdpiRepository: fdpiRepository)
-          ..add(LoadResidence("", "", ""));
+          ..add(LoadResidence("", "", "", ""));
       },
       child: ResidenceListView(),
     );
