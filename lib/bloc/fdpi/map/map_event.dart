@@ -9,9 +9,10 @@ sealed class MapEvent extends Equatable {
 
 class LoadMap extends MapEvent {
   final String idCluster;
+  final String idSite;
 
-  const LoadMap(this.idCluster);
+  const LoadMap(this.idCluster, this.idSite);
 
   @override
-  List<Object> get props => [idCluster];
+  List<Object> get props => [idCluster, idSite];
 }
