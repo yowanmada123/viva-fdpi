@@ -10,6 +10,7 @@ import '../../data/repository/booking_repository.dart';
 import '../../data/repository/fdpi_repository.dart';
 import '../../models/booking.dart';
 import '../widgets/BottomSheet/filter_booking.dart';
+import 'booking_form_screen.dart';
 
 class BookingScreen extends StatelessWidget {
   const BookingScreen({super.key});
@@ -175,7 +176,13 @@ class BookingViewBody extends StatelessWidget {
                     ),
                   ),
                   FilledButton(
-                    onPressed: () => print("heloo"),
+                    onPressed:
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BookingFormScreen(),
+                          ),
+                        ),
                     style: FilledButton.styleFrom(
                       backgroundColor: const Color(0xFF1C3FAA),
                       shape: RoundedRectangleBorder(

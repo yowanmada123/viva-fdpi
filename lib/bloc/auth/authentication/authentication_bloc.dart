@@ -36,6 +36,6 @@ class AuthenticationBloc
     if (state is Authenticated) {
       return {'authUser': state.user.toJson()};
     }
-    return null;
+    return {'authUser': null};
   }
 }
