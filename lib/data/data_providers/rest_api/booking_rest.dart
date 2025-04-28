@@ -31,7 +31,12 @@ class BookingRest {
         "end_date": end_date,
       };
 
-      final response = await http.post("api/fpi/booking/getListBooking");
+      log("This is the body : $body");
+
+      final response = await http.post(
+        "api/fpi/booking/getListBooking",
+        data: body,
+      );
 
       if (response.statusCode == 200) {
         log('Response body: ${response.data}');

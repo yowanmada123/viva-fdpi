@@ -8,8 +8,8 @@ class Booking {
   final String telepon;
   final String salesId;
   final String houseItem;
-  final String priceList;
-  final String discount;
+  final int priceList;
+  final int discount;
   final String payterm;
   final String bank;
   final String expDate;
@@ -64,8 +64,8 @@ class Booking {
     String? telepon,
     String? salesId,
     String? houseItem,
-    String? priceList,
-    String? discount,
+    int? priceList,
+    int? discount,
     String? payterm,
     String? bank,
     String? expDate,
@@ -123,6 +123,14 @@ class Booking {
     }
   }
 
+  static int _parseInt(String numberStr) {
+    double parsedDouble = double.tryParse(numberStr) ?? 0.0;
+
+    int parsedInt = parsedDouble.toInt();
+
+    return parsedInt;
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'book_id': bookId,
@@ -163,8 +171,8 @@ class Booking {
       telepon: map['telepon'] ?? '',
       salesId: map['sales_id'] ?? '',
       houseItem: map['house_item'] ?? '',
-      priceList: map['price_list'] ?? '',
-      discount: map['discount'] ?? '',
+      priceList: _parseInt(map['price_list'] ?? ''),
+      discount: _parseInt(map['discount'] ?? ''),
       payterm: map['payterm'] ?? '',
       bank: map['bank'] ?? '',
       expDate: map['exp_date'] ?? '',

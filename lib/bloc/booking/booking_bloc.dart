@@ -20,6 +20,8 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
   ) async {
     emit(BookingLoading());
 
+    print("Hello from get bookings");
+
     final result = await bookingRepository.getBooking(
       id_site: event.idSite,
       id_cluster: event.idCluster,

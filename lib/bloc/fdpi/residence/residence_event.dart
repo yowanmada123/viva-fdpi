@@ -10,10 +10,11 @@ sealed class ResidenceEvent extends Equatable {
 class LoadResidence extends ResidenceEvent {
   final String idProvince;
   final String idCity;
+  final String idSite;
   final String status;
 
-  const LoadResidence(this.idProvince, this.idCity, this.status);
+  const LoadResidence(this.idProvince, this.idCity, this.idSite, this.status);
 
   @override
-  List<Object> get props => [idProvince, idCity, status];
+  List<Object> get props => [idProvince, idCity, idSite, status];
 }

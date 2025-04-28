@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../bloc/auth/authentication/authentication_bloc.dart';
@@ -60,37 +59,6 @@ class MapCoordinatsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50.h),
-        child: AppBar(
-          backgroundColor: Color(0xFFBFD9FF),
-          title: Text(
-            clusterName,
-            style: TextStyle(
-              color: Color(0xFF1C3FAA),
-              fontSize: 8.sp,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                padding: EdgeInsets.symmetric(vertical: 1.h),
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-              );
-            },
-          ),
-          iconTheme: const IconThemeData(
-            color: Color(0xFF1C3FAA),
-            weight: 3,
-            size: 16,
-          ),
-        ),
-      ),
       body: Container(
         color: Colors.black,
         child: BlocConsumer<MapBloc, MapState>(

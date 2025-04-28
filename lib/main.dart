@@ -1,7 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:fdpi_app/bloc/authorization/access_menu/access_menu_bloc.dart';
-import 'package:fdpi_app/data/data_providers/rest_api/authorization/authorization_rest.dart';
-import 'package:fdpi_app/data/repository/authorization_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,10 +8,14 @@ import 'package:path_provider/path_provider.dart';
 
 import 'bloc/auth/authentication/authentication_bloc.dart';
 import 'data/data_providers/rest_api/auth_rest.dart';
+import 'data/data_providers/rest_api/authorization/authorization_rest.dart';
+import 'data/data_providers/rest_api/booking_rest.dart';
 import 'data/data_providers/rest_api/fdpi/fdpi_rest.dart';
 import 'data/data_providers/shared-preferences/shared_preferences_key.dart';
 import 'data/data_providers/shared-preferences/shared_preferences_manager.dart';
 import 'data/repository/auth_repository.dart';
+import 'data/repository/authorization_repository.dart';
+import 'data/repository/booking_repository.dart';
 import 'data/repository/fdpi_repository.dart';
 import 'environment.dart';
 import 'presentation/dashboard_screen.dart';
@@ -41,6 +42,7 @@ void main() async {
   final authRest = AuthRest(dioClient);
   final fdpiRest = FdpiRest(dioClient);
   final authorizationRest = AuthorizationRest(dioClient);
+  final bookingRest = BookingRest(dioClient);
 
   final authRepository = AuthRepository(
     authRest: authRest,
@@ -50,6 +52,7 @@ void main() async {
   final authorizationRepository = AuthorizationRepository(
     authorizationRest: authorizationRest,
   );
+  final bookingRepository = BookingRepository(bookingRest: bookingRest);
 
   runApp(
     MultiRepositoryProvider(
@@ -57,6 +60,7 @@ void main() async {
         RepositoryProvider.value(value: authRepository),
         RepositoryProvider.value(value: fdpiRepository),
         RepositoryProvider.value(value: authorizationRepository),
+        RepositoryProvider.value(value: bookingRepository),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -81,12 +85,32 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Viva Kencana Ekspedisi',
             theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
               primaryColor: Color(0xFF1C3FAA),
               hintColor: Color(0xffF1F1F1),
               disabledColor: Color(0xff808186),
-              scaffoldBackgroundColor: Color(0xFFBFD9FF),
               secondaryHeaderColor: Color(0xff575353),
+              scaffoldBackgroundColor: Color(0xffEAF1FF),
+              appBarTheme: AppBarTheme(
+                backgroundColor: Color(0xffEAF1FF),
+                titleTextStyle: TextStyle(
+                  color: Color(0xFF1C3FAA),
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: "Poppins",
+                ),
+                iconTheme: IconThemeData(color: Color(0xFF1C3FAA)),
+              ),
+              bottomSheetTheme: BottomSheetThemeData(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20.r),
+                    topRight: Radius.circular(20.r),
+                  ),
+                ),
+                modalBackgroundColor: const Color.fromARGB(52, 255, 255, 255),
+              ),
               fontFamily: "Poppins",
               textTheme: TextTheme(
                 labelSmall: const TextStyle(
@@ -115,9 +139,7 @@ class MyApp extends StatelessWidget {
             home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (context, state) {
                 if (state is Authenticated) {
-                  if (true) {
-                    return DriverDashboardScreen();
-                  }
+                  return DriverDashboardScreen();
                 }
                 return LoginFormScreen();
               },

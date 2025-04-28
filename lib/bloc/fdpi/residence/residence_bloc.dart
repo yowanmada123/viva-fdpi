@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+
 import '../../../data/repository/fdpi_repository.dart';
 import '../../../models/fdpi/residence.dart';
 
@@ -20,6 +21,7 @@ class ResidenceBloc extends Bloc<ResidenceEvent, ResidenceState> {
     final result = await fdpiRepository.getResidences(
       event.idProvince,
       event.idCity,
+      event.idSite,
       event.status,
     );
 
