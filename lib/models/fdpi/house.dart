@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:latlong2/latlong.dart';
 
-class House {
-  final String idHouse;
+class Coordinates {
+  final String idCoordinates;
   final String name;
   final String description;
   final String clusterName;
@@ -20,8 +20,8 @@ class House {
   final String colorName;
   final double ratio = 1000.0;
 
-  House({
-    required this.idHouse,
+  Coordinates({
+    required this.idCoordinates,
     required this.name,
     required this.description,
     required this.clusterName,
@@ -38,8 +38,8 @@ class House {
     required this.colorName,
   });
 
-  House copyWith({
-    String? idHouse,
+  Coordinates copyWith({
+    String? idCoordinates,
     String? name,
     String? description,
     String? clusterName,
@@ -55,8 +55,8 @@ class House {
     String? color,
     String? colorName,
   }) {
-    return House(
-      idHouse: idHouse ?? this.idHouse,
+    return Coordinates(
+      idCoordinates: idCoordinates ?? this.idCoordinates,
       name: name ?? this.name,
       description: description ?? this.description,
       clusterName: clusterName ?? this.clusterName,
@@ -102,7 +102,7 @@ class House {
   // In case in the future feature, the coordinates needs to be parse to String and multiply with 1000
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'id_house': idHouse,
+      'id_house': idCoordinates,
       'name': name,
       'description': description,
       'cluster_name': clusterName,
@@ -120,9 +120,9 @@ class House {
     };
   }
 
-  factory House.fromMap(Map<String, dynamic> map) {
-    return House(
-      idHouse: map['id_house'] ?? "",
+  factory Coordinates.fromMap(Map<String, dynamic> map) {
+    return Coordinates(
+      idCoordinates: map['id_house'] ?? "",
       name: map['name'] ?? "",
       description: map['description'] ?? "",
       clusterName: map['cluster_name'] ?? "",
@@ -142,19 +142,19 @@ class House {
 
   String toJson() => json.encode(toMap());
 
-  factory House.fromJson(String source) =>
-      House.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Coordinates.fromJson(String source) =>
+      Coordinates.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'House(idHouse: $idHouse, name: $name, description: $description, clusterName: $clusterName, commonName: $commonName, buildingArea: $buildingArea, landArea: $landArea, statName: $statName, dateBuild: $dateBuild, dateFinish: $dateFinish, soldStatName: $soldStatName, dateSold: $dateSold, coordinates: $coordinates, color: $color, colorName: $colorName)';
+    return 'Coordinates(idCoordinates: $idCoordinates, name: $name, description: $description, clusterName: $clusterName, commonName: $commonName, buildingArea: $buildingArea, landArea: $landArea, statName: $statName, dateBuild: $dateBuild, dateFinish: $dateFinish, soldStatName: $soldStatName, dateSold: $dateSold, coordinates: $coordinates, color: $color, colorName: $colorName)';
   }
 
   @override
-  bool operator ==(covariant House other) {
+  bool operator ==(covariant Coordinates other) {
     if (identical(this, other)) return true;
 
-    return other.idHouse == idHouse &&
+    return other.idCoordinates == idCoordinates &&
         other.name == name &&
         other.description == description &&
         other.clusterName == clusterName &&
@@ -173,7 +173,7 @@ class House {
 
   @override
   int get hashCode {
-    return idHouse.hashCode ^
+    return idCoordinates.hashCode ^
         name.hashCode ^
         description.hashCode ^
         clusterName.hashCode ^

@@ -15,25 +15,28 @@ import 'fdpi_detail_unit.dart';
 
 class FDPICoordinatesScreen extends StatelessWidget {
   final String idCluster;
+  final String idSite;
   final String clusterImg;
   final String clusterName;
 
   const FDPICoordinatesScreen({
     super.key,
     required this.idCluster,
+    required this.idSite,
     required this.clusterImg,
     required this.clusterName,
   });
 
   @override
   Widget build(BuildContext context) {
+    print("idCluster: $idCluster, idSite: $idSite");
     final fdpiRepository = context.read<FdpiRepository>();
 
     return LandscapeOrientationWrapper(
       child: BlocProvider(
         create: (context) {
           return MapBloc(fdpiRepository: fdpiRepository)
-            ..add(LoadMap(idCluster));
+            ..add(LoadMap(idCluster, idSite));
         },
         child: MapCoordinatsView(
           clusterImg: clusterImg,
@@ -135,7 +138,7 @@ class MapCoordinatsView extends StatelessWidget {
 
 class MapView extends StatefulWidget {
   final String clusterImg;
-  final List<House> units;
+  final List<Coordinates> units;
 
   const MapView({super.key, required this.clusterImg, required this.units});
 
@@ -159,7 +162,7 @@ class _MapViewState extends State<MapView> {
     return Color(int.parse(hexColor, radix: 16)).withOpacity((opacity));
   }
 
-  List<Polygon> _mapToPolygons(List<House> units) {
+  List<Polygon> _mapToPolygons(List<Coordinates> units) {
     return units
         .where(
           (unit) => unit.coordinates != null && unit.coordinates!.isNotEmpty,
@@ -170,7 +173,8 @@ class _MapViewState extends State<MapView> {
             color: _getColorWithOpacity(unit.color, 0.15),
             borderColor: _getColorWithOpacity(unit.color, 1.0),
             borderStrokeWidth: 1.0,
-            hitValue: unit, // Each polygon gets its associated House object
+            hitValue:
+                unit, // Each polygon gets its associated Coordinates object
           );
         })
         .toList();
@@ -182,12 +186,13 @@ class _MapViewState extends State<MapView> {
       return;
     }
 
-    final tappedUnit = hitResult.hitValues.first as House;
+    final tappedUnit = hitResult.hitValues.first as Coordinates;
 
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => FDPIDetailUnitScreen(selectedHouse: tappedUnit),
+        builder:
+            (context) => FDPIDetailUnitScreen(selectedCoordinates: tappedUnit),
       ),
     );
   }
