@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
-import '../../../bloc/booking/booking_bloc.dart';
+import '../../../bloc/booking/booking_list/booking_bloc.dart';
 import '../../../bloc/fdpi/residence/residence_bloc.dart';
 import '../../../bloc/fdpi/site/site_bloc.dart';
 import '../../../models/fdpi/residence.dart';

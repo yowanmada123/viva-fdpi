@@ -15,8 +15,10 @@ class MasterRest {
   Future<Either<CustomException, List<Bank>>> getBank() async {
     try {
       dio.options.headers['requiresToken'] = true;
-      log('Request to dios://v2.kencana.org/api/fpi/master/getBank (POST)');
-      final response = await dio.post("api/fpi/master/getBank");
+      log(
+        'Request to dios://v2.kencana.org/api/fpi/master/getbankaccount (POST)',
+      );
+      final response = await dio.post("api/fpi/master/getbankaccount");
       if (response.statusCode == 200) {
         log('Response body: ${response.data}');
         final body = response.data;
