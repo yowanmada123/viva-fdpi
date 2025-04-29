@@ -1,14 +1,75 @@
+import 'package:fdpi_app/bloc/booking/booking_list/booking_bloc.dart';
+import 'package:fdpi_app/bloc/fdpi/house_item/house_item_bloc.dart';
+import 'package:fdpi_app/data/repository/booking_repository.dart';
+import 'package:fdpi_app/models/bank.dart';
+import 'package:fdpi_app/models/errors/custom_exception.dart';
+import 'package:fdpi_app/models/fdpi/house_item.dart';
+import 'package:fdpi_app/models/fdpi/site.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-class BookingFormScreen extends StatefulWidget {
-  const BookingFormScreen({super.key});
+import '../../bloc/auth/authentication/authentication_bloc.dart';
+import '../../bloc/booking/booking_form/booking_form_bloc.dart';
+import '../../bloc/fdpi/residence/residence_bloc.dart';
+import '../../bloc/fdpi/site/site_bloc.dart';
+import '../../bloc/master/bank/bank_bloc.dart';
+import '../../data/repository/fdpi_repository.dart';
+import '../../data/repository/master_repository.dart';
+import '../../models/fdpi/residence.dart';
+
+class BookingFormScreen extends StatelessWidget {
+  final BookingBloc bookingBloc;
+  const BookingFormScreen({super.key, required this.bookingBloc});
 
   @override
-  State<BookingFormScreen> createState() => _BookingFormScreenState();
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: bookingBloc),
+        BlocProvider(
+          create:
+              (context) =>
+                  ResidenceBloc(fdpiRepository: context.read<FdpiRepository>()),
+        ),
+        BlocProvider(
+          create:
+              (context) =>
+                  SiteBloc(fdpiRepository: context.read<FdpiRepository>())
+                    ..add(GetSites("", "", "")),
+        ),
+        BlocProvider(
+          create:
+              (context) =>
+                  HouseItemBloc(fdpiRepository: context.read<FdpiRepository>()),
+        ),
+        BlocProvider(
+          create:
+              (context) =>
+                  BankBloc(masterRest: context.read<MasterRepository>())
+                    ..add(GetBank()),
+        ),
+        BlocProvider(
+          create:
+              (context) => BookingFormBloc(
+                bookingRepository: context.read<BookingRepository>(),
+              ),
+        ),
+      ],
+      child: const BookingFormView(),
+    );
+  }
 }
 
-class _BookingFormScreenState extends State<BookingFormScreen> {
+class BookingFormView extends StatefulWidget {
+  const BookingFormView({super.key});
+
+  @override
+  State<BookingFormView> createState() => _BookingFormViewState();
+}
+
+class _BookingFormViewState extends State<BookingFormView> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _namaController = TextEditingController();
   final TextEditingController _alamatController = TextEditingController();
@@ -16,18 +77,38 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
   final TextEditingController _teleponController = TextEditingController();
   final TextEditingController _priceListController = TextEditingController();
   final TextEditingController _expDateController = TextEditingController();
+  final TextEditingController _discountController = TextEditingController();
+  final TextEditingController _remarkController = TextEditingController();
 
-  String? _selectedSite;
-  String? _selectedCluster;
-  String? _selectedHouseItem;
+  Site? _selectedSite;
+  Residence? _selectedCluster;
+  HouseItem? _selectedHouseItem;
   String? _selectedPaymentTerm;
-  String? _selectedBank;
+  Bank? _selectedBank;
 
   List<String> sites = ['Site A', 'Site B', 'Site C'];
   List<String> clusters = ['Cluster X', 'Cluster Y', 'Cluster Z'];
   List<String> houseItems = ['Type 1', 'Type 2', 'Type 3'];
-  List<String> paymentTerms = ['Cash', 'Credit', 'Installment'];
+  List<String> paymentTerms = ['KPR', 'SOFT CASH', 'HARD CASH'];
   List<String> banks = ['BCA', 'Mandiri', 'BNI', 'BRI'];
+
+  final _priceFormatter = new MaskTextInputFormatter(
+    mask: '###.###.###.###.###.###.###.###',
+    filter: {"#": RegExp(r'[0-9]')},
+    type: MaskAutoCompletionType.lazy,
+  );
+
+  final _discountFormatter = new MaskTextInputFormatter(
+    mask: '###.###.###.###.###.###.###.###',
+    filter: {"#": RegExp(r'[0-9]')},
+    type: MaskAutoCompletionType.lazy,
+  );
+
+  final _phoneFormatter = new MaskTextInputFormatter(
+    mask: '####-####-######',
+    filter: {"#": RegExp(r'[0-9]')},
+    type: MaskAutoCompletionType.lazy,
+  );
 
   @override
   void dispose() {
@@ -37,6 +118,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
     _teleponController.dispose();
     _priceListController.dispose();
     _expDateController.dispose();
+    _discountController.dispose();
     super.dispose();
   }
 
@@ -55,290 +137,481 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
     }
   }
 
+  Widget _buildLabel(String text, {bool required = true}) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 4.h),
+      child: RichText(
+        text: TextSpan(
+          text: text,
+          style: TextStyle(
+            fontSize: 14.sp,
+            color: Colors.black87,
+            fontWeight: FontWeight.w500,
+          ),
+          children: [
+            if (required)
+              const TextSpan(text: ' *', style: TextStyle(color: Colors.red)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    String? hintText,
+    TextInputType? keyboardType,
+    bool readOnly = false,
+    Widget? suffixIcon,
+    String? Function(String?)? validator,
+    int? maxLines = 1,
+    MaskTextInputFormatter? formatter,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        hintText: hintText,
+        border: UnderlineInputBorder(),
+        suffixIcon: suffixIcon,
+        fillColor: const Color(0xffffffff),
+        filled: true,
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: 12.w,
+          vertical: maxLines == 1 ? 0 : 12.h,
+        ),
+      ),
+      keyboardType: keyboardType,
+      readOnly: readOnly,
+      validator: validator,
+      maxLines: maxLines,
+      inputFormatters: formatter != null ? [formatter] : null,
+    );
+  }
+
+  Widget _buildDropdown<T>({
+    required String label,
+    required List<T> items,
+    required String Function(T) itemBuilder,
+    required T? value,
+    required void Function(T?) onChanged,
+    String? Function(T?)? validator,
+    bool required = true,
+  }) {
+    return DropdownButtonFormField<T>(
+      value: value,
+      decoration: InputDecoration(
+        border: UnderlineInputBorder(),
+        fillColor: const Color(0xffffffff),
+        filled: true,
+        contentPadding: EdgeInsets.symmetric(horizontal: 12.w),
+      ),
+      items:
+          items.map((T item) {
+            return DropdownMenuItem<T>(
+              value: item,
+              child: Text(itemBuilder(item)),
+            );
+          }).toList(),
+      onChanged: onChanged,
+      validator: validator,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Booking Form'), centerTitle: true),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.w),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Nama Field
-              TextFormField(
-                controller: _namaController,
-                decoration: const InputDecoration(
-                  labelText: 'Nama',
-                  border: OutlineInputBorder(),
+      body: BlocConsumer<BookingFormBloc, BookingFormState>(
+        listener: (context, state) {
+          if (state is BookingFormSubmitSuccess) {
+            context.read<BookingBloc>().add(GetBookings("", "", "", ""));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Data Telah Tersimpan!"),
+                duration: Duration(seconds: 5),
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Nama harus diisi';
-                  }
-                  return null;
-                },
+                backgroundColor: Color.fromARGB(255, 99, 235, 87),
               ),
-              SizedBox(height: 16.h),
-
-              // Alamat Field
-              TextFormField(
-                controller: _alamatController,
-                decoration: const InputDecoration(
-                  labelText: 'Alamat',
-                  border: OutlineInputBorder(),
+            );
+            Navigator.pop(context);
+          } else if (state is BookingFormSubmitFailure) {
+            if (state.exception is UnauthorizedException) {
+              if (state.exception is UnauthorizedException) {
+                context.read<AuthenticationBloc>().add(
+                  SetAuthenticationStatus(isAuthenticated: false),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "Session Anda telah habis. Silakan login kembali",
+                    ),
+                    duration: Duration(seconds: 5),
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    backgroundColor: Color(0xffEB5757),
+                  ),
+                );
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              }
+              return;
+            }
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  "Terjadi Error, silahkan coba beberapa saat lagi",
                 ),
-                maxLines: 3,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Alamat harus diisi';
-                  }
-                  return null;
-                },
+                duration: Duration(seconds: 5),
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                backgroundColor: Color(0xffEB5757),
               ),
-              SizedBox(height: 16.h),
-
-              // No HP & Telepon Row
-              Row(
+            );
+          } else {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(const SnackBar(content: Text('Submit Data')));
+          }
+        },
+        builder: (context, state) {
+          return SingleChildScrollView(
+            padding: EdgeInsets.all(16.w),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _noHpController,
-                      decoration: const InputDecoration(
-                        labelText: 'No HP',
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.phone,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'No HP harus diisi';
-                        }
-                        return null;
-                      },
-                    ),
+                  // Nama Field
+                  _buildLabel('Nama'),
+                  _buildTextField(
+                    controller: _namaController,
+                    hintText: 'Masukkan nama lengkap',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Nama harus diisi';
+                      }
+                      return null;
+                    },
                   ),
-                  SizedBox(width: 16.w),
-                  Expanded(
-                    child: TextFormField(
-                      controller: _teleponController,
-                      decoration: const InputDecoration(
-                        labelText: 'Telepon',
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.phone,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16.h),
+                  SizedBox(height: 16.w),
 
-              // Site, Cluster, House Item Row
-              Row(
-                children: [
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      value: _selectedSite,
-                      decoration: const InputDecoration(
-                        labelText: 'Site',
-                        border: OutlineInputBorder(),
-                      ),
-                      items:
-                          sites.map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedSite = value;
-                        });
-                      },
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Pilih site';
-                        }
-                        return null;
-                      },
-                    ),
+                  // Alamat Field
+                  _buildLabel('Alamat'),
+                  _buildTextField(
+                    controller: _alamatController,
+                    hintText: 'Masukkan alamat lengkap',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Alamat harus diisi';
+                      }
+                      return null;
+                    },
                   ),
-                  SizedBox(width: 8.w),
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      value: _selectedCluster,
-                      decoration: const InputDecoration(
-                        labelText: 'Cluster',
-                        border: OutlineInputBorder(),
-                      ),
-                      items:
-                          clusters.map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedCluster = value;
-                        });
-                      },
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Pilih cluster';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  SizedBox(width: 8.w),
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      value: _selectedHouseItem,
-                      decoration: const InputDecoration(
-                        labelText: 'House Item',
-                        border: OutlineInputBorder(),
-                      ),
-                      items:
-                          houseItems.map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedHouseItem = value;
-                        });
-                      },
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Pilih house item';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16.h),
+                  SizedBox(height: 16.w),
 
-              // Price List Field
-              TextFormField(
-                controller: _priceListController,
-                decoration: const InputDecoration(
-                  labelText: 'Price List',
-                  border: OutlineInputBorder(),
-                  prefixText: 'Rp ',
-                ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Price list harus diisi';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 16.h),
-
-              // Payment Term & Bank Row
-              Row(
-                children: [
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      value: _selectedPaymentTerm,
-                      decoration: const InputDecoration(
-                        labelText: 'Payment Term',
-                        border: OutlineInputBorder(),
+                  // No HP & Telepon Row
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildLabel('No HP'),
+                            _buildTextField(
+                              controller: _noHpController,
+                              hintText: '0812-3456-7890',
+                              keyboardType: TextInputType.phone,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'No HP harus diisi';
+                                }
+                                return null;
+                              },
+                              formatter: _phoneFormatter,
+                            ),
+                          ],
+                        ),
                       ),
-                      items:
-                          paymentTerms.map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedPaymentTerm = value;
-                        });
-                      },
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Pilih payment term';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  SizedBox(width: 8.w),
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      value: _selectedBank,
-                      decoration: const InputDecoration(
-                        labelText: 'Bank',
-                        border: OutlineInputBorder(),
+                      SizedBox(width: 16.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildLabel('Telepon', required: false),
+                            _buildTextField(
+                              controller: _teleponController,
+                              hintText: '(021) 123456',
+                              keyboardType: TextInputType.phone,
+                            ),
+                          ],
+                        ),
                       ),
-                      items:
-                          banks.map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedBank = value;
-                        });
-                      },
-                    ),
+                    ],
                   ),
-                ],
-              ),
-              SizedBox(height: 16.h),
+                  SizedBox(height: 16.w),
 
-              // Exp Date Field
-              TextFormField(
-                controller: _expDateController,
-                decoration: InputDecoration(
-                  labelText: 'Exp Date',
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.calendar_today),
-                    onPressed: () => _selectExpDate(context),
-                  ),
-                ),
-                readOnly: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Exp date harus diisi';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 24.h),
+                  // Site, Cluster, House Item Row
+                  _buildLabel('Site'),
+                  BlocBuilder<SiteBloc, SiteState>(
+                    builder: (context, state) {
+                      return _buildDropdown<Site>(
+                        label: 'Site',
+                        items: state is SiteLoadedSuccess ? state.sites : [],
+                        itemBuilder: (item) => item.siteName,
+                        value: _selectedSite,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedSite = value;
+                          });
 
-              // Submit Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // Handle form submission
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Processing Data')),
+                          if (value == null) return;
+                          context.read<ResidenceBloc>().add(
+                            LoadResidence("", "", value.idSite, ""),
+                          );
+                        },
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Pilih site';
+                          }
+                          return null;
+                        },
                       );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 16.h),
+                    },
                   ),
-                  child: const Text('Submit'),
-                ),
+                  SizedBox(height: 16.w),
+                  _buildLabel('Cluster'),
+                  BlocBuilder<ResidenceBloc, ResidenceState>(
+                    builder: (context, state) {
+                      return _buildDropdown<Residence>(
+                        label: 'Cluster',
+                        items:
+                            state is ResidenceLoadSuccess
+                                ? state.residences
+                                : [],
+                        itemBuilder: (item) => item.clusterName,
+                        value: _selectedCluster,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedCluster = value;
+                          });
+
+                          if (value == null) return;
+                          context.read<HouseItemBloc>().add(
+                            GetHouseItem(
+                              "",
+                              "",
+                              _selectedSite?.idSite ?? "",
+                              value.idCluster,
+                              "",
+                              "",
+                              "",
+                            ),
+                          );
+                        },
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Pilih cluster';
+                          }
+                          return null;
+                        },
+                      );
+                    },
+                  ),
+
+                  SizedBox(height: 16.w),
+                  _buildLabel('House Item'),
+                  BlocBuilder<HouseItemBloc, HouseItemState>(
+                    builder: (context, state) {
+                      return _buildDropdown<HouseItem>(
+                        label: 'House Item',
+                        items:
+                            state is HouseItemLoadSuccess
+                                ? state.houseItems
+                                : [],
+                        itemBuilder: (item) => item.house_name,
+                        value: _selectedHouseItem,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedHouseItem = value;
+                            _priceListController.text =
+                                value?.house_price.toString() ?? '';
+                          });
+                        },
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Pilih house item';
+                          }
+                          return null;
+                        },
+                      );
+                    },
+                  ),
+
+                  SizedBox(height: 16.w),
+
+                  // Price List Field
+                  _buildLabel('Price List'),
+                  _buildTextField(
+                    controller: _priceListController,
+                    hintText: 'Masukkan harga',
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Price list harus diisi';
+                      }
+                      return null;
+                    },
+                    formatter: _priceFormatter,
+                  ),
+                  SizedBox(height: 16.w),
+
+                  // Discount Field
+                  _buildLabel('Discount', required: false),
+                  _buildTextField(
+                    controller: _discountController,
+                    hintText: 'Masukkan diskon',
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      return;
+                    },
+                    formatter: _discountFormatter,
+                  ),
+                  SizedBox(height: 16.w),
+
+                  // Payment Term & Bank Row
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildLabel('Payment Term'),
+                            _buildDropdown<String>(
+                              label: 'Payment Term',
+                              items: paymentTerms,
+                              itemBuilder: (item) => item,
+                              value: _selectedPaymentTerm,
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedPaymentTerm = value;
+                                });
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Pilih payment term';
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildLabel('Bank'),
+                            BlocBuilder<BankBloc, BankState>(
+                              builder: (context, state) {
+                                return _buildDropdown<Bank>(
+                                  label: 'Bank',
+                                  items:
+                                      state is BankLoadSuccess
+                                          ? state.banks
+                                          : [],
+                                  itemBuilder: (item) => item.bank_name,
+                                  value: _selectedBank,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selectedBank = value;
+                                    });
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16.w),
+
+                  // Exp Date Field
+                  _buildLabel('Exp Date'),
+                  _buildTextField(
+                    controller: _expDateController,
+                    hintText: 'Jumlah hari sebelum expired',
+                    readOnly: false,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Exp date harus diisi';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 24.h),
+
+                  _buildLabel('Remark', required: false),
+                  _buildTextField(
+                    controller: _remarkController,
+                    hintText: 'Catatan Khusus',
+                    readOnly: false,
+                    maxLines: 3,
+                    validator: (value) {},
+                  ),
+                  SizedBox(height: 24.h),
+
+                  // Submit Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          context.read<BookingFormBloc>().add(
+                            SubmitBookingForm(
+                              namaCustomer: _namaController.text,
+                              alamatCustomer: _alamatController.text,
+                              nomorHp: _noHpController.text,
+                              telepon: _phoneFormatter.getUnmaskedText(),
+                              houseItem: _selectedHouseItem!.id_house,
+                              priceList: _priceFormatter.getUnmaskedText(),
+                              discount: _discountFormatter.getMaskedText(),
+                              payterm: _selectedPaymentTerm!,
+                              bank: _selectedBank!.bank_name,
+                              expDate: _expDateController.text,
+                              remark: _remarkController.text,
+                            ),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 16.w),
+                        backgroundColor: const Color(0xFF1C3FAA),
+                      ),
+                      child: Text(
+                        'Submit',
+                        style: TextStyle(
+                          fontSize: 16.w,
+                          color: Color(0xFFFFFFFF),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

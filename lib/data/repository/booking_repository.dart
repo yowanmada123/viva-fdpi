@@ -22,4 +22,32 @@ class BookingRepository {
       end_date: end_date,
     );
   }
+
+  Future<Either<CustomException, String>> submitBookingForm(
+    String? namaCustomer,
+    String? alamatCustomer,
+    String? nomorHp,
+    String? telepon,
+    String? houseItem,
+    String? priceList,
+    String? discount,
+    String? payterm,
+    String? bank,
+    String? expDate,
+    String? remark,
+  ) async {
+    return bookingRest.submitBookingForm(
+      namaCustomer ?? '',
+      alamatCustomer ?? '',
+      nomorHp ?? '',
+      telepon ?? '',
+      houseItem ?? '',
+      priceList ?? '',
+      discount ?? '',
+      payterm ?? '',
+      bank ?? '',
+      expDate ?? '',
+      remark ?? '',
+    );
+  }
 }

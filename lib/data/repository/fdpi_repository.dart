@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import '../../models/errors/custom_exception.dart';
 import '../../models/fdpi/city.dart';
 import '../../models/fdpi/house.dart';
+import '../../models/fdpi/house_item.dart';
 import '../../models/fdpi/house_type.dart';
 import '../../models/fdpi/province.dart';
 import '../../models/fdpi/residence.dart';
@@ -52,5 +53,25 @@ class FdpiRepository {
     String status,
   ) async {
     return fdpiRest.getHouseTypes(idSite, houseCategory, status);
+  }
+
+  Future<Either<CustomException, List<HouseItem>>> getHouseItem(
+    String? idProvince,
+    String? idProvCity,
+    String? idSite,
+    String? idCluster,
+    String? category,
+    String? status,
+    String? idHouseType,
+  ) async {
+    return fdpiRest.getHouseItem(
+      idProvince ?? "",
+      idProvCity ?? "",
+      idSite ?? "",
+      idCluster ?? "",
+      category ?? "",
+      status ?? "",
+      idHouseType ?? "",
+    );
   }
 }

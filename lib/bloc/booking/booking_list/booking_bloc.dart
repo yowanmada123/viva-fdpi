@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../data/repository/booking_repository.dart';
-import '../../models/booking.dart';
+import '../../../data/repository/booking_repository.dart';
+import '../../../models/booking.dart';
 
 part 'booking_event.dart';
 part 'booking_state.dart';

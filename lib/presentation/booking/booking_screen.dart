@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
-import '../../bloc/booking/booking_bloc.dart';
+import '../../bloc/booking/booking_list/booking_bloc.dart';
 import '../../bloc/fdpi/residence/residence_bloc.dart';
 import '../../bloc/fdpi/site/site_bloc.dart';
 import '../../data/repository/booking_repository.dart';
@@ -176,13 +176,18 @@ class BookingViewBody extends StatelessWidget {
                     ),
                   ),
                   FilledButton(
-                    onPressed:
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BookingFormScreen(),
-                          ),
+                    onPressed: () {
+                      final bookingBloc = context.read<BookingBloc>();
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) =>
+                                  BookingFormScreen(bookingBloc: bookingBloc),
                         ),
+                      );
+                    },
                     style: FilledButton.styleFrom(
                       backgroundColor: const Color(0xFF1C3FAA),
                       shape: RoundedRectangleBorder(
@@ -265,7 +270,10 @@ class BookingCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: const Color(0xffF2994A),
+                  color:
+                      booking.trType == "NEGO"
+                          ? const Color.fromARGB(255, 74, 105, 242)
+                          : const Color(0xffF2994A),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
