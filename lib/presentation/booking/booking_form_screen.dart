@@ -92,19 +92,19 @@ class _BookingFormViewState extends State<BookingFormView> {
   List<String> paymentTerms = ['KPR', 'SOFT CASH', 'HARD CASH'];
   List<String> banks = ['BCA', 'Mandiri', 'BNI', 'BRI'];
 
-  final _priceFormatter = new MaskTextInputFormatter(
+  final _priceFormatter = MaskTextInputFormatter(
     mask: '###.###.###.###.###.###.###.###',
     filter: {"#": RegExp(r'[0-9]')},
     type: MaskAutoCompletionType.lazy,
   );
 
-  final _discountFormatter = new MaskTextInputFormatter(
+  final _discountFormatter = MaskTextInputFormatter(
     mask: '###.###.###.###.###.###.###.###',
     filter: {"#": RegExp(r'[0-9]')},
     type: MaskAutoCompletionType.lazy,
   );
 
-  final _phoneFormatter = new MaskTextInputFormatter(
+  final _phoneFormatter = MaskTextInputFormatter(
     mask: '####-####-######',
     filter: {"#": RegExp(r'[0-9]')},
     type: MaskAutoCompletionType.lazy,
@@ -120,21 +120,6 @@ class _BookingFormViewState extends State<BookingFormView> {
     _expDateController.dispose();
     _discountController.dispose();
     super.dispose();
-  }
-
-  Future<void> _selectExpDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(DateTime.now().year + 5),
-    );
-    if (picked != null) {
-      setState(() {
-        _expDateController.text =
-            "${picked.day}/${picked.month}/${picked.year}";
-      });
-    }
   }
 
   Widget _buildLabel(String text, {bool required = true}) {
@@ -567,7 +552,6 @@ class _BookingFormViewState extends State<BookingFormView> {
                     hintText: 'Catatan Khusus',
                     readOnly: false,
                     maxLines: 3,
-                    validator: (value) {},
                   ),
                   SizedBox(height: 24.h),
 

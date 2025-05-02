@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fdpi_app/models/fdpi/house_item.dart';
 
-import '../../../data/data_providers/rest_api/fdpi/fdpi_rest.dart';
 import '../../../data/repository/fdpi_repository.dart';
 
 part 'house_item_event.dart';
