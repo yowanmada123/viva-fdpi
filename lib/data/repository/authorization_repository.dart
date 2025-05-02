@@ -3,7 +3,6 @@ import 'package:fdpi_app/data/data_providers/rest_api/authorization/authorizatio
 import 'package:fdpi_app/models/authorization/menu.dart';
 
 import '../../models/errors/custom_exception.dart';
-import '../data_providers/shared-preferences/shared_preferences_manager.dart';
 
 class AuthorizationRepository {
   final AuthorizationRest authorizationRest;

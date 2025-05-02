@@ -177,6 +177,11 @@ class _MapViewState extends State<MapView> {
         minZoom: 0,
         maxZoom: 2,
         onTap: (_, __) => _handlePolygonTap(),
+        initialRotation: 0,
+        interactionOptions: const InteractionOptions(
+          flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+          rotationWinGestures: MultiFingerGesture.none,
+        ),
       ),
       children: [
         OverlayImageLayer(
