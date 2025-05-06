@@ -148,6 +148,7 @@ class _FilterFormState extends State<_FilterForm> {
                   if (value != null) {
                     setState(() {
                       _site = value;
+                      _cluster = null;
                     });
                     context.read<ResidenceBloc>().add(
                       LoadResidence("", "", value, ""),
@@ -175,7 +176,7 @@ class _FilterFormState extends State<_FilterForm> {
                 items:
                     state.residences.map((Residence item) {
                       return DropdownMenuItem<String>(
-                        value: item.idSite,
+                        value: item.idCluster,
                         child: Text(item.clusterName),
                       );
                     }).toList(),
@@ -188,7 +189,6 @@ class _FilterFormState extends State<_FilterForm> {
             }
             return DropdownButtonFormField<String>(
               decoration: const InputDecoration(labelText: 'Cluster'),
-              value: _cluster,
               items: [],
               onChanged: (value) {},
             );
