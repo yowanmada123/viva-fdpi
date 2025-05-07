@@ -106,8 +106,10 @@ class BookingRest {
         return Left(NetUtils.parseErrorResponse(response: response.data));
       }
     } on DioException catch (e) {
+      log("This is the exception : $e");
       return Left(NetUtils.parseDioException(e));
     } on Exception catch (e) {
+      log("This is the exception : $e");
       return Future.value(Left(CustomException(message: e.toString())));
     } catch (e) {
       return Left(CustomException(message: e.toString()));
