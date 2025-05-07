@@ -12,6 +12,7 @@ import '../data/repository/auth_repository.dart';
 import '../data/repository/authorization_repository.dart';
 import '../models/authorization/menu.dart';
 import '../models/errors/custom_exception.dart';
+import 'SPK/spk_list_screen.dart';
 import 'booking/booking_screen.dart';
 import 'fdpi/fdpi_residences_screen.dart';
 import 'widgets/bottom_navigator.dart';
@@ -62,6 +63,18 @@ class MyGridLayout extends StatelessWidget {
       'text': 'Sales',
       'description': 'Menu untuk sales',
       'route': null,
+    },
+    'checkListBank': {
+      'icon': Icons.task,
+      'text': 'Bank Check List',
+      'description': 'Monitoring Pembayaran Bank',
+      'route': SpkListScreen(),
+    },
+    'checkListBuilding': {
+      'icon': Icons.checklist,
+      'text': 'Building Check List',
+      'description': 'Monitoring Pembangunan Rumah',
+      'route': SpkListScreen(),
     },
   };
 
@@ -226,6 +239,7 @@ class MyGridLayout extends StatelessWidget {
                     },
                   ),
                 ),
+                Container(child: _buildMenuCard(context, buttons['spk'])),
               ],
             ),
           ),

@@ -5,10 +5,13 @@ import 'package:fdpi_app/models/bank.dart';
 import 'package:fdpi_app/models/errors/custom_exception.dart';
 import 'package:fdpi_app/models/fdpi/house_item.dart';
 import 'package:fdpi_app/models/fdpi/site.dart';
+import 'package:fdpi_app/presentation/widgets/MoneyInputWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:flutter/services.dart';
 
 import '../../bloc/auth/authentication/authentication_bloc.dart';
 import '../../bloc/booking/booking_form/booking_form_bloc.dart';
@@ -354,6 +357,8 @@ class _BookingFormViewState extends State<BookingFormView> {
                         onChanged: (value) {
                           setState(() {
                             _selectedSite = value;
+                            _selectedCluster = null;
+                            _selectedHouseItem = null;
                           });
 
                           if (value == null) return;
@@ -385,6 +390,7 @@ class _BookingFormViewState extends State<BookingFormView> {
                         onChanged: (value) {
                           setState(() {
                             _selectedCluster = value;
+                            _selectedHouseItem = null;
                           });
 
                           if (value == null) return;
@@ -425,8 +431,9 @@ class _BookingFormViewState extends State<BookingFormView> {
                         onChanged: (value) {
                           setState(() {
                             _selectedHouseItem = value;
-                            _priceListController.text =
-                                value?.house_price.toString() ?? '';
+                            _priceListController.text = NumberFormat(
+                              '#,###',
+                            ).format(value?.house_price ?? 0);
                           });
                         },
                         validator: (value) {
@@ -443,30 +450,21 @@ class _BookingFormViewState extends State<BookingFormView> {
 
                   // Price List Field
                   _buildLabel('Price List'),
-                  _buildTextField(
+                  MoneyInputWidget(
                     controller: _priceListController,
                     hintText: 'Masukkan harga',
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Price list harus diisi';
-                      }
-                      return null;
-                    },
-                    formatter: _priceFormatter,
+                    suffixIcon: null,
+                    maxLines: 1,
                   ),
                   SizedBox(height: 16.w),
 
                   // Discount Field
                   _buildLabel('Discount', required: false),
-                  _buildTextField(
+                  MoneyInputWidget(
                     controller: _discountController,
-                    hintText: 'Masukkan diskon',
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      return;
-                    },
-                    formatter: _discountFormatter,
+                    hintText: 'Masukkan discount',
+                    suffixIcon: null,
+                    maxLines: 1,
                   ),
                   SizedBox(height: 16.w),
 
@@ -532,7 +530,7 @@ class _BookingFormViewState extends State<BookingFormView> {
                   SizedBox(height: 16.w),
 
                   // Exp Date Field
-                  _buildLabel('Exp Date'),
+                  _buildLabel('Exp Date(Dalam hari)'),
                   _buildTextField(
                     controller: _expDateController,
                     hintText: 'Jumlah hari sebelum expired',
@@ -550,6 +548,7 @@ class _BookingFormViewState extends State<BookingFormView> {
                   _buildTextField(
                     controller: _remarkController,
                     hintText: 'Catatan Khusus',
+                    keyboardType: TextInputType.number,
                     readOnly: false,
                     maxLines: 3,
                   ),
@@ -560,6 +559,7 @@ class _BookingFormViewState extends State<BookingFormView> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
+                        if (state is BookingFormLoading) return;
                         if (_formKey.currentState!.validate()) {
                           context.read<BookingFormBloc>().add(
                             SubmitBookingForm(
@@ -568,8 +568,14 @@ class _BookingFormViewState extends State<BookingFormView> {
                               nomorHp: _noHpController.text,
                               telepon: _phoneFormatter.getUnmaskedText(),
                               houseItem: _selectedHouseItem!.id_house,
-                              priceList: _priceFormatter.getUnmaskedText(),
-                              discount: _discountFormatter.getMaskedText(),
+                              priceList: _priceListController.text.replaceAll(
+                                ',',
+                                '',
+                              ),
+                              discount: _discountController.text.replaceAll(
+                                ',',
+                                '',
+                              ),
                               payterm: _selectedPaymentTerm!,
                               bank: _selectedBank!.bank_name,
                               expDate: _expDateController.text,
@@ -582,13 +588,16 @@ class _BookingFormViewState extends State<BookingFormView> {
                         padding: EdgeInsets.symmetric(vertical: 16.w),
                         backgroundColor: const Color(0xFF1C3FAA),
                       ),
-                      child: Text(
-                        'Submit',
-                        style: TextStyle(
-                          fontSize: 16.w,
-                          color: Color(0xFFFFFFFF),
-                        ),
-                      ),
+                      child:
+                          state is BookingFormLoading
+                              ? const CircularProgressIndicator()
+                              : Text(
+                                'Submit',
+                                style: TextStyle(
+                                  fontSize: 16.w,
+                                  color: Color(0xFFFFFFFF),
+                                ),
+                              ),
                     ),
                   ),
                 ],
