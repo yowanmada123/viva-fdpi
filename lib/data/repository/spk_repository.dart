@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
 
+import '../../models/QC/SPK.dart';
+import '../../models/QC/SPR.dart';
 import '../../models/checklistItem.dart';
 import '../../models/errors/custom_exception.dart';
 import '../data_providers/rest_api/spk_rest.dart';
@@ -9,9 +11,23 @@ class SPKRepository {
 
   SPKRepository({required this.spkRest});
 
+  Future<Either<CustomException, List<SPK>>> getSPKList({
+    required String idSite,
+    required String idCluster,
+  }) async {
+    return spkRest.getSPKList(idSite: idSite, idCluster: idCluster);
+  }
+
+  Future<Either<CustomException, List<SPR>>> getSPRList({
+    required String idSite,
+    required String idCluster,
+  }) async {
+    return spkRest.getSPRList(idSite: idSite, idCluster: idCluster);
+  }
+
   Future<Either<CustomException, Map<String, List<ChecklistItem>>>>
-  getChecklistItem({required String idHouse, required String clType}) async {
-    return spkRest.getChecklistItem(idHouse: idHouse, clType: clType);
+  getChecklistItem({required String qcTransId}) async {
+    return spkRest.getChecklistItem(qcTransId: qcTransId);
   }
 
   Future<Either<CustomException, String>> approveChecklist({

@@ -19,8 +19,7 @@ class ChecklistBloc extends Bloc<ChecklistEvent, ChecklistState> {
   ) async {
     emit(ChecklistLoading());
     final result = await spkRepository.getChecklistItem(
-      idHouse: event.idHouse,
-      clType: event.clType,
+      qcTransId: event.qcTransId,
     );
     result.fold(
       (failure) =>

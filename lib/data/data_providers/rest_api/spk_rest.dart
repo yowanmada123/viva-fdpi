@@ -2,9 +2,11 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:fdpi_app/models/QC/SPR.dart';
 import 'package:fdpi_app/models/checklistItem.dart';
 import 'package:fdpi_app/utils/grouping_item.dart';
 
+import '../../../models/QC/SPK.dart';
 import '../../../models/errors/custom_exception.dart';
 import '../../../utils/net_utils.dart';
 
@@ -13,18 +15,100 @@ class SPKRest {
 
   SPKRest(this.http);
 
-  Future<Either<CustomException, Map<String, List<ChecklistItem>>>>
-  getChecklistItem({required String idHouse, required String clType}) async {
+  Future<Either<CustomException, List<SPR>>> getSPRList({
+    required String idSite,
+    required String idCluster,
+  }) async {
     try {
       http.options.headers['requiresToken'] = true;
       log(
-        'Request to https://v2.kencana.org/api/fpi/checklist/getCheckList (POST)',
+        'Request to https://v2.kencana.org/api/fpi/checklist/getCheckListHdr (POST)',
       );
 
-      final body = {"id_house": idHouse, "cl_type": clType};
+      final body = {
+        "id_site": idSite,
+        "id_cluster": idCluster,
+        "cl_type": "BP",
+      };
 
       final response = await http.post(
-        "api/fpi/checklist/getCheckList",
+        "api/fpi/checklist/getCheckListHdr",
+        data: body,
+      );
+
+      if (response.statusCode == 200) {
+        log('Response body: ${response.data}');
+        final data = response.data;
+
+        final List<SPR> items =
+            List<SPR>.from(data['data'].map((e) => SPR.fromMap(e))).toList();
+
+        return Right(items);
+      } else {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
+  Future<Either<CustomException, List<SPK>>> getSPKList({
+    required String idSite,
+    required String idCluster,
+  }) async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log(
+        'Request to https://v2.kencana.org/api/fpi/checklist/getCheckListHdr (POST)',
+      );
+
+      final body = {
+        "id_site": idSite,
+        "id_cluster": idCluster,
+        "cl_type": "SK",
+      };
+
+      final response = await http.post(
+        "api/fpi/checklist/getCheckListHdr",
+        data: body,
+      );
+
+      if (response.statusCode == 200) {
+        log('Response body: ${response.data}');
+        final data = response.data;
+
+        final List<SPK> items =
+            List<SPK>.from(data['data'].map((e) => SPK.fromMap(e))).toList();
+
+        return Right(items);
+      } else {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
+  Future<Either<CustomException, Map<String, List<ChecklistItem>>>>
+  getChecklistItem({required String qcTransId}) async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log(
+        'Request to https://v2.kencana.org/api/fpi/checklist/getCheckListDtl (POST)',
+      );
+
+      final body = {"qc_trans_id": qcTransId};
+
+      final response = await http.post(
+        "api/fpi/checklist/getCheckListDtl",
         data: body,
       );
 

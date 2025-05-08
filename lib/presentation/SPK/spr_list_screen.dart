@@ -1,23 +1,20 @@
-import 'package:fdpi_app/bloc/fdpi/site/site_bloc.dart';
-import 'package:fdpi_app/data/repository/spk_repository.dart';
-import 'package:fdpi_app/models/QC/SPK.dart';
-import 'package:fdpi_app/models/fdpi/house_item.dart';
-import 'package:fdpi_app/models/fdpi/residence.dart';
-import 'package:fdpi_app/presentation/SPK/spk_progress_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../bloc/QC/spk_list/spk_list_bloc.dart';
+import '../../bloc/QC/spr_list/spr_list_bloc.dart';
 import '../../bloc/auth/authentication/authentication_bloc.dart';
 import '../../bloc/fdpi/house_item/house_item_bloc.dart';
 import '../../bloc/fdpi/residence/residence_bloc.dart';
+import '../../bloc/fdpi/site/site_bloc.dart';
 import '../../data/repository/fdpi_repository.dart';
+import '../../data/repository/spk_repository.dart';
 import '../../models/errors/custom_exception.dart';
+import '../../models/fdpi/residence.dart';
 import '../../models/fdpi/site.dart';
+import 'spk_progress_list_screen.dart';
 
-class SpkListScreen extends StatelessWidget {
-  const SpkListScreen({super.key});
+class SprListScreen extends StatelessWidget {
+  const SprListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,34 +39,34 @@ class SpkListScreen extends StatelessWidget {
         BlocProvider(
           create:
               (context) =>
-                  SpkListBloc(spkRepository: context.read<SPKRepository>()),
+                  SprListBloc(spkRepository: context.read<SPKRepository>()),
         ),
       ],
-      child: const _SpkListScreenContent(),
+      child: const _SprListScreenContent(),
     );
   }
 }
 
-class _SpkListScreenContent extends StatelessWidget {
-  const _SpkListScreenContent({super.key});
+class _SprListScreenContent extends StatelessWidget {
+  const _SprListScreenContent();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('SPK List')),
-      body: const _SpkListBody(),
+      appBar: AppBar(title: const Text('SPR List')),
+      body: const _SprListBody(),
     );
   }
 }
 
-class _SpkListBody extends StatefulWidget {
-  const _SpkListBody({super.key});
+class _SprListBody extends StatefulWidget {
+  const _SprListBody({super.key});
 
   @override
-  State<_SpkListBody> createState() => _SpkListBodyState();
+  State<_SprListBody> createState() => _SprListBodyState();
 }
 
-class _SpkListBodyState extends State<_SpkListBody> {
+class _SprListBodyState extends State<_SprListBody> {
   final _formKey = GlobalKey<FormState>();
   String? _site;
   String? _cluster;
@@ -97,10 +94,10 @@ class _SpkListBodyState extends State<_SpkListBody> {
             const SizedBox(height: 16),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              child: BlocConsumer<SpkListBloc, SpkListState>(
+              child: BlocConsumer<SprListBloc, SprListState>(
                 listener:
                     (context, state) => {
-                      if (state is SpkListLoadFailure)
+                      if (state is SprListLoadFailure)
                         {
                           if (state.error is UnauthorizedException)
                             {
@@ -122,13 +119,14 @@ class _SpkListBodyState extends State<_SpkListBody> {
                         },
                     },
                 builder: (context, state) {
-                  if (state is SpkListLoadSuccess) {
+                  if (state is SprListLoadSuccess) {
                     return Table(
                       columnWidths: {
                         0: const FixedColumnWidth(150),
                         1: const FixedColumnWidth(150),
                         2: const FixedColumnWidth(120),
                         3: const FixedColumnWidth(130),
+                        4: const FixedColumnWidth(100),
                       },
                       children: [
                         TableRow(
@@ -139,7 +137,14 @@ class _SpkListBodyState extends State<_SpkListBody> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                'SPK ID',
+                                'Site Name',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Cluster Name',
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
@@ -153,7 +158,7 @@ class _SpkListBodyState extends State<_SpkListBody> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                'Vendor',
+                                'Transaction ID',
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
@@ -166,9 +171,9 @@ class _SpkListBodyState extends State<_SpkListBody> {
                             ),
                           ],
                         ),
-                        ...List.generate(state.spkList.length, (index) {
+                        ...List.generate(state.sprList.length, (index) {
                           return TableRow(
-                            key: ValueKey(state.spkList[index].idSPK),
+                            key: ValueKey(state.sprList[index].siteName),
                             decoration: BoxDecoration(
                               border: Border(
                                 bottom: BorderSide(
@@ -196,7 +201,7 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                     vertical: 2.0,
                                   ),
                                   child: Text(
-                                    state.spkList[index].idSPK,
+                                    state.sprList[index].siteName,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -211,7 +216,7 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                     vertical: 2.0,
                                   ),
                                   child: Text(
-                                    state.spkList[index].houseName,
+                                    state.sprList[index].clusterName,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -226,7 +231,22 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                     vertical: 2.0,
                                   ),
                                   child: Text(
-                                    state.spkList[index].vendorName,
+                                    state.sprList[index].houseName,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                              TableCell(
+                                verticalAlignment:
+                                    TableCellVerticalAlignment.middle,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8.0,
+                                    vertical: 2.0,
+                                  ),
+                                  child: Text(
+                                    state.sprList[index].qcTransId,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -285,7 +305,7 @@ class _SpkListBodyState extends State<_SpkListBody> {
     final siteBloc = BlocProvider.of<SiteBloc>(context);
     final residenceBloc = BlocProvider.of<ResidenceBloc>(context);
     final houseItemBloc = BlocProvider.of<HouseItemBloc>(context);
-    final spkListBloc = BlocProvider.of<SpkListBloc>(context);
+    final sprListBloc = BlocProvider.of<SprListBloc>(context);
 
     // Create a local state manager for the bottom sheet
 
@@ -301,7 +321,7 @@ class _SpkListBodyState extends State<_SpkListBody> {
             BlocProvider.value(value: siteBloc),
             BlocProvider.value(value: residenceBloc),
             BlocProvider.value(value: houseItemBloc),
-            BlocProvider.value(value: spkListBloc),
+            BlocProvider.value(value: sprListBloc),
           ],
           child: StatefulBuilder(
             builder: (BuildContext context, StateSetter setModalState) {
@@ -412,13 +432,14 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                 onPressed: () {
                                   if (_formKey.currentState?.validate() ??
                                       false) {
+                                    print("Masuk kamuuu");
                                     setState(() {
                                       _site = localSite;
                                       _cluster = localCluster;
                                     });
 
-                                    context.read<SpkListBloc>().add(
-                                      GetSPKList(
+                                    context.read<SprListBloc>().add(
+                                      GetSPRList(
                                         idSite: _site ?? '',
                                         idCluster: _cluster ?? '',
                                       ),

@@ -8,11 +8,10 @@ sealed class ChecklistEvent extends Equatable {
 }
 
 class LoadChecklist extends ChecklistEvent {
-  final String idHouse;
-  final String clType;
+  final String qcTransId;
 
-  const LoadChecklist({required this.idHouse, required this.clType});
+  const LoadChecklist({required this.qcTransId});
 
   @override
-  List<Object> get props => [idHouse, clType];
+  List<Object> get props => [qcTransId];
 }

@@ -535,6 +535,7 @@ class _BookingFormViewState extends State<BookingFormView> {
                     controller: _expDateController,
                     hintText: 'Jumlah hari sebelum expired',
                     readOnly: false,
+                    keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Exp date harus diisi';
@@ -548,7 +549,6 @@ class _BookingFormViewState extends State<BookingFormView> {
                   _buildTextField(
                     controller: _remarkController,
                     hintText: 'Catatan Khusus',
-                    keyboardType: TextInputType.number,
                     readOnly: false,
                     maxLines: 3,
                   ),
