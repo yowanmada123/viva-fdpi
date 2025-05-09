@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 
 import '../../models/QC/SPK.dart';
 import '../../models/QC/SPR.dart';
-import '../../models/checklistItem.dart';
 import '../../models/errors/custom_exception.dart';
 import '../data_providers/rest_api/spk_rest.dart';
 

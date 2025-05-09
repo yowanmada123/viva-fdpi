@@ -188,141 +188,145 @@ class _SpkProgressListScreenContentState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('SPK Progress', style: TextStyle(fontSize: 20.sp)),
-      ),
-      body: BlocBuilder<ChecklistBloc, ChecklistState>(
-        builder: (context, state) {
-          if (state is ChecklistLoadSuccess) {
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  for (var entry in state.checklistItem.entries)
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 8.0,
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 1,
-                              blurRadius: 5,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('SPK Progress', style: TextStyle(fontSize: 20.sp)),
+        ),
+        body: BlocBuilder<ChecklistBloc, ChecklistState>(
+          builder: (context, state) {
+            if (state is ChecklistLoadSuccess) {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    for (var entry in state.checklistItem.entries)
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 8.0,
                         ),
-                        child: ExpansionTile(
-                          key: ValueKey(entry.key),
-                          initiallyExpanded:
-                              _currentExpandedIndex ==
-                              state.checklistItem.keys.toList().indexOf(
-                                entry.key,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 1,
+                                blurRadius: 5,
+                                offset: Offset(0, 2),
                               ),
-                          onExpansionChanged: (expanded) {
-                            final index = state.checklistItem.keys
-                                .toList()
-                                .indexOf(entry.key);
-                            final keyBefore =
-                                index > 0
-                                    ? state.checklistItem.keys.toList()[index -
-                                        1]
-                                    : null;
+                            ],
+                          ),
+                          child: ExpansionTile(
+                            key: ValueKey(entry.key),
+                            initiallyExpanded:
+                                _currentExpandedIndex ==
+                                state.checklistItem.keys.toList().indexOf(
+                                  entry.key,
+                                ),
+                            onExpansionChanged: (expanded) {
+                              final index = state.checklistItem.keys
+                                  .toList()
+                                  .indexOf(entry.key);
+                              final keyBefore =
+                                  index > 0
+                                      ? state.checklistItem.keys
+                                          .toList()[index - 1]
+                                      : null;
 
-                            if (index == 0 ||
-                                (keyBefore != null &&
-                                    state.checklistItem[keyBefore]!['finish'] ==
-                                        true)) {
-                              setState(() {
-                                _currentExpandedIndex = expanded ? index : null;
-                              });
-                            }
-                          },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                          ),
-                          collapsedShape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                          ),
-                          title: Opacity(
-                            opacity:
-                                _isPanelEnabled(state, entry.key) ? 1.0 : 0.5,
-                            child: Text(
-                              entry.key,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-                                color:
-                                    _isPanelEnabled(state, entry.key)
-                                        ? null
-                                        : Colors.grey,
+                              if (index == 0 ||
+                                  (keyBefore != null &&
+                                      state.checklistItem[keyBefore]!['finish'] ==
+                                          true)) {
+                                setState(() {
+                                  _currentExpandedIndex =
+                                      expanded ? index : null;
+                                });
+                              }
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4.0),
+                            ),
+                            collapsedShape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4.0),
+                            ),
+                            title: Opacity(
+                              opacity:
+                                  _isPanelEnabled(state, entry.key) ? 1.0 : 0.5,
+                              child: Text(
+                                entry.key,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.0,
+                                  color:
+                                      _isPanelEnabled(state, entry.key)
+                                          ? null
+                                          : Colors.grey,
+                                ),
                               ),
                             ),
-                          ),
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Column(
-                                children:
-                                    (entry.value
-                                            as Map<String, dynamic>)['data']
-                                        .map<Widget>((item) {
-                                          return CheckboxListTile(
-                                            contentPadding: EdgeInsets.zero,
-                                            title: Text(item.qcItem),
-                                            value: item.aprvBy.isNotEmpty,
-                                            onChanged:
-                                                _isPanelEnabled(
-                                                      state,
-                                                      entry.key,
-                                                    )
-                                                    ? (bool? newValue) {
-                                                      _showApprovalBottomSheet(
-                                                        context: context,
-                                                        qcTransId:
-                                                            widget.qcTransId,
-                                                        category: entry.key,
-                                                        itemId: item.idQcItem,
-                                                        currentApprovalStatus:
-                                                            item
-                                                                .aprvBy
-                                                                .isNotEmpty,
-                                                        itemName: item.qcItem,
-                                                        approveChecklistBloc:
-                                                            context
-                                                                .read<
-                                                                  ApproveChecklistBloc
-                                                                >(),
-                                                        checklistBloc:
-                                                            context
-                                                                .read<
-                                                                  ChecklistBloc
-                                                                >(),
-                                                      );
-                                                    }
-                                                    : null,
-                                            controlAffinity:
-                                                ListTileControlAffinity.leading,
-                                          );
-                                        })
-                                        .toList(),
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Column(
+                                  children:
+                                      (entry.value
+                                              as Map<String, dynamic>)['data']
+                                          .map<Widget>((item) {
+                                            return CheckboxListTile(
+                                              contentPadding: EdgeInsets.zero,
+                                              title: Text(item.qcItem),
+                                              value: item.aprvBy.isNotEmpty,
+                                              onChanged:
+                                                  _isPanelEnabled(
+                                                        state,
+                                                        entry.key,
+                                                      )
+                                                      ? (bool? newValue) {
+                                                        _showApprovalBottomSheet(
+                                                          context: context,
+                                                          qcTransId:
+                                                              widget.qcTransId,
+                                                          category: entry.key,
+                                                          itemId: item.idQcItem,
+                                                          currentApprovalStatus:
+                                                              item
+                                                                  .aprvBy
+                                                                  .isNotEmpty,
+                                                          itemName: item.qcItem,
+                                                          approveChecklistBloc:
+                                                              context
+                                                                  .read<
+                                                                    ApproveChecklistBloc
+                                                                  >(),
+                                                          checklistBloc:
+                                                              context
+                                                                  .read<
+                                                                    ChecklistBloc
+                                                                  >(),
+                                                        );
+                                                      }
+                                                      : null,
+                                              controlAffinity:
+                                                  ListTileControlAffinity
+                                                      .leading,
+                                            );
+                                          })
+                                          .toList(),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                ],
-              ),
-            );
-          }
-          return Center(child: CircularProgressIndicator());
-        },
+                  ],
+                ),
+              );
+            }
+            return Center(child: CircularProgressIndicator());
+          },
+        ),
       ),
     );
   }

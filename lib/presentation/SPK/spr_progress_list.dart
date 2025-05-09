@@ -188,63 +188,65 @@ class _SprProgressListScreenContentState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('SPR Progress', style: TextStyle(fontSize: 20.sp)),
-      ),
-      body: BlocBuilder<ChecklistBloc, ChecklistState>(
-        builder: (context, state) {
-          if (state is ChecklistLoadSuccess) {
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  for (var entry in state.checklistItem.entries)
-                    Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Column(
-                        children:
-                            (entry.value as Map<String, dynamic>)['data']
-                                .map<Widget>((item) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    margin: EdgeInsets.only(bottom: 8.0),
-                                    child: CheckboxListTile(
-                                      contentPadding: EdgeInsets.zero,
-                                      title: Text(item.qcItem),
-                                      value: item.aprvBy.isNotEmpty,
-                                      onChanged: (bool? newValue) {
-                                        _showApprovalBottomSheet(
-                                          context: context,
-                                          qcTransId: widget.qcTransId,
-                                          category: entry.key,
-                                          itemId: item.idQcItem,
-                                          currentApprovalStatus:
-                                              item.aprvBy.isNotEmpty,
-                                          itemName: item.qcItem,
-                                          approveChecklistBloc:
-                                              context
-                                                  .read<ApproveChecklistBloc>(),
-                                          checklistBloc:
-                                              context.read<ChecklistBloc>(),
-                                        );
-                                      },
-                                      controlAffinity:
-                                          ListTileControlAffinity.leading,
-                                    ),
-                                  );
-                                })
-                                .toList(),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('SPR Progress', style: TextStyle(fontSize: 20.sp)),
+        ),
+        body: BlocBuilder<ChecklistBloc, ChecklistState>(
+          builder: (context, state) {
+            if (state is ChecklistLoadSuccess) {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    for (var entry in state.checklistItem.entries)
+                      Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Column(
+                          children:
+                              (entry.value as Map<String, dynamic>)['data'].map<
+                                Widget
+                              >((item) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  margin: EdgeInsets.only(bottom: 8.0),
+                                  child: CheckboxListTile(
+                                    contentPadding: EdgeInsets.zero,
+                                    title: Text(item.qcItem),
+                                    value: item.aprvBy.isNotEmpty,
+                                    onChanged: (bool? newValue) {
+                                      _showApprovalBottomSheet(
+                                        context: context,
+                                        qcTransId: widget.qcTransId,
+                                        category: entry.key,
+                                        itemId: item.idQcItem,
+                                        currentApprovalStatus:
+                                            item.aprvBy.isNotEmpty,
+                                        itemName: item.qcItem,
+                                        approveChecklistBloc:
+                                            context
+                                                .read<ApproveChecklistBloc>(),
+                                        checklistBloc:
+                                            context.read<ChecklistBloc>(),
+                                      );
+                                    },
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
+                                  ),
+                                );
+                              }).toList(),
+                        ),
                       ),
-                    ),
-                ],
-              ),
-            );
-          }
-          return Center(child: CircularProgressIndicator());
-        },
+                  ],
+                ),
+              );
+            }
+            return Center(child: CircularProgressIndicator());
+          },
+        ),
       ),
     );
   }

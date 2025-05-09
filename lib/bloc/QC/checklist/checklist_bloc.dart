@@ -1,8 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fdpi_app/data/repository/spk_repository.dart';
 
-import '../../../models/checklistItem.dart';
+import '../../../data/repository/spk_repository.dart';
 
 part 'checklist_event.dart';
 part 'checklist_state.dart';

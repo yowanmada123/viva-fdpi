@@ -45,11 +45,6 @@ class FDPIMenuView extends StatelessWidget {
     BuildContext context,
     LocationState state,
   ) {
-    // Handle form submission
-    final province = state.selectedProvince?.idProvince ?? "";
-    final city = state.selectedCity?.idCity ?? "";
-    final status = state.selectedStatus?.name ?? "Aktif";
-
     return () {
       Navigator.push(
         context,
