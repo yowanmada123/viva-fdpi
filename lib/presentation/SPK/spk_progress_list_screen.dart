@@ -1,49 +1,341 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'spk_checklist_screen.dart';
+import '../../bloc/QC/approve_checklist/approve_checklist_bloc.dart';
+import '../../bloc/QC/checklist/checklist_bloc.dart';
+import '../../data/repository/spk_repository.dart';
 
 class SpkProgressListScreen extends StatelessWidget {
-  const SpkProgressListScreen({Key? key}) : super(key: key);
-
-  static final List<Map<String, dynamic>> _sPKProgressList = [
-    {"percentage": 50, "status": 'In Progress', "documentAttachment": null},
-    {"percentage": 100, "status": 'Completed', "documentAttachment": null},
-  ];
+  final String qcTransId;
+  const SpkProgressListScreen({super.key, required this.qcTransId});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('SPK Progress', style: TextStyle(fontSize: 20.sp)),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create:
+              (context) =>
+                  ChecklistBloc(spkRepository: context.read<SPKRepository>())
+                    ..add(LoadChecklist(qcTransId: qcTransId)),
+        ),
+        BlocProvider(
+          create:
+              (context) => ApproveChecklistBloc(
+                spkRepository: context.read<SPKRepository>(),
+              ),
+        ),
+      ],
+      child: _SpkProgressListScreenContent(qcTransId: qcTransId),
+    );
+  }
+}
+
+class _SpkProgressListScreenContent extends StatefulWidget {
+  final String qcTransId;
+  const _SpkProgressListScreenContent({required this.qcTransId});
+
+  @override
+  State<_SpkProgressListScreenContent> createState() =>
+      _SpkProgressListScreenContentState();
+}
+
+class _SpkProgressListScreenContentState
+    extends State<_SpkProgressListScreenContent> {
+  int? _currentExpandedIndex;
+  final TextEditingController _remarkController = TextEditingController();
+
+  void _showApprovalBottomSheet({
+    required BuildContext context,
+    required String qcTransId,
+    required String category,
+    required String itemId,
+    required bool currentApprovalStatus,
+    required String itemName,
+    required ApproveChecklistBloc approveChecklistBloc,
+    required ChecklistBloc checklistBloc,
+  }) {
+    _remarkController.clear();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white, // Add background color
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      body: ListView.builder(
-        itemCount: _sPKProgressList.length,
-        itemBuilder: (context, index) {
-          final spkProgress = _sPKProgressList[index];
-          return ListTile(
-            title: Text(
-              '${spkProgress['percentage']}%',
-              style: TextStyle(fontSize: 18.sp),
+      builder: (context) {
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider.value(value: approveChecklistBloc),
+            BlocProvider.value(value: checklistBloc),
+          ],
+          child: BlocListener<ApproveChecklistBloc, ApproveChecklistState>(
+            listener: (context, state) {
+              if (state is ApproveChecklistLoadSuccess) {
+                // Refresh checklist data
+                checklistBloc.add(LoadChecklist(qcTransId: qcTransId));
+                Navigator.pop(context);
+
+                // Optional: Show success message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              }
+            },
+            child: Container(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                left: 16.0,
+                right: 16.0,
+                top: 16.0,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Remark for $itemName',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 16),
+                  TextField(
+                    controller: _remarkController,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      hintText: 'Enter your remark...',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                          child: Text('Cancel'),
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      BlocBuilder<ApproveChecklistBloc, ApproveChecklistState>(
+                        builder: (context, state) {
+                          return Expanded(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFF1C3FAA),
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                              onPressed:
+                                  state is ApproveChecklistLoading
+                                      ? null // Disable button when loading
+                                      : () {
+                                        approveChecklistBloc.add(
+                                          ApproveChecklistEventInit(
+                                            qcTransId: qcTransId,
+                                            idQcItem: itemId,
+                                            remark: _remarkController.text,
+                                          ),
+                                        );
+                                      },
+                              child:
+                                  state is ApproveChecklistLoading
+                                      ? CircularProgressIndicator(
+                                        color: Colors.white,
+                                      )
+                                      : Text(
+                                        currentApprovalStatus
+                                            ? 'Unapprove'
+                                            : 'Approve',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                ],
+              ),
             ),
-            subtitle: Text(
-              spkProgress['status'],
-              style: TextStyle(fontSize: 16.sp),
-            ),
-            trailing: Text(spkProgress['documentAttachment'] ?? '-'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return SpkChecklistScreen();
-                  },
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _remarkController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('SPK Progress', style: TextStyle(fontSize: 20.sp)),
+        ),
+        body: BlocBuilder<ChecklistBloc, ChecklistState>(
+          builder: (context, state) {
+            if (state is ChecklistLoadSuccess) {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    for (var entry in state.checklistItem.entries)
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 8.0,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 1,
+                                blurRadius: 5,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: ExpansionTile(
+                            key: ValueKey(entry.key),
+                            initiallyExpanded:
+                                _currentExpandedIndex ==
+                                state.checklistItem.keys.toList().indexOf(
+                                  entry.key,
+                                ),
+                            onExpansionChanged: (expanded) {
+                              final index = state.checklistItem.keys
+                                  .toList()
+                                  .indexOf(entry.key);
+                              final keyBefore =
+                                  index > 0
+                                      ? state.checklistItem.keys
+                                          .toList()[index - 1]
+                                      : null;
+
+                              if (index == 0 ||
+                                  (keyBefore != null &&
+                                      state.checklistItem[keyBefore]!['finish'] ==
+                                          true)) {
+                                setState(() {
+                                  _currentExpandedIndex =
+                                      expanded ? index : null;
+                                });
+                              }
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4.0),
+                            ),
+                            collapsedShape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4.0),
+                            ),
+                            title: Opacity(
+                              opacity:
+                                  _isPanelEnabled(state, entry.key) ? 1.0 : 0.5,
+                              child: Text(
+                                entry.key,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.0,
+                                  color:
+                                      _isPanelEnabled(state, entry.key)
+                                          ? null
+                                          : Colors.grey,
+                                ),
+                              ),
+                            ),
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Column(
+                                  children:
+                                      (entry.value
+                                              as Map<String, dynamic>)['data']
+                                          .map<Widget>((item) {
+                                            return CheckboxListTile(
+                                              contentPadding: EdgeInsets.zero,
+                                              title: Text(item.qcItem),
+                                              value: item.aprvBy.isNotEmpty,
+                                              onChanged:
+                                                  _isPanelEnabled(
+                                                        state,
+                                                        entry.key,
+                                                      )
+                                                      ? (bool? newValue) {
+                                                        _showApprovalBottomSheet(
+                                                          context: context,
+                                                          qcTransId:
+                                                              widget.qcTransId,
+                                                          category: entry.key,
+                                                          itemId: item.idQcItem,
+                                                          currentApprovalStatus:
+                                                              item
+                                                                  .aprvBy
+                                                                  .isNotEmpty,
+                                                          itemName: item.qcItem,
+                                                          approveChecklistBloc:
+                                                              context
+                                                                  .read<
+                                                                    ApproveChecklistBloc
+                                                                  >(),
+                                                          checklistBloc:
+                                                              context
+                                                                  .read<
+                                                                    ChecklistBloc
+                                                                  >(),
+                                                        );
+                                                      }
+                                                      : null,
+                                              controlAffinity:
+                                                  ListTileControlAffinity
+                                                      .leading,
+                                            );
+                                          })
+                                          .toList(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               );
-            },
-          );
-        },
+            }
+            return Center(child: CircularProgressIndicator());
+          },
+        ),
       ),
     );
+  }
+
+  bool _isPanelEnabled(ChecklistLoadSuccess state, String currentKey) {
+    final index = state.checklistItem.keys.toList().indexOf(currentKey);
+    if (index == 0) return true;
+
+    final keyBefore = state.checklistItem.keys.toList()[index - 1];
+    return state.checklistItem[keyBefore]!['finish'] == true;
   }
 }

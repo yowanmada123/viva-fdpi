@@ -11,7 +11,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:flutter/services.dart';
 
 import '../../bloc/auth/authentication/authentication_bloc.dart';
 import '../../bloc/booking/booking_form/booking_form_bloc.dart';
@@ -94,18 +93,6 @@ class _BookingFormViewState extends State<BookingFormView> {
   List<String> houseItems = ['Type 1', 'Type 2', 'Type 3'];
   List<String> paymentTerms = ['KPR', 'SOFT CASH', 'HARD CASH'];
   List<String> banks = ['BCA', 'Mandiri', 'BNI', 'BRI'];
-
-  final _priceFormatter = MaskTextInputFormatter(
-    mask: '###.###.###.###.###.###.###.###',
-    filter: {"#": RegExp(r'[0-9]')},
-    type: MaskAutoCompletionType.lazy,
-  );
-
-  final _discountFormatter = MaskTextInputFormatter(
-    mask: '###.###.###.###.###.###.###.###',
-    filter: {"#": RegExp(r'[0-9]')},
-    type: MaskAutoCompletionType.lazy,
-  );
 
   final _phoneFormatter = MaskTextInputFormatter(
     mask: '####-####-######',
@@ -535,6 +522,7 @@ class _BookingFormViewState extends State<BookingFormView> {
                     controller: _expDateController,
                     hintText: 'Jumlah hari sebelum expired',
                     readOnly: false,
+                    keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Exp date harus diisi';
@@ -548,7 +536,6 @@ class _BookingFormViewState extends State<BookingFormView> {
                   _buildTextField(
                     controller: _remarkController,
                     hintText: 'Catatan Khusus',
-                    keyboardType: TextInputType.number,
                     readOnly: false,
                     maxLines: 3,
                   ),

@@ -12,6 +12,7 @@ import 'data/data_providers/rest_api/authorization/authorization_rest.dart';
 import 'data/data_providers/rest_api/booking_rest.dart';
 import 'data/data_providers/rest_api/fdpi/fdpi_rest.dart';
 import 'data/data_providers/rest_api/master/master_rest.dart';
+import 'data/data_providers/rest_api/spk_rest.dart';
 import 'data/data_providers/shared-preferences/shared_preferences_key.dart';
 import 'data/data_providers/shared-preferences/shared_preferences_manager.dart';
 import 'data/repository/auth_repository.dart';
@@ -19,6 +20,7 @@ import 'data/repository/authorization_repository.dart';
 import 'data/repository/booking_repository.dart';
 import 'data/repository/fdpi_repository.dart';
 import 'data/repository/master_repository.dart';
+import 'data/repository/spk_repository.dart';
 import 'environment.dart';
 import 'presentation/dashboard_screen.dart';
 import 'presentation/login/login_form_screen.dart';
@@ -46,6 +48,7 @@ void main() async {
   final authorizationRest = AuthorizationRest(dioClient);
   final bookingRest = BookingRest(dioClient);
   final masterRest = MasterRest(dioClient);
+  final spkRest = SPKRest(dioClient);
 
   final authRepository = AuthRepository(
     authRest: authRest,
@@ -57,6 +60,7 @@ void main() async {
   );
   final bookingRepository = BookingRepository(bookingRest: bookingRest);
   final masterRepository = MasterRepository(masterRest: masterRest);
+  final spkRepository = SPKRepository(spkRest: spkRest);
 
   runApp(
     MultiRepositoryProvider(
@@ -66,6 +70,7 @@ void main() async {
         RepositoryProvider.value(value: authorizationRepository),
         RepositoryProvider.value(value: bookingRepository),
         RepositoryProvider.value(value: masterRepository),
+        RepositoryProvider.value(value: spkRepository),
       ],
       child: MultiBlocProvider(
         providers: [

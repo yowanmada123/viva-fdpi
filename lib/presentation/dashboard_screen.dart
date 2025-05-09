@@ -13,6 +13,7 @@ import '../data/repository/authorization_repository.dart';
 import '../models/authorization/menu.dart';
 import '../models/errors/custom_exception.dart';
 import 'SPK/spk_list_screen.dart';
+import 'SPK/spr_list_screen.dart';
 import 'booking/booking_screen.dart';
 import 'fdpi/fdpi_residences_screen.dart';
 import 'widgets/bottom_navigator.dart';
@@ -68,7 +69,7 @@ class MyGridLayout extends StatelessWidget {
       'icon': Icons.task,
       'text': 'Bank Check List',
       'description': 'Monitoring Pembayaran Bank',
-      'route': SpkListScreen(),
+      'route': SprListScreen(),
     },
     'checkListBuilding': {
       'icon': Icons.checklist,
