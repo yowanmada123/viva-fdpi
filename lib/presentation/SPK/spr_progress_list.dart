@@ -6,9 +6,9 @@ import '../../bloc/QC/approve_checklist/approve_checklist_bloc.dart';
 import '../../bloc/QC/checklist/checklist_bloc.dart';
 import '../../data/repository/spk_repository.dart';
 
-class SpkProgressListScreen extends StatelessWidget {
+class SprProgressListScreen extends StatelessWidget {
   final String qcTransId;
-  const SpkProgressListScreen({super.key, required this.qcTransId});
+  const SprProgressListScreen({super.key, required this.qcTransId});
 
   @override
   Widget build(BuildContext context) {
@@ -27,22 +27,22 @@ class SpkProgressListScreen extends StatelessWidget {
               ),
         ),
       ],
-      child: _SpkProgressListScreenContent(qcTransId: qcTransId),
+      child: _SprProgressListScreenContent(qcTransId: qcTransId),
     );
   }
 }
 
-class _SpkProgressListScreenContent extends StatefulWidget {
+class _SprProgressListScreenContent extends StatefulWidget {
   final String qcTransId;
-  const _SpkProgressListScreenContent({required this.qcTransId});
+  const _SprProgressListScreenContent({required this.qcTransId});
 
   @override
-  State<_SpkProgressListScreenContent> createState() =>
-      _SpkProgressListScreenContentState();
+  State<_SprProgressListScreenContent> createState() =>
+      _SprProgressListScreenContentState();
 }
 
-class _SpkProgressListScreenContentState
-    extends State<_SpkProgressListScreenContent> {
+class _SprProgressListScreenContentState
+    extends State<_SprProgressListScreenContent> {
   int? _currentExpandedIndex;
   final TextEditingController _remarkController = TextEditingController();
 
@@ -190,7 +190,7 @@ class _SpkProgressListScreenContentState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('SPK Progress', style: TextStyle(fontSize: 20.sp)),
+        title: Text('SPR Progress', style: TextStyle(fontSize: 20.sp)),
       ),
       body: BlocBuilder<ChecklistBloc, ChecklistState>(
         builder: (context, state) {
@@ -200,121 +200,43 @@ class _SpkProgressListScreenContentState
                 children: [
                   for (var entry in state.checklistItem.entries)
                     Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 8.0,
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 1,
-                              blurRadius: 5,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: ExpansionTile(
-                          key: ValueKey(entry.key),
-                          initiallyExpanded:
-                              _currentExpandedIndex ==
-                              state.checklistItem.keys.toList().indexOf(
-                                entry.key,
-                              ),
-                          onExpansionChanged: (expanded) {
-                            final index = state.checklistItem.keys
-                                .toList()
-                                .indexOf(entry.key);
-                            final keyBefore =
-                                index > 0
-                                    ? state.checklistItem.keys.toList()[index -
-                                        1]
-                                    : null;
-
-                            if (index == 0 ||
-                                (keyBefore != null &&
-                                    state.checklistItem[keyBefore]!['finish'] ==
-                                        true)) {
-                              setState(() {
-                                _currentExpandedIndex = expanded ? index : null;
-                              });
-                            }
-                          },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                          ),
-                          collapsedShape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                          ),
-                          title: Opacity(
-                            opacity:
-                                _isPanelEnabled(state, entry.key) ? 1.0 : 0.5,
-                            child: Text(
-                              entry.key,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-                                color:
-                                    _isPanelEnabled(state, entry.key)
-                                        ? null
-                                        : Colors.grey,
-                              ),
-                            ),
-                          ),
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Column(
-                                children:
-                                    (entry.value
-                                            as Map<String, dynamic>)['data']
-                                        .map<Widget>((item) {
-                                          return CheckboxListTile(
-                                            contentPadding: EdgeInsets.zero,
-                                            title: Text(item.qcItem),
-                                            value: item.aprvBy.isNotEmpty,
-                                            onChanged:
-                                                _isPanelEnabled(
-                                                      state,
-                                                      entry.key,
-                                                    )
-                                                    ? (bool? newValue) {
-                                                      _showApprovalBottomSheet(
-                                                        context: context,
-                                                        qcTransId:
-                                                            widget.qcTransId,
-                                                        category: entry.key,
-                                                        itemId: item.idQcItem,
-                                                        currentApprovalStatus:
-                                                            item
-                                                                .aprvBy
-                                                                .isNotEmpty,
-                                                        itemName: item.qcItem,
-                                                        approveChecklistBloc:
-                                                            context
-                                                                .read<
-                                                                  ApproveChecklistBloc
-                                                                >(),
-                                                        checklistBloc:
-                                                            context
-                                                                .read<
-                                                                  ChecklistBloc
-                                                                >(),
-                                                      );
-                                                    }
-                                                    : null,
-                                            controlAffinity:
-                                                ListTileControlAffinity.leading,
-                                          );
-                                        })
-                                        .toList(),
-                              ),
-                            ),
-                          ],
-                        ),
+                      padding: EdgeInsets.all(16.0),
+                      child: Column(
+                        children:
+                            (entry.value as Map<String, dynamic>)['data']
+                                .map<Widget>((item) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    margin: EdgeInsets.only(bottom: 8.0),
+                                    child: CheckboxListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      title: Text(item.qcItem),
+                                      value: item.aprvBy.isNotEmpty,
+                                      onChanged: (bool? newValue) {
+                                        _showApprovalBottomSheet(
+                                          context: context,
+                                          qcTransId: widget.qcTransId,
+                                          category: entry.key,
+                                          itemId: item.idQcItem,
+                                          currentApprovalStatus:
+                                              item.aprvBy.isNotEmpty,
+                                          itemName: item.qcItem,
+                                          approveChecklistBloc:
+                                              context
+                                                  .read<ApproveChecklistBloc>(),
+                                          checklistBloc:
+                                              context.read<ChecklistBloc>(),
+                                        );
+                                      },
+                                      controlAffinity:
+                                          ListTileControlAffinity.leading,
+                                    ),
+                                  );
+                                })
+                                .toList(),
                       ),
                     ),
                 ],
@@ -325,13 +247,5 @@ class _SpkProgressListScreenContentState
         },
       ),
     );
-  }
-
-  bool _isPanelEnabled(ChecklistLoadSuccess state, String currentKey) {
-    final index = state.checklistItem.keys.toList().indexOf(currentKey);
-    if (index == 0) return true;
-
-    final keyBefore = state.checklistItem.keys.toList()[index - 1];
-    return state.checklistItem[keyBefore]!['finish'] == true;
   }
 }

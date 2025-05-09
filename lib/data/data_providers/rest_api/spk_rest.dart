@@ -2,12 +2,12 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:fdpi_app/models/QC/SPR.dart';
-import 'package:fdpi_app/models/checklistItem.dart';
-import 'package:fdpi_app/utils/grouping_item.dart';
 
 import '../../../models/QC/SPK.dart';
+import '../../../models/QC/SPR.dart';
+import '../../../models/checklistItem.dart';
 import '../../../models/errors/custom_exception.dart';
+import '../../../utils/grouping_item.dart';
 import '../../../utils/net_utils.dart';
 
 class SPKRest {
@@ -97,7 +97,7 @@ class SPKRest {
     }
   }
 
-  Future<Either<CustomException, Map<String, List<ChecklistItem>>>>
+  Future<Either<CustomException, Map<String, Map<String, dynamic>>>>
   getChecklistItem({required String qcTransId}) async {
     try {
       http.options.headers['requiresToken'] = true;
@@ -120,12 +120,13 @@ class SPKRest {
           data['data'].map((e) => ChecklistItem.fromMap(e)),
         );
 
-        final Map<String, List<ChecklistItem>> checklistItem = groupItemsBy(
-          items,
-          (ChecklistItem e) => e.comDesc,
+        final Map<String, Map<String, dynamic>> grouped = groupItemsWithStats(
+          items: items,
+          keySelector: (item) => item.comDesc,
+          isApproved: (item) => item.aprvBy.isNotEmpty,
         );
 
-        return Right(checklistItem);
+        return Right(grouped);
       } else {
         return Left(NetUtils.parseErrorResponse(response: response.data));
       }

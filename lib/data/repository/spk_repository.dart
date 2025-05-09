@@ -25,7 +25,7 @@ class SPKRepository {
     return spkRest.getSPRList(idSite: idSite, idCluster: idCluster);
   }
 
-  Future<Either<CustomException, Map<String, List<ChecklistItem>>>>
+  Future<Either<CustomException, Map<String, Map<String, dynamic>>>>
   getChecklistItem({required String qcTransId}) async {
     return spkRest.getChecklistItem(qcTransId: qcTransId);
   }

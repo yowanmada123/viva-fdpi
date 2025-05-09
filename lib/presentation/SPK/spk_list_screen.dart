@@ -247,7 +247,12 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                         MaterialPageRoute(
                                           builder:
                                               (context) =>
-                                                  const SpkProgressListScreen(),
+                                                  SpkProgressListScreen(
+                                                    qcTransId:
+                                                        state
+                                                            .spkList[index]
+                                                            .qcTransId,
+                                                  ),
                                         ),
                                       );
                                     },

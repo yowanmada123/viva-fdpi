@@ -11,7 +11,7 @@ import '../../data/repository/spk_repository.dart';
 import '../../models/errors/custom_exception.dart';
 import '../../models/fdpi/residence.dart';
 import '../../models/fdpi/site.dart';
-import 'spk_progress_list_screen.dart';
+import 'spr_progress_list.dart';
 
 class SprListScreen extends StatelessWidget {
   const SprListScreen({super.key});
@@ -267,7 +267,12 @@ class _SprListBodyState extends State<_SprListBody> {
                                         MaterialPageRoute(
                                           builder:
                                               (context) =>
-                                                  const SpkProgressListScreen(),
+                                                  SprProgressListScreen(
+                                                    qcTransId:
+                                                        state
+                                                            .sprList[index]
+                                                            .qcTransId,
+                                                  ),
                                         ),
                                       );
                                     },

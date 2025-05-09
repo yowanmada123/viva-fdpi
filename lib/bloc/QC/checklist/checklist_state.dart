@@ -12,7 +12,7 @@ final class ChecklistInitial extends ChecklistState {}
 final class ChecklistLoading extends ChecklistState {}
 
 final class ChecklistLoadSuccess extends ChecklistState {
-  final Map<String, List<ChecklistItem>> checklistItem;
+  final Map<String, Map<String, dynamic>> checklistItem;
   const ChecklistLoadSuccess({required this.checklistItem});
 
   @override
