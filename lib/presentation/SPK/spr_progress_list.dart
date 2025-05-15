@@ -43,7 +43,6 @@ class _SprProgressListScreenContent extends StatefulWidget {
 
 class _SprProgressListScreenContentState
     extends State<_SprProgressListScreenContent> {
-  int? _currentExpandedIndex;
   final TextEditingController _remarkController = TextEditingController();
 
   void _showApprovalBottomSheet({
@@ -58,120 +57,114 @@ class _SprProgressListScreenContentState
   }) {
     _remarkController.clear();
 
-    showModalBottomSheet(
+    showDialog(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white, // Add background color
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+      barrierDismissible: false,
       builder: (context) {
-        return MultiBlocProvider(
-          providers: [
-            BlocProvider.value(value: approveChecklistBloc),
-            BlocProvider.value(value: checklistBloc),
-          ],
-          child: BlocListener<ApproveChecklistBloc, ApproveChecklistState>(
-            listener: (context, state) {
-              if (state is ApproveChecklistLoadSuccess) {
-                // Refresh checklist data
-                checklistBloc.add(LoadChecklist(qcTransId: qcTransId));
-                Navigator.pop(context);
-
-                // Optional: Show success message
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.message),
-                    duration: Duration(seconds: 2),
-                  ),
-                );
-              }
-            },
-            child: Container(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-                left: 16.0,
-                right: 16.0,
-                top: 16.0,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Remark for $itemName',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 16),
-                  TextField(
-                    controller: _remarkController,
-                    maxLines: 3,
-                    decoration: InputDecoration(
-                      hintText: 'Enter your remark...',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
+        return Dialog(
+          backgroundColor: Colors.white,
+          insetPadding: EdgeInsets.symmetric(
+            horizontal: 16.0,
+          ), // Adjust side margins
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width, // Full width
+            ),
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider.value(value: approveChecklistBloc),
+                BlocProvider.value(value: checklistBloc),
+              ],
+              child: BlocListener<ApproveChecklistBloc, ApproveChecklistState>(
+                listener: (context, state) {
+                  if (state is ApproveChecklistLoadSuccess) {
+                    checklistBloc.add(LoadChecklist(qcTransId: qcTransId));
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.message),
+                        duration: Duration(seconds: 2),
                       ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    );
+                  }
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                          ),
-                          onPressed: () => Navigator.pop(context),
-                          child: Text('Cancel'),
+                      Text(
+                        'Remark for $itemName',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(width: 16),
-                      BlocBuilder<ApproveChecklistBloc, ApproveChecklistState>(
-                        builder: (context, state) {
-                          return Expanded(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF1C3FAA),
-                                padding: EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
-                              onPressed:
-                                  state is ApproveChecklistLoading
-                                      ? null // Disable button when loading
-                                      : () {
-                                        approveChecklistBloc.add(
-                                          ApproveChecklistEventInit(
-                                            qcTransId: qcTransId,
-                                            idQcItem: itemId,
-                                            remark: _remarkController.text,
-                                          ),
-                                        );
-                                      },
-                              child:
-                                  state is ApproveChecklistLoading
-                                      ? CircularProgressIndicator(
-                                        color: Colors.white,
-                                      )
-                                      : Text(
-                                        currentApprovalStatus
-                                            ? 'Unapprove'
-                                            : 'Approve',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
+                      SizedBox(height: 16),
+                      TextField(
+                        controller: _remarkController,
+                        maxLines: 3,
+                        decoration: InputDecoration(
+                          hintText: 'Enter your remark...',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text('Cancel'),
                             ),
-                          );
-                        },
+                          ),
+                          SizedBox(width: 16),
+                          BlocBuilder<
+                            ApproveChecklistBloc,
+                            ApproveChecklistState
+                          >(
+                            builder: (context, state) {
+                              return Expanded(
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color(0xFF1C3FAA),
+                                  ),
+                                  onPressed:
+                                      state is ApproveChecklistLoading
+                                          ? null
+                                          : () {
+                                            approveChecklistBloc.add(
+                                              ApproveChecklistEventInit(
+                                                qcTransId: qcTransId,
+                                                idQcItem: itemId,
+                                                remark: _remarkController.text,
+                                              ),
+                                            );
+                                          },
+                                  child:
+                                      state is ApproveChecklistLoading
+                                          ? CircularProgressIndicator(
+                                            color: Colors.white,
+                                          )
+                                          : Text(
+                                            'Submit',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
-                ],
+                ),
               ),
             ),
           ),
@@ -188,65 +181,63 @@ class _SprProgressListScreenContentState
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('SPR Progress', style: TextStyle(fontSize: 20.sp)),
-        ),
-        body: BlocBuilder<ChecklistBloc, ChecklistState>(
-          builder: (context, state) {
-            if (state is ChecklistLoadSuccess) {
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    for (var entry in state.checklistItem.entries)
-                      Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Column(
-                          children:
-                              (entry.value as Map<String, dynamic>)['data'].map<
-                                Widget
-                              >((item) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  margin: EdgeInsets.only(bottom: 8.0),
-                                  child: CheckboxListTile(
-                                    contentPadding: EdgeInsets.zero,
-                                    title: Text(item.qcItem),
-                                    value: item.aprvBy.isNotEmpty,
-                                    onChanged: (bool? newValue) {
-                                      _showApprovalBottomSheet(
-                                        context: context,
-                                        qcTransId: widget.qcTransId,
-                                        category: entry.key,
-                                        itemId: item.idQcItem,
-                                        currentApprovalStatus:
-                                            item.aprvBy.isNotEmpty,
-                                        itemName: item.qcItem,
-                                        approveChecklistBloc:
-                                            context
-                                                .read<ApproveChecklistBloc>(),
-                                        checklistBloc:
-                                            context.read<ChecklistBloc>(),
-                                      );
-                                    },
-                                    controlAffinity:
-                                        ListTileControlAffinity.leading,
-                                  ),
-                                );
-                              }).toList(),
-                        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Bank Check List', style: TextStyle(fontSize: 20.sp)),
+      ),
+      body: BlocBuilder<ChecklistBloc, ChecklistState>(
+        builder: (context, state) {
+          if (state is ChecklistLoadSuccess) {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  for (var entry in state.checklistItem.entries)
+                    Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Column(
+                        children:
+                            (entry.value as Map<String, dynamic>)['data']
+                                .map<Widget>((item) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    margin: EdgeInsets.only(bottom: 8.0),
+                                    child: CheckboxListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      title: Text(item.qcItem),
+                                      value: item.aprvBy.isNotEmpty,
+                                      onChanged: (bool? newValue) {
+                                        _showApprovalBottomSheet(
+                                          context: context,
+                                          qcTransId: widget.qcTransId,
+                                          category: entry.key,
+                                          itemId: item.idQcItem,
+                                          currentApprovalStatus:
+                                              item.aprvBy.isNotEmpty,
+                                          itemName: item.qcItem,
+                                          approveChecklistBloc:
+                                              context
+                                                  .read<ApproveChecklistBloc>(),
+                                          checklistBloc:
+                                              context.read<ChecklistBloc>(),
+                                        );
+                                      },
+                                      controlAffinity:
+                                          ListTileControlAffinity.leading,
+                                    ),
+                                  );
+                                })
+                                .toList(),
                       ),
-                  ],
-                ),
-              );
-            }
-            return Center(child: CircularProgressIndicator());
-          },
-        ),
+                    ),
+                ],
+              ),
+            );
+          }
+          return Center(child: CircularProgressIndicator());
+        },
       ),
     );
   }

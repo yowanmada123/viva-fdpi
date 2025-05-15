@@ -31,7 +31,6 @@ class FDPIDetailUnitView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFBFD9FF),
         title: Text(
           "Detail Unit",
           style: TextStyle(

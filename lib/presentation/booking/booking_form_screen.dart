@@ -195,7 +195,7 @@ class _BookingFormViewState extends State<BookingFormView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Booking Form'), centerTitle: true),
+      appBar: AppBar(title: const Text('Booking Form')),
       body: BlocConsumer<BookingFormBloc, BookingFormState>(
         listener: (context, state) {
           if (state is BookingFormSubmitSuccess) {
