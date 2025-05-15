@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../bloc/QC/spk_list/spk_list_bloc.dart';
 import '../../bloc/auth/authentication/authentication_bloc.dart';
@@ -75,12 +76,12 @@ class _SpkListBodyState extends State<_SpkListBody> {
     return SafeArea(
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.w),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
@@ -244,7 +245,7 @@ class _SpkListBodyState extends State<_SpkListBody> {
                             ),
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: EdgeInsets.all(8.w),
                                 child: Text(
                                   'Action',
                                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -252,21 +253,21 @@ class _SpkListBodyState extends State<_SpkListBody> {
                               ),
 
                               Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: EdgeInsets.all(8.w),
                                 child: Text(
                                   'House Item',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: EdgeInsets.all(8.w),
                                 child: Text(
                                   'Vendor',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: EdgeInsets.all(8.w),
                                 child: Text(
                                   'SPK ID',
                                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -304,9 +305,9 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                   verticalAlignment:
                                       TableCellVerticalAlignment.middle,
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0,
-                                      vertical: 2.0,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8.w,
+                                      vertical: 2.w,
                                     ),
                                     child: IconButton(
                                       onPressed: () {
@@ -335,9 +336,9 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                   verticalAlignment:
                                       TableCellVerticalAlignment.middle,
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0,
-                                      vertical: 2.0,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8.w,
+                                      vertical: 2.w,
                                     ),
                                     child: Text(
                                       state.spkList[index].houseName,
@@ -350,9 +351,9 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                   verticalAlignment:
                                       TableCellVerticalAlignment.middle,
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0,
-                                      vertical: 2.0,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8.w,
+                                      vertical: 2.w,
                                     ),
                                     child: Text(
                                       state.spkList[index].vendorName,
@@ -365,9 +366,9 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                   verticalAlignment:
                                       TableCellVerticalAlignment.middle,
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0,
-                                      vertical: 2.0,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8.w,
+                                      vertical: 2.w,
                                     ),
                                     child: Text(
                                       state.spkList[index].idSPK,
