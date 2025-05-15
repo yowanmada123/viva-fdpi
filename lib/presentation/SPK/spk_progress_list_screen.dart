@@ -204,7 +204,7 @@ class _SpkProgressListScreenContentState
                           borderRadius: BorderRadius.circular(8.w),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
+                              color: Colors.grey.withOpacity(0.5),
                               spreadRadius: 1,
                               blurRadius: 5,
                               offset: Offset(0, 2),
@@ -245,7 +245,7 @@ class _SpkProgressListScreenContentState
                           ),
                           title: Opacity(
                             opacity:
-                                _isPanelEnabled(state, entry.key) ? 1.w : 0.5,
+                                _isPanelEnabled(state, entry.key) ? 1.0 : 0.5,
                             child: Text(
                               entry.key,
                               style: TextStyle(

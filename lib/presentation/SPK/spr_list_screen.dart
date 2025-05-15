@@ -14,7 +14,8 @@ import '../../models/fdpi/site.dart';
 import 'spr_progress_list.dart';
 
 class SprListScreen extends StatelessWidget {
-  const SprListScreen({super.key});
+  final String title;
+  const SprListScreen({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -37,18 +38,19 @@ class SprListScreen extends StatelessWidget {
                   SprListBloc(spkRepository: context.read<SPKRepository>()),
         ),
       ],
-      child: const _SprListScreenContent(),
+      child: _SprListScreenContent(title: title),
     );
   }
 }
 
 class _SprListScreenContent extends StatelessWidget {
-  const _SprListScreenContent();
+  final String title;
+  const _SprListScreenContent({required this.title});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Bank Check List')),
+      appBar: AppBar(title: Text(title)),
       body: const _SprListBody(),
     );
   }
@@ -323,32 +325,24 @@ class _SprListBodyState extends State<_SprListBody> {
                                             ),
                                   ),
                                   children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        navigateToSPRProgressListScreen(
-                                          context,
-                                          state.sprList[index].qcTransId,
-                                        );
-                                      },
-                                      child: TableCell(
-                                        verticalAlignment:
-                                            TableCellVerticalAlignment.middle,
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 8.w,
-                                            vertical: 2.w,
-                                          ),
-                                          child: IconButton(
-                                            onPressed: () {
-                                              navigateToSPRProgressListScreen(
-                                                context,
-                                                state.sprList[index].qcTransId,
-                                              );
-                                            },
-                                            icon: const Icon(
-                                              Icons.edit,
-                                              color: Colors.blue,
-                                            ),
+                                    TableCell(
+                                      verticalAlignment:
+                                          TableCellVerticalAlignment.middle,
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 8.w,
+                                          vertical: 2.w,
+                                        ),
+                                        child: IconButton(
+                                          onPressed: () {
+                                            navigateToSPRProgressListScreen(
+                                              context,
+                                              state.sprList[index].qcTransId,
+                                            );
+                                          },
+                                          icon: const Icon(
+                                            Icons.edit,
+                                            color: Colors.blue,
                                           ),
                                         ),
                                       ),

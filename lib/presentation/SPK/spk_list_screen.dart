@@ -15,7 +15,8 @@ import '../../models/fdpi/site.dart';
 import 'spk_progress_list_screen.dart';
 
 class SpkListScreen extends StatelessWidget {
-  const SpkListScreen({super.key});
+  final String title;
+  const SpkListScreen({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -43,18 +44,19 @@ class SpkListScreen extends StatelessWidget {
                   SpkListBloc(spkRepository: context.read<SPKRepository>()),
         ),
       ],
-      child: const _SpkListScreenContent(),
+      child: _SpkListScreenContent(title: title),
     );
   }
 }
 
 class _SpkListScreenContent extends StatelessWidget {
-  const _SpkListScreenContent();
+  final String title;
+  const _SpkListScreenContent({required this.title});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Building Check List')),
+      appBar: AppBar(title: Text(title)),
       body: const _SpkListBody(),
     );
   }
@@ -70,6 +72,15 @@ class _SpkListBody extends StatefulWidget {
 class _SpkListBodyState extends State<_SpkListBody> {
   String? _site;
   String? _cluster;
+
+  navigateToSPKProgressListScreen(BuildContext context, String qcTransId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SpkProgressListScreen(qcTransId: qcTransId),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -311,18 +322,9 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                     ),
                                     child: IconButton(
                                       onPressed: () {
-                                        Navigator.push(
+                                        navigateToSPKProgressListScreen(
                                           context,
-                                          MaterialPageRoute(
-                                            builder:
-                                                (context) =>
-                                                    SpkProgressListScreen(
-                                                      qcTransId:
-                                                          state
-                                                              .spkList[index]
-                                                              .qcTransId,
-                                                    ),
-                                          ),
+                                          state.spkList[index].qcTransId,
                                         );
                                       },
                                       icon: const Icon(
@@ -335,45 +337,66 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                 TableCell(
                                   verticalAlignment:
                                       TableCellVerticalAlignment.middle,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 8.w,
-                                      vertical: 2.w,
-                                    ),
-                                    child: Text(
-                                      state.spkList[index].houseName,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ),
-                                TableCell(
-                                  verticalAlignment:
-                                      TableCellVerticalAlignment.middle,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 8.w,
-                                      vertical: 2.w,
-                                    ),
-                                    child: Text(
-                                      state.spkList[index].vendorName,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
+                                  child: GestureDetector(
+                                    onTap:
+                                        () => navigateToSPKProgressListScreen(
+                                          context,
+                                          state.spkList[index].qcTransId,
+                                        ),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 8.w,
+                                        vertical: 2.w,
+                                      ),
+                                      child: Text(
+                                        state.spkList[index].houseName,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
                                   ),
                                 ),
                                 TableCell(
                                   verticalAlignment:
                                       TableCellVerticalAlignment.middle,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 8.w,
-                                      vertical: 2.w,
+                                  child: GestureDetector(
+                                    onTap:
+                                        () => navigateToSPKProgressListScreen(
+                                          context,
+                                          state.spkList[index].qcTransId,
+                                        ),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 8.w,
+                                        vertical: 2.w,
+                                      ),
+                                      child: Text(
+                                        state.spkList[index].vendorName,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                    child: Text(
-                                      state.spkList[index].idSPK,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                TableCell(
+                                  verticalAlignment:
+                                      TableCellVerticalAlignment.middle,
+                                  child: GestureDetector(
+                                    onTap:
+                                        () => navigateToSPKProgressListScreen(
+                                          context,
+                                          state.spkList[index].qcTransId,
+                                        ),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 8.w,
+                                        vertical: 2.w,
+                                      ),
+                                      child: Text(
+                                        state.spkList[index].idSPK,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
                                   ),
                                 ),
