@@ -114,7 +114,7 @@ class BookingViewBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xffEAF1FF),
+        backgroundColor: Color.fromARGB(255, 245, 245, 245),
         title: const Text("Booking List"),
         actions: [
           Container(
@@ -157,7 +157,7 @@ class BookingViewBody extends StatelessWidget {
         ],
       ),
       body: Container(
-        color: const Color(0xffEAF1FF),
+        color: Color.fromARGB(255, 245, 245, 245),
         padding: EdgeInsets.symmetric(vertical: 16.h),
         child: Column(
           children: [

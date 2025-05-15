@@ -47,7 +47,7 @@ class _SprListScreenContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('SPR List')),
+      appBar: AppBar(title: const Text('Bank Check List')),
       body: const _SprListBody(),
     );
   }
@@ -61,7 +61,6 @@ class _SprListBody extends StatefulWidget {
 }
 
 class _SprListBodyState extends State<_SprListBody> {
-  final _formKey = GlobalKey<FormState>();
   String? _site;
   String? _cluster;
 
@@ -83,16 +82,6 @@ class _SprListBodyState extends State<_SprListBody> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Filter Data SPR",
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                        fontFamily: 'Poppins',
-                      ),
-                    ),
-                    const SizedBox(height: 12),
                     BlocBuilder<SiteBloc, SiteState>(
                       builder: (context, state) {
                         if (state is SiteLoadedSuccess) {
@@ -190,7 +179,7 @@ class _SprListBodyState extends State<_SprListBody> {
                         ),
                         child: Center(
                           child: Text(
-                            'Filter',
+                            'Search',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -234,20 +223,20 @@ class _SprListBodyState extends State<_SprListBody> {
                         if (state is SprListLoadSuccess) {
                           return Table(
                             columnWidths: const {
-                              0: FixedColumnWidth(150),
+                              0: FixedColumnWidth(100),
                               1: FixedColumnWidth(150),
                               2: FixedColumnWidth(120),
                               3: FixedColumnWidth(130),
-                              4: FixedColumnWidth(100),
+                              4: FixedColumnWidth(150),
                             },
                             children: [
                               TableRow(
                                 decoration: BoxDecoration(
                                   color: const Color.fromARGB(
                                     255,
-                                    194,
-                                    194,
-                                    194,
+                                    236,
+                                    236,
+                                    236,
                                   ),
                                 ),
                                 children: [
@@ -312,13 +301,13 @@ class _SprListBodyState extends State<_SprListBody> {
                                         index % 2 == 0
                                             ? const Color.fromARGB(
                                               255,
-                                              212,
-                                              239,
+                                              255,
+                                              255,
                                               255,
                                             )
                                             : const Color.fromARGB(
                                               255,
-                                              244,
+                                              254,
                                               255,
                                               255,
                                             ),
@@ -332,10 +321,27 @@ class _SprListBodyState extends State<_SprListBody> {
                                           horizontal: 8.0,
                                           vertical: 2.0,
                                         ),
-                                        child: Text(
-                                          state.sprList[index].siteName,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder:
+                                                    (
+                                                      context,
+                                                    ) => SprProgressListScreen(
+                                                      qcTransId:
+                                                          state
+                                                              .sprList[index]
+                                                              .qcTransId,
+                                                    ),
+                                              ),
+                                            );
+                                          },
+                                          icon: const Icon(
+                                            Icons.edit,
+                                            color: Colors.blue,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -392,27 +398,10 @@ class _SprListBodyState extends State<_SprListBody> {
                                           horizontal: 8.0,
                                           vertical: 2.0,
                                         ),
-                                        child: IconButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder:
-                                                    (
-                                                      context,
-                                                    ) => SprProgressListScreen(
-                                                      qcTransId:
-                                                          state
-                                                              .sprList[index]
-                                                              .qcTransId,
-                                                    ),
-                                              ),
-                                            );
-                                          },
-                                          icon: const Icon(
-                                            Icons.edit,
-                                            color: Colors.blue,
-                                          ),
+                                        child: Text(
+                                          state.sprList[index].siteName,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                     ),

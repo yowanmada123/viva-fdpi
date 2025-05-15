@@ -34,9 +34,8 @@ class ResidenceListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFBFD9FF),
         title: const Text(
-          'Fasindo App',
+          'Siteplan',
           style: TextStyle(
             color: Color(0xFF1C3FAA),
             fontWeight: FontWeight.w600,
@@ -47,7 +46,6 @@ class ResidenceListView extends StatelessWidget {
       bottomNavigationBar: const CustomBottomNavigationBar(currentIndex: 0),
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
-        color: const Color(0xFFEAF1FF),
         child: BlocConsumer<ResidenceBloc, ResidenceState>(
           listener: (context, state) {
             if (state is ResidenceLoadFailure) {

@@ -100,9 +100,9 @@ class MyApp extends StatelessWidget {
               hintColor: Color(0xffF1F1F1),
               disabledColor: Color(0xff808186),
               secondaryHeaderColor: Color(0xff575353),
-              scaffoldBackgroundColor: Color(0xffEAF1FF),
+              scaffoldBackgroundColor: Color.fromARGB(255, 245, 245, 245),
               appBarTheme: AppBarTheme(
-                backgroundColor: Color(0xffEAF1FF),
+                backgroundColor: Color.fromARGB(255, 245, 245, 245),
                 titleTextStyle: TextStyle(
                   color: Color(0xFF1C3FAA),
                   fontSize: 20.sp,

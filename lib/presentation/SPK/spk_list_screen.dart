@@ -53,7 +53,7 @@ class _SpkListScreenContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('SPK List')),
+      appBar: AppBar(title: const Text('Building Check List')),
       body: const _SpkListBody(),
     );
   }
@@ -67,7 +67,6 @@ class _SpkListBody extends StatefulWidget {
 }
 
 class _SpkListBodyState extends State<_SpkListBody> {
-  final _formKey = GlobalKey<FormState>();
   String? _site;
   String? _cluster;
 
@@ -89,16 +88,6 @@ class _SpkListBodyState extends State<_SpkListBody> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Filter Data SPK",
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                        fontFamily: 'Poppins',
-                      ),
-                    ),
-                    const SizedBox(height: 12),
                     BlocBuilder<SiteBloc, SiteState>(
                       builder: (context, state) {
                         if (state is SiteLoadedSuccess) {
@@ -196,7 +185,7 @@ class _SpkListBodyState extends State<_SpkListBody> {
                         ),
                         child: Center(
                           child: Text(
-                            'Filter',
+                            'Search',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -243,24 +232,25 @@ class _SpkListBodyState extends State<_SpkListBody> {
                     if (state is SpkListLoadSuccess) {
                       return Table(
                         columnWidths: {
-                          0: const FixedColumnWidth(150),
+                          0: const FixedColumnWidth(100),
                           1: const FixedColumnWidth(150),
                           2: const FixedColumnWidth(120),
-                          3: const FixedColumnWidth(130),
+                          3: const FixedColumnWidth(100),
                         },
                         children: [
                           TableRow(
                             decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 194, 194, 194),
+                              color: const Color.fromARGB(255, 236, 236, 236),
                             ),
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  'SPK ID',
+                                  'Action',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
+
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
@@ -278,7 +268,7 @@ class _SpkListBodyState extends State<_SpkListBody> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  'Action',
+                                  'SPK ID',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
@@ -298,13 +288,13 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                     index % 2 == 0
                                         ? const Color.fromARGB(
                                           255,
-                                          212,
-                                          239,
+                                          255,
+                                          255,
                                           255,
                                         )
                                         : const Color.fromARGB(
                                           255,
-                                          244,
+                                          254,
                                           255,
                                           255,
                                         ),
@@ -318,10 +308,26 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                       horizontal: 8.0,
                                       vertical: 2.0,
                                     ),
-                                    child: Text(
-                                      state.spkList[index].idSPK,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) =>
+                                                    SpkProgressListScreen(
+                                                      qcTransId:
+                                                          state
+                                                              .spkList[index]
+                                                              .qcTransId,
+                                                    ),
+                                          ),
+                                        );
+                                      },
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.blue,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -363,26 +369,10 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                       horizontal: 8.0,
                                       vertical: 2.0,
                                     ),
-                                    child: IconButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder:
-                                                (context) =>
-                                                    SpkProgressListScreen(
-                                                      qcTransId:
-                                                          state
-                                                              .spkList[index]
-                                                              .qcTransId,
-                                                    ),
-                                          ),
-                                        );
-                                      },
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Colors.blue,
-                                      ),
+                                    child: Text(
+                                      state.spkList[index].idSPK,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ),
