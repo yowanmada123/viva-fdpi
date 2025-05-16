@@ -46,38 +46,39 @@ class DriverDashboardScreen extends StatelessWidget {
 }
 
 class MyGridLayout extends StatelessWidget {
-  final Map<String, Map<String, dynamic>> buttons = {
-    'booking': {
-      'icon': Icons.map,
-      'text': 'Siteplan',
-      'description': 'Lihat dan interaksi dengan layout cluster',
-      'route': FDPIResidencesScreen(),
-    },
-    'site': {
-      'icon': Icons.book,
-      'text': 'Booking',
-      'description': 'Pesan atau negosiasi transaksi',
-      'route': BookingScreen(),
-    },
-    'sales': {
-      'icon': Icons.real_estate_agent,
-      'text': 'Sales',
-      'description': 'Menu untuk sales',
-      'route': null,
-    },
-    'checkListBank': {
-      'icon': Icons.task,
-      'text': 'Bank Check List',
-      'description': 'Monitoring Pembayaran Bank',
-      'route': SprListScreen(),
-    },
-    'checkListBuilding': {
-      'icon': Icons.checklist,
-      'text': 'Building Check List',
-      'description': 'Monitoring Pembangunan Rumah',
-      'route': SpkListScreen(),
-    },
-  };
+  Map<String, dynamic> getButton(SubMenu submenu) {
+    Map<String, Map<String, dynamic>> buttons = {
+      'site': {
+        'icon': Icons.map,
+        'description': 'Lihat dan interaksi dengan layout cluster',
+        'route': FDPIResidencesScreen(title: submenu.menu_caption),
+      },
+      'booking': {
+        'icon': Icons.book,
+        'description': 'Pesan atau negosiasi transaksi',
+        'route': BookingScreen(title: submenu.menu_caption),
+      },
+      'sales': {
+        'icon': Icons.real_estate_agent,
+        'description': 'Menu untuk sales',
+        'route': null,
+      },
+      'checkListBank': {
+        'icon': Icons.task,
+        'description': 'Monitoring Pembayaran Bank',
+        'route': SprListScreen(title: submenu.menu_caption),
+      },
+      'checkListBuilding': {
+        'icon': Icons.checklist,
+        'description': 'Monitoring Pembangunan Rumah',
+        'route': SpkListScreen(title: submenu.menu_caption),
+      },
+    };
+
+    Map<String, dynamic> button = buttons[submenu.menu_id]!;
+    button['text'] = submenu.menu_caption;
+    return button;
+  }
 
   final List<String> imagesCaraousel = [
     'assets/images/foto-awards.webp',
@@ -240,7 +241,6 @@ class MyGridLayout extends StatelessWidget {
                     },
                   ),
                 ),
-                Container(child: _buildMenuCard(context, buttons['spk'])),
               ],
             ),
           ),
@@ -268,7 +268,7 @@ class MyGridLayout extends StatelessWidget {
                 ...menu.submenus.map((item) {
                   return Column(
                     children: [
-                      _buildMenuCard(context, buttons[item.menu_id]),
+                      _buildMenuCard(context, getButton(item)),
                       SizedBox(height: 16.w),
                     ],
                   );

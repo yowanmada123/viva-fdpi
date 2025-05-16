@@ -13,16 +13,18 @@ import '../widgets/BottomSheet/filter_booking.dart';
 import 'booking_form_screen.dart';
 
 class BookingScreen extends StatelessWidget {
-  const BookingScreen({super.key});
+  final String title;
+  const BookingScreen({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
-    return const BookingView();
+    return BookingView(title: title);
   }
 }
 
 class BookingView extends StatefulWidget {
-  const BookingView({super.key});
+  final String title;
+  const BookingView({super.key, required this.title});
 
   @override
   State<BookingView> createState() => _BookingViewState();
@@ -78,6 +80,7 @@ class _BookingViewState extends State<BookingView> {
         ),
       ],
       child: BookingViewBody(
+        title: widget.title,
         currentSite: _currentSite,
         currentCluster: _currentCluster,
         currentStartDate: _currentStartDate,
@@ -89,6 +92,7 @@ class _BookingViewState extends State<BookingView> {
 }
 
 class BookingViewBody extends StatelessWidget {
+  final String title;
   final String? currentSite;
   final String? currentCluster;
   final String? currentStartDate;
@@ -103,6 +107,7 @@ class BookingViewBody extends StatelessWidget {
 
   const BookingViewBody({
     super.key,
+    required this.title,
     required this.currentSite,
     required this.currentCluster,
     required this.currentStartDate,
@@ -115,7 +120,7 @@ class BookingViewBody extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 245, 245, 245),
-        title: const Text("Booking List"),
+        title: Text(title),
         actions: [
           Container(
             margin: const EdgeInsets.fromLTRB(0, 0, 12.0, 0),

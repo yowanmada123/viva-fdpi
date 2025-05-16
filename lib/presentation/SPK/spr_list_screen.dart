@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../bloc/QC/spr_list/spr_list_bloc.dart';
 import '../../bloc/auth/authentication/authentication_bloc.dart';
@@ -13,7 +14,8 @@ import '../../models/fdpi/site.dart';
 import 'spr_progress_list.dart';
 
 class SprListScreen extends StatelessWidget {
-  const SprListScreen({super.key});
+  final String title;
+  const SprListScreen({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -36,18 +38,19 @@ class SprListScreen extends StatelessWidget {
                   SprListBloc(spkRepository: context.read<SPKRepository>()),
         ),
       ],
-      child: const _SprListScreenContent(),
+      child: _SprListScreenContent(title: title),
     );
   }
 }
 
 class _SprListScreenContent extends StatelessWidget {
-  const _SprListScreenContent();
+  final String title;
+  const _SprListScreenContent({required this.title});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Bank Check List')),
+      appBar: AppBar(title: Text(title)),
       body: const _SprListBody(),
     );
   }
@@ -64,17 +67,26 @@ class _SprListBodyState extends State<_SprListBody> {
   String? _site;
   String? _cluster;
 
+  navigateToSPRProgressListScreen(BuildContext context, String qcTransId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SprProgressListScreen(qcTransId: qcTransId),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.w),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
@@ -241,7 +253,7 @@ class _SprListBodyState extends State<_SprListBody> {
                                 ),
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.all(8.w),
                                     child: Text(
                                       'Site Name',
                                       style: TextStyle(
@@ -250,7 +262,7 @@ class _SprListBodyState extends State<_SprListBody> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.all(8.w),
                                     child: Text(
                                       'Cluster Name',
                                       style: TextStyle(
@@ -259,7 +271,7 @@ class _SprListBodyState extends State<_SprListBody> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.all(8.w),
                                     child: Text(
                                       'House Item',
                                       style: TextStyle(
@@ -268,7 +280,7 @@ class _SprListBodyState extends State<_SprListBody> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.all(8.w),
                                     child: Text(
                                       'Transaction ID',
                                       style: TextStyle(
@@ -277,7 +289,7 @@ class _SprListBodyState extends State<_SprListBody> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.all(8.w),
                                     child: Text(
                                       'Action',
                                       style: TextStyle(
@@ -317,25 +329,15 @@ class _SprListBodyState extends State<_SprListBody> {
                                       verticalAlignment:
                                           TableCellVerticalAlignment.middle,
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0,
-                                          vertical: 2.0,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 8.w,
+                                          vertical: 2.w,
                                         ),
                                         child: IconButton(
                                           onPressed: () {
-                                            Navigator.push(
+                                            navigateToSPRProgressListScreen(
                                               context,
-                                              MaterialPageRoute(
-                                                builder:
-                                                    (
-                                                      context,
-                                                    ) => SprProgressListScreen(
-                                                      qcTransId:
-                                                          state
-                                                              .sprList[index]
-                                                              .qcTransId,
-                                                    ),
-                                              ),
+                                              state.sprList[index].qcTransId,
                                             );
                                           },
                                           icon: const Icon(
@@ -348,60 +350,92 @@ class _SprListBodyState extends State<_SprListBody> {
                                     TableCell(
                                       verticalAlignment:
                                           TableCellVerticalAlignment.middle,
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0,
-                                          vertical: 2.0,
-                                        ),
-                                        child: Text(
-                                          state.sprList[index].clusterName,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ),
-                                    TableCell(
-                                      verticalAlignment:
-                                          TableCellVerticalAlignment.middle,
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0,
-                                          vertical: 2.0,
-                                        ),
-                                        child: Text(
-                                          state.sprList[index].houseName,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          navigateToSPRProgressListScreen(
+                                            context,
+                                            state.sprList[index].qcTransId,
+                                          );
+                                        },
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 8.w,
+                                            vertical: 2.w,
+                                          ),
+                                          child: Text(
+                                            state.sprList[index].clusterName,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
                                       ),
                                     ),
                                     TableCell(
                                       verticalAlignment:
                                           TableCellVerticalAlignment.middle,
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0,
-                                          vertical: 2.0,
-                                        ),
-                                        child: Text(
-                                          state.sprList[index].qcTransId,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          navigateToSPRProgressListScreen(
+                                            context,
+                                            state.sprList[index].qcTransId,
+                                          );
+                                        },
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 8.w,
+                                            vertical: 2.w,
+                                          ),
+                                          child: Text(
+                                            state.sprList[index].houseName,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
                                       ),
                                     ),
                                     TableCell(
                                       verticalAlignment:
                                           TableCellVerticalAlignment.middle,
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0,
-                                          vertical: 2.0,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          navigateToSPRProgressListScreen(
+                                            context,
+                                            state.sprList[index].qcTransId,
+                                          );
+                                        },
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 8.w,
+                                            vertical: 2.w,
+                                          ),
+                                          child: Text(
+                                            state.sprList[index].qcTransId,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
-                                        child: Text(
-                                          state.sprList[index].siteName,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    TableCell(
+                                      verticalAlignment:
+                                          TableCellVerticalAlignment.middle,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          navigateToSPRProgressListScreen(
+                                            context,
+                                            state.sprList[index].qcTransId,
+                                          );
+                                        },
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 8.w,
+                                            vertical: 2.w,
+                                          ),
+                                          child: Text(
+                                            state.sprList[index].siteName,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
                                       ),
                                     ),

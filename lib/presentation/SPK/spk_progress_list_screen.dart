@@ -65,7 +65,7 @@ class _SpkProgressListScreenContentState
         return Dialog(
           backgroundColor: Colors.white,
           insetPadding: EdgeInsets.symmetric(
-            horizontal: 16.0,
+            horizontal: 16.w,
           ), // Adjust side margins
           child: ConstrainedBox(
             constraints: BoxConstraints(
@@ -90,7 +90,7 @@ class _SpkProgressListScreenContentState
                   }
                 },
                 child: Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(16.w),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,7 +109,7 @@ class _SpkProgressListScreenContentState
                         decoration: InputDecoration(
                           hintText: 'Enter your remark...',
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
+                            borderRadius: BorderRadius.circular(10.w),
                           ),
                         ),
                       ),
@@ -195,16 +195,16 @@ class _SpkProgressListScreenContentState
                   for (var entry in state.checklistItem.entries)
                     Padding(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 8.0,
+                        horizontal: 16.w,
+                        vertical: 8.w,
                       ),
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.circular(8.w),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
+                              color: Colors.grey.withOpacity(0.5),
                               spreadRadius: 1,
                               blurRadius: 5,
                               offset: Offset(0, 2),
@@ -238,10 +238,10 @@ class _SpkProgressListScreenContentState
                             }
                           },
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
+                            borderRadius: BorderRadius.circular(4.w),
                           ),
                           collapsedShape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
+                            borderRadius: BorderRadius.circular(4.w),
                           ),
                           title: Opacity(
                             opacity:
@@ -250,7 +250,7 @@ class _SpkProgressListScreenContentState
                               entry.key,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
+                                fontSize: 16.w,
                                 color:
                                     _isPanelEnabled(state, entry.key)
                                         ? null
@@ -260,7 +260,7 @@ class _SpkProgressListScreenContentState
                           ),
                           children: [
                             Padding(
-                              padding: EdgeInsets.all(16.0),
+                              padding: EdgeInsets.all(16.w),
                               child: Column(
                                 children:
                                     (entry.value

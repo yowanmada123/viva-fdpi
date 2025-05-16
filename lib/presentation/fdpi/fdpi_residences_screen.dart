@@ -11,7 +11,8 @@ import '../widgets/bottom_navigator.dart';
 import '../widgets/residence_card.dart';
 
 class FDPIResidencesScreen extends StatelessWidget {
-  const FDPIResidencesScreen({super.key});
+  final String title;
+  const FDPIResidencesScreen({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -22,20 +23,21 @@ class FDPIResidencesScreen extends StatelessWidget {
         return ResidenceBloc(fdpiRepository: fdpiRepository)
           ..add(LoadResidence("", "", "", ""));
       },
-      child: ResidenceListView(),
+      child: ResidenceListView(title: title),
     );
   }
 }
 
 class ResidenceListView extends StatelessWidget {
-  const ResidenceListView({super.key});
+  final String title;
+  const ResidenceListView({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Siteplan',
+        title: Text(
+          title,
           style: TextStyle(
             color: Color(0xFF1C3FAA),
             fontWeight: FontWeight.w600,

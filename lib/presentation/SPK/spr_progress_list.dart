@@ -64,7 +64,7 @@ class _SprProgressListScreenContentState
         return Dialog(
           backgroundColor: Colors.white,
           insetPadding: EdgeInsets.symmetric(
-            horizontal: 16.0,
+            horizontal: 16.w,
           ), // Adjust side margins
           child: ConstrainedBox(
             constraints: BoxConstraints(
@@ -89,7 +89,7 @@ class _SprProgressListScreenContentState
                   }
                 },
                 child: Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(16.w),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,7 +108,7 @@ class _SprProgressListScreenContentState
                         decoration: InputDecoration(
                           hintText: 'Enter your remark...',
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
+                            borderRadius: BorderRadius.circular(10.w),
                           ),
                         ),
                       ),
@@ -193,7 +193,7 @@ class _SprProgressListScreenContentState
                 children: [
                   for (var entry in state.checklistItem.entries)
                     Padding(
-                      padding: EdgeInsets.all(16.0),
+                      padding: EdgeInsets.all(16.w),
                       child: Column(
                         children:
                             (entry.value as Map<String, dynamic>)['data']
@@ -201,9 +201,9 @@ class _SprProgressListScreenContentState
                                   return Container(
                                     decoration: BoxDecoration(
                                       color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8.0),
+                                      borderRadius: BorderRadius.circular(8.w),
                                     ),
-                                    margin: EdgeInsets.only(bottom: 8.0),
+                                    margin: EdgeInsets.only(bottom: 8.w),
                                     child: CheckboxListTile(
                                       contentPadding: EdgeInsets.zero,
                                       title: Text(item.qcItem),
