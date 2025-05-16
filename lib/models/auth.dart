@@ -45,10 +45,10 @@ class Auth {
   factory Auth.fromMap(Map<String, dynamic> map) {
     return Auth(
       user: User.fromMap(map['user'] as Map<String, dynamic>),
-      avatar: map['avatar'] as String,
-      accessToken: map['access_token'] as String,
-      tokenType: map['token_type'] as String,
-      expiresAt: map['expires_at'] as String,
+      avatar: map['avatar'] ?? "",
+      accessToken: map['access_token'] ?? "",
+      tokenType: map['token_type'] ?? "",
+      expiresAt: map['expires_at'] ?? "",
     );
   }
 
