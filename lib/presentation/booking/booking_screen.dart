@@ -9,7 +9,7 @@ import '../../bloc/fdpi/site/site_bloc.dart';
 import '../../data/repository/booking_repository.dart';
 import '../../data/repository/fdpi_repository.dart';
 import '../../models/booking.dart';
-import '../widgets/BottomSheet/filter_booking.dart';
+import '../widgets/AlertDialog/filter_booking.dart';
 import 'booking_form_screen.dart';
 
 class BookingScreen extends StatelessWidget {
@@ -147,7 +147,7 @@ class BookingViewBody extends StatelessWidget {
                       child: Dialog(
                         backgroundColor: Colors.white,
                         insetPadding: EdgeInsets.symmetric(horizontal: 16.w),
-                        child: FilterBottomSheet(
+                        child: FilterDialog(
                           initialSite: currentSite,
                           initialCluster: currentCluster,
                           initialStartDate: currentStartDate ?? '',
