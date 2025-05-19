@@ -1,215 +1,162 @@
+import 'dart:math';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class SpkChecklistScreen extends StatefulWidget {
-  const SpkChecklistScreen({super.key});
+class NewSpkChecklistScreen extends StatefulWidget {
+  const NewSpkChecklistScreen({super.key});
 
   @override
-  _SpkChecklistScreenState createState() => _SpkChecklistScreenState();
+  _NewSpkChecklistScreenState createState() => _NewSpkChecklistScreenState();
 }
 
-class _SpkChecklistScreenState extends State<SpkChecklistScreen> {
-  final List<Map<String, dynamic>> _dummyData = List.generate(
-    20,
-    (index) => {
-      'title': 'Checklist ${index + 1}',
-      'mini_description': 'This is checklist ${index + 1}',
-      'isChecked': false,
+class _NewSpkChecklistScreenState extends State<NewSpkChecklistScreen> {
+  final List<Map<String, dynamic>> _dummyData = [
+    {
+      'type': 'Pelunasan 30%',
+      'isExpanded': true,
+      'data': [
+        {
+          'category': 'Tanah Rata',
+          'isDone': false,
+          'data': [
+            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
+            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
+          ],
+        },
+        {
+          'category': 'Air Tanah',
+          'isDone': false,
+          'data': [
+            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
+            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
+          ],
+        },
+        {
+          'category': 'Kategori 3',
+          'isDone': false,
+          'data': [
+            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
+            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
+          ],
+        },
+      ],
     },
-  );
+    {
+      'type': 'Pelunasan 60%',
+      'isExpanded': true,
+      'data': [
+        {
+          'category': 'Tanah Rata',
+          'isDone': false,
+          'data': [
+            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
+            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
+          ],
+        },
+        {
+          'category': 'Air Tanah',
+          'isDone': false,
+          'data': [
+            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
+            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
+          ],
+        },
+        {
+          'category': 'Kategori 3',
+          'isDone': false,
+          'data': [
+            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
+            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
+          ],
+        },
+      ],
+    },
+    {
+      'type': 'Pelunasan 90%',
+      'isExpanded': true,
+      'data': [
+        {
+          'category': 'Tanah Rata',
+          'isDone': false,
+          'data': [
+            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
+            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
+          ],
+        },
+        {
+          'category': 'Air Tanah',
+          'isDone': false,
+          'data': [
+            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
+            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
+          ],
+        },
+        {
+          'category': 'Kategori 3',
+          'isDone': false,
+          'data': [
+            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
+            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
+          ],
+        },
+      ],
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('SPK Checklist')),
+      appBar: AppBar(title: const Text('SPK Checklist')),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Attachment',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
+        child: Container(
+          padding: EdgeInsets.all(16.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Single ExpansionPanelList containing all panels
+              ExpansionPanelList(
+                expansionCallback: (panelIndex, isExpanded) {
+                  setState(() {
+                    _dummyData[panelIndex]['isExpanded'] = isExpanded;
+                  });
+                },
+                expandedHeaderPadding: EdgeInsets.all(0),
+                children:
+                    _dummyData.map<ExpansionPanel>((item) {
+                      return ExpansionPanel(
+                        backgroundColor: Color(0xff1F1F1F),
+                        headerBuilder:
+                            (context, isExpanded) => Padding(
+                              padding: EdgeInsets.all(16.w),
+                              child: Text(
+                                item['type'],
+                                style: TextStyle(
+                                  fontSize: max(16.sp, 16.0),
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                        body: Container(
+                          padding: EdgeInsets.all(16.w),
+                          child: Column(
+                            children: [
+                              // Example nested content
+                              Text("Details for ${item['type']}"),
+                              // You can add another ExpansionPanelList here for categories
+                              // if you need nested expansion panels
+                            ],
+                          ),
                         ),
-                      ),
-                      FilledButton(
-                        style: FilledButton.styleFrom(
-                          backgroundColor: Color(0xff1C3FAA),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        onPressed: () async {
-                          try {
-                            FilePickerResult? result =
-                                await FilePicker.platform.pickFiles();
-                            if (result != null) {
-                              PlatformFile file = result.files.first;
-                              print(file.name);
-                              print(file.bytes);
-                              print(file.size);
-                              print(file.extension);
-                              print(file.path);
-                            } else {
-                              // User canceled the picker
-                            }
-                          } catch (e) {
-                            print("Error while picking file: $e");
-                          }
-                        },
-                        child: Row(
-                          children: [Icon(Icons.attach_file), Text('Upload')],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        spacing: 8,
-                        children: [
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                        isExpanded: item['isExpanded'],
+                        canTapOnHeader: true,
+                      );
+                    }).toList(),
               ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(16),
-                  child: Text(
-                    'Checklist',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                ),
-                ..._dummyData.map((e) {
-                  return ListTile(
-                    title: Text(e['title']),
-                    subtitle: Text(e['mini_description']),
-                    trailing: Checkbox(
-                      value: e['isChecked'],
-                      onChanged: (value) {
-                        setState(() {
-                          e['isChecked'] = value;
-                        });
-                      },
-                    ),
-                  );
-                }),
-              ],
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        width: double.infinity,
-        height: 60,
-        color: Colors.blue,
-        child: TextButton(
-          onPressed: () {},
-          child: Text('Save', style: TextStyle(color: Colors.white)),
+            ],
+          ),
         ),
       ),
     );

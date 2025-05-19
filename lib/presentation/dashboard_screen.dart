@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
+import 'package:fdpi_app/presentation/SPK/spk_checklist_screen.dart';
+import 'package:fdpi_app/presentation/approval/approval_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -72,6 +74,18 @@ class MyGridLayout extends StatelessWidget {
         'icon': Icons.checklist,
         'description': 'Monitoring Pembangunan Rumah',
         'route': SpkListScreen(title: submenu.menu_caption),
+      },
+      'approval': {
+        'icon': Icons.edit_document,
+        'text': 'Approval Pengajuan',
+        'description': 'Approval Pengajuan',
+        'route': ApprovalScreen(title: submenu.menu_caption),
+      },
+      'testing-ui-spk': {
+        'icon': Icons.edit_document,
+        'text': 'Approval Pengajuan',
+        'description': 'Approval Pengajuan',
+        'route': NewSpkChecklistScreen(),
       },
     };
 
@@ -239,6 +253,52 @@ class MyGridLayout extends StatelessWidget {
                       }
                       return Text("Tidak ada menu yang dapat diakses");
                     },
+                  ),
+                ),
+
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  decoration: BoxDecoration(color: Color(0xFFEAF1FF)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Testing Purpose(Static User Interface)',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: max(16.sp, 16.0),
+                        ),
+                      ),
+                      SizedBox(height: 16.w),
+                      _buildMenuCard(
+                        context,
+                        getButton(
+                          SubMenu(
+                            entity_id: '',
+                            appl_id: '',
+                            menu_id: 'approval',
+                            seq_id: '',
+                            menu_caption: 'Approval',
+                            route_path: '',
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16.w),
+                      _buildMenuCard(
+                        context,
+                        getButton(
+                          SubMenu(
+                            entity_id: '',
+                            appl_id: '',
+                            menu_id: 'testing-ui-spk',
+                            seq_id: '',
+                            menu_caption: 'SPK Checklist',
+                            route_path: '',
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
