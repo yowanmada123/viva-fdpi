@@ -117,6 +117,7 @@ class _NewSpkChecklistScreenState extends State<NewSpkChecklistScreen> {
             children: [
               // Single ExpansionPanelList containing all panels
               ExpansionPanelList(
+                expandIconColor: Colors.white,
                 expansionCallback: (panelIndex, isExpanded) {
                   setState(() {
                     _dummyData[panelIndex]['isExpanded'] = isExpanded;
@@ -126,10 +127,15 @@ class _NewSpkChecklistScreenState extends State<NewSpkChecklistScreen> {
                 children:
                     _dummyData.map<ExpansionPanel>((item) {
                       return ExpansionPanel(
-                        backgroundColor: Color(0xff1F1F1F),
+                        backgroundColor: const Color(0xff1f1f1f),
+                        isExpanded: item['isExpanded'],
+                        canTapOnHeader: true,
                         headerBuilder:
-                            (context, isExpanded) => Padding(
+                            (context, isExpanded) => Container(
                               padding: EdgeInsets.all(16.w),
+                              decoration: const BoxDecoration(
+                                color: Color(0xff1f1f1f),
+                              ),
                               child: Text(
                                 item['type'],
                                 style: TextStyle(
@@ -139,19 +145,54 @@ class _NewSpkChecklistScreenState extends State<NewSpkChecklistScreen> {
                                 ),
                               ),
                             ),
-                        body: Container(
-                          padding: EdgeInsets.all(16.w),
-                          child: Column(
-                            children: [
-                              // Example nested content
-                              Text("Details for ${item['type']}"),
-                              // You can add another ExpansionPanelList here for categories
-                              // if you need nested expansion panels
-                            ],
-                          ),
+                        body: Column(
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              decoration: const BoxDecoration(
+                                color: Color(0xff1f1f1f),
+                              ),
+                              padding: EdgeInsets.all(16.w),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Details for ${item['type']}",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 32.w,
+                                    child: Center(
+                                      child: Text(
+                                        "Done",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 32.w,
+                                    child: Center(
+                                      child: Text(
+                                        "QC",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        isExpanded: item['isExpanded'],
-                        canTapOnHeader: true,
                       );
                     }).toList(),
               ),
