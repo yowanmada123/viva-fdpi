@@ -13,15 +13,25 @@ class SPKRepository {
   Future<Either<CustomException, List<SPK>>> getSPKList({
     required String idSite,
     required String idCluster,
+    required String idHouse,
   }) async {
-    return spkRest.getSPKList(idSite: idSite, idCluster: idCluster);
+    return spkRest.getSPKList(
+      idSite: idSite,
+      idCluster: idCluster,
+      idHouse: idHouse,
+    );
   }
 
   Future<Either<CustomException, List<SPR>>> getSPRList({
     required String idSite,
     required String idCluster,
+    required String idHouse,
   }) async {
-    return spkRest.getSPRList(idSite: idSite, idCluster: idCluster);
+    return spkRest.getSPRList(
+      idSite: idSite,
+      idCluster: idCluster,
+      idHouse: idHouse,
+    );
   }
 
   Future<Either<CustomException, Map<String, Map<String, dynamic>>>>
@@ -33,11 +43,15 @@ class SPKRepository {
     required String qcTransId,
     required String idQcItem,
     required String remark,
+    required String imgBase64,
+    required String idWork,
   }) async {
     return spkRest.approveChecklist(
       qcTransId: qcTransId,
       idQcItem: idQcItem,
       remark: remark,
+      imgBase64: imgBase64,
+      idWork: idWork,
     );
   }
 }

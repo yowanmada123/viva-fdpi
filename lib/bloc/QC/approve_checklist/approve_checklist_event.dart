@@ -8,11 +8,20 @@ sealed class ApproveChecklistEvent extends Equatable {
 }
 
 class ApproveChecklistEventInit extends ApproveChecklistEvent {
-  final qcTransId;
-  final idQcItem;
-  final remark;
-  const ApproveChecklistEventInit({this.qcTransId, this.idQcItem, this.remark});
+  final String qcTransId;
+  final String idQcItem;
+  final String? remark;
+  final String? imgBase64;
+  final String idWork;
+
+  const ApproveChecklistEventInit({
+    required this.qcTransId,
+    required this.idQcItem,
+    required this.idWork,
+    this.imgBase64,
+    this.remark,
+  });
 
   @override
-  List<Object> get props => [qcTransId, idQcItem, remark];
+  List<Object> get props => [qcTransId, idQcItem, remark!, imgBase64!, idWork];
 }

@@ -142,6 +142,7 @@ class _SprProgressListScreenContentState
                                                 qcTransId: qcTransId,
                                                 idQcItem: itemId,
                                                 remark: _remarkController.text,
+                                                idWork: '1',
                                               ),
                                             );
                                           },

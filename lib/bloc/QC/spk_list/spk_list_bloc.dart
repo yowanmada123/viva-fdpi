@@ -18,6 +18,7 @@ class SpkListBloc extends Bloc<SpkListEvent, SpkListState> {
     final result = await spkRepository.getSPKList(
       idSite: event.idSite,
       idCluster: event.idCluster,
+      idHouse: event.idHouse,
     );
     result.fold(
       (failure) =>

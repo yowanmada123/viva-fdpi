@@ -4,11 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../bloc/QC/spr_list/spr_list_bloc.dart';
 import '../../bloc/auth/authentication/authentication_bloc.dart';
+import '../../bloc/fdpi/house_item/house_item_bloc.dart';
 import '../../bloc/fdpi/residence/residence_bloc.dart';
 import '../../bloc/fdpi/site/site_bloc.dart';
 import '../../data/repository/fdpi_repository.dart';
 import '../../data/repository/spk_repository.dart';
 import '../../models/errors/custom_exception.dart';
+import '../../models/fdpi/house_item.dart';
 import '../../models/fdpi/residence.dart';
 import '../../models/fdpi/site.dart';
 import 'spr_progress_list.dart';
@@ -31,6 +33,11 @@ class SprListScreen extends StatelessWidget {
           create:
               (context) =>
                   ResidenceBloc(fdpiRepository: context.read<FdpiRepository>()),
+        ),
+        BlocProvider(
+          create:
+              (context) =>
+                  HouseItemBloc(fdpiRepository: context.read<FdpiRepository>()),
         ),
         BlocProvider(
           create:
@@ -66,6 +73,7 @@ class _SprListBody extends StatefulWidget {
 class _SprListBodyState extends State<_SprListBody> {
   String? _site;
   String? _cluster;
+  String? _houseId;
 
   navigateToSPRProgressListScreen(BuildContext context, String qcTransId) {
     Navigator.push(
@@ -156,11 +164,60 @@ class _SprListBodyState extends State<_SprListBody> {
                               setState(() {
                                 _cluster = value;
                               });
+
+                              context.read<HouseItemBloc>().add(
+                                GetHouseItem(
+                                  "",
+                                  "",
+                                  _site!,
+                                  value!,
+                                  "",
+                                  "",
+                                  "",
+                                ),
+                              );
                             },
                           );
                         }
                         return DropdownButtonFormField<String>(
                           decoration: InputDecoration(labelText: 'Cluster'),
+                          items: [],
+                          onChanged: null,
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    BlocBuilder<HouseItemBloc, HouseItemState>(
+                      builder: (context, state) {
+                        if (state is HouseItemLoadSuccess) {
+                          final validCluster =
+                              state.houseItems.any(
+                                    (r) => r.id_house == _houseId,
+                                  )
+                                  ? _houseId
+                                  : null;
+
+                          return DropdownButtonFormField<String>(
+                            decoration: const InputDecoration(
+                              labelText: 'House Type',
+                            ),
+                            value: validCluster,
+                            items:
+                                state.houseItems.map((HouseItem item) {
+                                  return DropdownMenuItem<String>(
+                                    value: item.id_house,
+                                    child: Text(item.house_name),
+                                  );
+                                }).toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _houseId = value;
+                              });
+                            },
+                          );
+                        }
+                        return DropdownButtonFormField<String>(
+                          decoration: InputDecoration(labelText: 'House item'),
                           items: [],
                           onChanged: null,
                         );
@@ -180,6 +237,7 @@ class _SprListBodyState extends State<_SprListBody> {
                           GetSPRList(
                             idSite: _site ?? '',
                             idCluster: _cluster ?? '',
+                            idHouse: _houseId ?? '',
                           ),
                         );
                       },
