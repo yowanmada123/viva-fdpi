@@ -9,7 +9,7 @@ import '../../bloc/fdpi/site/site_bloc.dart';
 import '../../data/repository/booking_repository.dart';
 import '../../data/repository/fdpi_repository.dart';
 import '../../models/booking.dart';
-import '../widgets/BottomSheet/filter_booking.dart';
+import '../widgets/AlertDialog/filter_booking.dart';
 import 'booking_form_screen.dart';
 
 class BookingScreen extends StatelessWidget {
@@ -138,20 +138,24 @@ class BookingViewBody extends StatelessWidget {
                 final residenceBloc = context.read<ResidenceBloc>();
                 final siteBloc = context.read<SiteBloc>();
 
-                showModalBottomSheet<void>(
+                showDialog<void>(
                   context: context,
-                  isScrollControlled: true,
+                  barrierDismissible: false,
                   builder: (BuildContext context) {
                     return BlocProvider.value(
                       value: bookingBloc,
-                      child: FilterBottomSheet(
-                        initialSite: currentSite,
-                        initialCluster: currentCluster,
-                        initialStartDate: currentStartDate ?? '',
-                        initialEndDate: currentEndDate ?? '',
-                        onApplyFilters: updateFilters,
-                        residenceBloc: residenceBloc,
-                        siteBloc: siteBloc,
+                      child: Dialog(
+                        backgroundColor: Colors.white,
+                        insetPadding: EdgeInsets.symmetric(horizontal: 16.w),
+                        child: FilterDialog(
+                          initialSite: currentSite,
+                          initialCluster: currentCluster,
+                          initialStartDate: currentStartDate ?? '',
+                          initialEndDate: currentEndDate ?? '',
+                          onApplyFilters: updateFilters,
+                          residenceBloc: residenceBloc,
+                          siteBloc: siteBloc,
+                        ),
                       ),
                     );
                   },
@@ -220,6 +224,10 @@ class BookingViewBody extends StatelessWidget {
                   if (state is BookingLoading) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (state is BookingLoaded) {
+                    if (state.bookings.isEmpty) {
+                      return const Text("No data available");
+                    }
+
                     return Container(
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
                       child: ListView.separated(

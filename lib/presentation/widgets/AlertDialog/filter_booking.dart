@@ -9,7 +9,7 @@ import '../../../bloc/fdpi/site/site_bloc.dart';
 import '../../../models/fdpi/residence.dart';
 import '../../../models/fdpi/site.dart';
 
-class FilterBottomSheet extends StatelessWidget {
+class FilterDialog extends StatelessWidget {
   final String? initialSite;
   final String? initialCluster;
   final String initialStartDate;
@@ -18,7 +18,7 @@ class FilterBottomSheet extends StatelessWidget {
   final ResidenceBloc residenceBloc;
   final SiteBloc siteBloc;
 
-  const FilterBottomSheet({
+  const FilterDialog({
     super.key,
     required this.initialSite,
     required this.initialCluster,
@@ -40,7 +40,7 @@ class FilterBottomSheet extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.w),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),
+          borderRadius: const BorderRadius.all(Radius.circular(16.0)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
