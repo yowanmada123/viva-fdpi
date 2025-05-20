@@ -45,7 +45,7 @@ class _SprProgressListScreenContentState
     extends State<_SprProgressListScreenContent> {
   final TextEditingController _remarkController = TextEditingController();
 
-  void _showApprovalBottomSheet({
+  void _showApprovalDialog({
     required BuildContext context,
     required String qcTransId,
     required String category,
@@ -209,7 +209,7 @@ class _SprProgressListScreenContentState
                                       title: Text(item.qcItem),
                                       value: item.aprvBy.isNotEmpty,
                                       onChanged: (bool? newValue) {
-                                        _showApprovalBottomSheet(
+                                        _showApprovalDialog(
                                           context: context,
                                           qcTransId: widget.qcTransId,
                                           category: entry.key,

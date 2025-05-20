@@ -46,7 +46,7 @@ class _SpkProgressListScreenContentState
   int? _currentExpandedIndex;
   final TextEditingController _remarkController = TextEditingController();
 
-  void _showApprovalBottomSheet({
+  void _showApprovalDialog({
     required BuildContext context,
     required String qcTransId,
     required String category,
@@ -276,7 +276,7 @@ class _SpkProgressListScreenContentState
                                                       entry.key,
                                                     )
                                                     ? (bool? newValue) {
-                                                      _showApprovalBottomSheet(
+                                                      _showApprovalDialog(
                                                         context: context,
                                                         qcTransId:
                                                             widget.qcTransId,

@@ -111,16 +111,6 @@ class MyApp extends StatelessWidget {
                 ),
                 iconTheme: IconThemeData(color: Color(0xFF1C3FAA)),
               ),
-              bottomSheetTheme: BottomSheetThemeData(
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20.r),
-                    topRight: Radius.circular(20.r),
-                  ),
-                ),
-                modalBackgroundColor: const Color.fromARGB(52, 255, 255, 255),
-              ),
               fontFamily: "Poppins",
               textTheme: TextTheme(
                 labelSmall: const TextStyle(
