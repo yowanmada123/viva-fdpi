@@ -18,6 +18,7 @@ class SPKRest {
   Future<Either<CustomException, List<SPR>>> getSPRList({
     required String idSite,
     required String idCluster,
+    required String idHouse,
   }) async {
     try {
       http.options.headers['requiresToken'] = true;
@@ -28,7 +29,8 @@ class SPKRest {
       final body = {
         "id_site": idSite,
         "id_cluster": idCluster,
-        "cl_type": "BP",
+        "id_house_item": idHouse,
+        "doc_type": "SPR",
       };
 
       final response = await http.post(
@@ -59,6 +61,7 @@ class SPKRest {
   Future<Either<CustomException, List<SPK>>> getSPKList({
     required String idSite,
     required String idCluster,
+    required String idHouse,
   }) async {
     try {
       http.options.headers['requiresToken'] = true;
@@ -69,7 +72,8 @@ class SPKRest {
       final body = {
         "id_site": idSite,
         "id_cluster": idCluster,
-        "cl_type": "SK",
+        "id_house_item": idHouse,
+        "doc_type": "SPK",
       };
 
       final response = await http.post(
@@ -143,6 +147,8 @@ class SPKRest {
     required String qcTransId,
     required String idQcItem,
     required String remark,
+    required String imgBase64,
+    required String idWork,
   }) async {
     try {
       http.options.headers['requiresToken'] = true;
@@ -153,7 +159,9 @@ class SPKRest {
       final body = {
         "qc_trans_id": qcTransId,
         "id_qc_item": idQcItem,
+        "id_work": idWork,
         "remark": remark,
+        "img": imgBase64,
       };
 
       final response = await http.post(

@@ -20,6 +20,7 @@ class SprListBloc extends Bloc<SprListEvent, SprListState> {
     final result = await spkRepository.getSPRList(
       idSite: event.idSite,
       idCluster: event.idCluster,
+      idHouse: event.idHouse,
     );
     result.fold(
       (failure) =>

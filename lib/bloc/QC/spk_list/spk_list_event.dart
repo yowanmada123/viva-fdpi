@@ -10,8 +10,13 @@ sealed class SpkListEvent extends Equatable {
 class GetSPKList extends SpkListEvent {
   final String idSite;
   final String idCluster;
+  final String idHouse;
 
-  const GetSPKList({required this.idSite, required this.idCluster});
+  const GetSPKList({
+    required this.idSite,
+    required this.idCluster,
+    required this.idHouse,
+  });
 
   @override
   List<Object> get props => [idSite, idCluster];

@@ -1,215 +1,398 @@
+import 'dart:io';
+import 'dart:math';
+
+import 'package:fdpi_app/presentation/widgets/spk/spk_category.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class SpkChecklistScreen extends StatefulWidget {
-  const SpkChecklistScreen({super.key});
+class NewSpkChecklistScreen extends StatefulWidget {
+  const NewSpkChecklistScreen({super.key});
 
   @override
-  _SpkChecklistScreenState createState() => _SpkChecklistScreenState();
+  _NewSpkChecklistScreenState createState() => _NewSpkChecklistScreenState();
 }
 
-class _SpkChecklistScreenState extends State<SpkChecklistScreen> {
-  final List<Map<String, dynamic>> _dummyData = List.generate(
-    20,
-    (index) => {
-      'title': 'Checklist ${index + 1}',
-      'mini_description': 'This is checklist ${index + 1}',
-      'isChecked': false,
+class _NewSpkChecklistScreenState extends State<NewSpkChecklistScreen> {
+  final List<Map<String, dynamic>> _dummyData = [
+    {
+      'type': 'Pelunasan 30%',
+      'isExpanded': true,
+      'data': [
+        {
+          'category': 'Tanah Rata',
+          'isDone': false,
+          'data': [
+            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
+            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
+          ],
+        },
+        {
+          'category': 'Air Tanah',
+          'isDone': false,
+          'data': [
+            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
+            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
+          ],
+        },
+        {
+          'category': 'Kategori 3',
+          'isDone': false,
+          'data': [
+            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
+            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
+          ],
+        },
+      ],
     },
-  );
+    {
+      'type': 'Pelunasan 60%',
+      'isExpanded': true,
+      'data': [
+        {
+          'category': 'Tanah Rata',
+          'isDone': false,
+          'data': [
+            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
+            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
+          ],
+        },
+        {
+          'category': 'Air Tanah',
+          'isDone': false,
+          'data': [
+            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
+            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
+          ],
+        },
+        {
+          'category': 'Kategori 3',
+          'isDone': false,
+          'data': [
+            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
+            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
+          ],
+        },
+      ],
+    },
+    {
+      'type': 'Pelunasan 90%',
+      'isExpanded': true,
+      'data': [
+        {
+          'category': 'Tanah Rata',
+          'isDone': false,
+          'data': [
+            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
+            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
+          ],
+        },
+        {
+          'category': 'Air Tanah',
+          'isDone': false,
+          'data': [
+            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
+            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
+          ],
+        },
+        {
+          'category': 'Kategori 3',
+          'isDone': false,
+          'data': [
+            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
+            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
+          ],
+        },
+      ],
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('SPK Checklist')),
+      appBar: AppBar(title: const Text('SPK Checklist')),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Attachment',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
+        child: Container(
+          padding: EdgeInsets.all(16.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Single ExpansionPanelList containing all panels
+              ExpansionPanelList(
+                expandIconColor: Colors.white,
+                expansionCallback: (panelIndex, isExpanded) {
+                  setState(() {
+                    _dummyData[panelIndex]['isExpanded'] = isExpanded;
+                  });
+                },
+                expandedHeaderPadding: EdgeInsets.all(0),
+                children:
+                    _dummyData.map<ExpansionPanel>((item) {
+                      return ExpansionPanel(
+                        backgroundColor: const Color(0xff1f1f1f),
+                        isExpanded: item['isExpanded'],
+                        canTapOnHeader: true,
+                        headerBuilder:
+                            (context, isExpanded) => Container(
+                              padding: EdgeInsets.all(16.w),
+                              decoration: const BoxDecoration(
+                                color: Color(0xff1f1f1f),
+                              ),
+                              child: Text(
+                                item['type'],
+                                style: TextStyle(
+                                  fontSize: max(16.sp, 16.0),
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                        body: Column(
+                          children: [
+                            // Table header
+                            Container(
+                              width: double.infinity,
+                              decoration: const BoxDecoration(
+                                color: Color(0xff1f1f1f),
+                              ),
+                              padding: EdgeInsets.all(16.w),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Details for ${item['type']}",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 32.w,
+                                    child: Center(
+                                      child: Text(
+                                        "Done",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 32.w,
+                                    child: Center(
+                                      child: Text(
+                                        "QC",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            ...item['data']
+                                .asMap()
+                                .entries
+                                .map<Widget>(
+                                  (category) => SpkChecklistAccordion(
+                                    index: category.key,
+                                    showCheckboxQC: false,
+                                    showCheckboxDone: false,
+                                    initiallyExpanded: true,
+                                    backgroundColor: const Color(0xFFC7C7C7),
+                                    title: category.value['category'],
+                                    content: Container(
+                                      child: Column(
+                                        children: [
+                                          ...category.value['data']
+                                              .asMap()
+                                              .entries
+                                              .map(
+                                                (
+                                                  qcItem,
+                                                ) => SpkChecklistAccordion(
+                                                  index: qcItem.key,
+                                                  showCheckboxQC: true,
+                                                  showCheckboxDone: true,
+                                                  showIcon: false,
+                                                  title:
+                                                      qcItem.value['qc_item'],
+                                                  content: Container(
+                                                    width: double.infinity,
+                                                    padding: EdgeInsets.all(
+                                                      16.w,
+                                                    ),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          "Remark",
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 4.w),
+                                                        Text(
+                                                          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+                                                          maxLines: 2,
+                                                          overflow:
+                                                              TextOverflow
+                                                                  .ellipsis,
+                                                        ),
+                                                        SizedBox(height: 8.w),
+
+                                                        Text(
+                                                          "Attachment",
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 4.w),
+                                                        SingleChildScrollView(
+                                                          scrollDirection:
+                                                              Axis.horizontal,
+                                                          child: Row(
+                                                            children: [
+                                                              ...List.generate(
+                                                                Random().nextInt(
+                                                                      6,
+                                                                    ) +
+                                                                    1,
+                                                                (
+                                                                  index,
+                                                                ) => Padding(
+                                                                  padding:
+                                                                      EdgeInsets.only(
+                                                                        right:
+                                                                            4.w,
+                                                                      ),
+                                                                  child: SizedBox(
+                                                                    width: 64.w,
+                                                                    height:
+                                                                        64.w,
+                                                                    child: Container(
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                              2,
+                                                                            ),
+                                                                        color:
+                                                                            Colors.grey[300],
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              GestureDetector(
+                                                                onTap: () async {
+                                                                  FilePickerResult?
+                                                                  result = await FilePicker
+                                                                      .platform
+                                                                      .pickFiles(
+                                                                        allowMultiple:
+                                                                            true,
+                                                                      );
+
+                                                                  if (result !=
+                                                                      null) {
+                                                                    List<File>
+                                                                    files =
+                                                                        result
+                                                                            .paths
+                                                                            .map(
+                                                                              (
+                                                                                path,
+                                                                              ) => File(
+                                                                                path!,
+                                                                              ),
+                                                                            )
+                                                                            .toList();
+                                                                  } else {
+                                                                    // User canceled the picker
+                                                                  }
+                                                                },
+                                                                child: SizedBox(
+                                                                  width: 64.w,
+                                                                  height: 64.w,
+                                                                  child: Container(
+                                                                    decoration: BoxDecoration(
+                                                                      border: Border.all(
+                                                                        color: Color(
+                                                                          0xffE2E2E2,
+                                                                        ),
+                                                                      ),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                            2,
+                                                                          ),
+                                                                      color: Color(
+                                                                        0xffF9F9F9,
+                                                                      ),
+                                                                    ),
+                                                                    child: Column(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        Icon(
+                                                                          Icons
+                                                                              .upload,
+                                                                          color: Color(
+                                                                            0xff555555,
+                                                                          ),
+                                                                          size:
+                                                                              16.w,
+                                                                        ),
+                                                                        SizedBox(
+                                                                          height:
+                                                                              4.w,
+                                                                        ),
+                                                                        Text(
+                                                                          "Upload",
+                                                                          style: TextStyle(
+                                                                            color: Color(
+                                                                              0xff555555,
+                                                                            ),
+                                                                            fontSize:
+                                                                                10.sp,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                              .toList(),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ],
                         ),
-                      ),
-                      FilledButton(
-                        style: FilledButton.styleFrom(
-                          backgroundColor: Color(0xff1C3FAA),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        onPressed: () async {
-                          try {
-                            FilePickerResult? result =
-                                await FilePicker.platform.pickFiles();
-                            if (result != null) {
-                              PlatformFile file = result.files.first;
-                              print(file.name);
-                              print(file.bytes);
-                              print(file.size);
-                              print(file.extension);
-                              print(file.path);
-                            } else {
-                              // User canceled the picker
-                            }
-                          } catch (e) {
-                            print("Error while picking file: $e");
-                          }
-                        },
-                        child: Row(
-                          children: [Icon(Icons.attach_file), Text('Upload')],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        spacing: 8,
-                        children: [
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          Container(
-                            height: 64,
-                            width: 64,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                      );
+                    }).toList(),
               ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(16),
-                  child: Text(
-                    'Checklist',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                ),
-                ..._dummyData.map((e) {
-                  return ListTile(
-                    title: Text(e['title']),
-                    subtitle: Text(e['mini_description']),
-                    trailing: Checkbox(
-                      value: e['isChecked'],
-                      onChanged: (value) {
-                        setState(() {
-                          e['isChecked'] = value;
-                        });
-                      },
-                    ),
-                  );
-                }),
-              ],
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        width: double.infinity,
-        height: 60,
-        color: Colors.blue,
-        child: TextButton(
-          onPressed: () {},
-          child: Text('Save', style: TextStyle(color: Colors.white)),
+            ],
+          ),
         ),
       ),
     );

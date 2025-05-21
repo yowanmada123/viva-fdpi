@@ -143,6 +143,8 @@ class _SpkProgressListScreenContentState
                                                 qcTransId: qcTransId,
                                                 idQcItem: itemId,
                                                 remark: _remarkController.text,
+                                                imgBase64: '',
+                                                idWork: '1',
                                               ),
                                             );
                                           },
