@@ -32,11 +32,15 @@ class _NewSpkChecklistScreenState extends State<NewSpkChecklistScreen> {
           'isDone': false,
           'data': [
             {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
-            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
+            {
+              'qc_item': 'Wkagfhlha wkoghagja wahghlasj',
+              'isDone': null,
+              'qcApproval': null,
+            },
           ],
         },
         {
-          'category': 'Kategori 3',
+          'category': 'Wkagfhlha wkoghagja wahghlasj',
           'isDone': false,
           'data': [
             {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
@@ -149,52 +153,6 @@ class _NewSpkChecklistScreenState extends State<NewSpkChecklistScreen> {
                             ),
                         body: Column(
                           children: [
-                            // Table header
-                            Container(
-                              width: double.infinity,
-                              decoration: const BoxDecoration(
-                                color: Color(0xff1f1f1f),
-                              ),
-                              padding: EdgeInsets.all(16.w),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      "Details for ${item['type']}",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 32.w,
-                                    child: Center(
-                                      child: Text(
-                                        "Done",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 32.w,
-                                    child: Center(
-                                      child: Text(
-                                        "QC",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
                             ...item['data']
                                 .asMap()
                                 .entries
@@ -202,9 +160,9 @@ class _NewSpkChecklistScreenState extends State<NewSpkChecklistScreen> {
                                   (category) => SpkChecklistAccordion(
                                     index: category.key,
                                     showCheckboxQC: false,
-                                    showCheckboxDone: false,
+                                    showCheckboxApplicator: false,
                                     initiallyExpanded: true,
-                                    backgroundColor: const Color(0xFFC7C7C7),
+                                    backgroundColor: const Color(0xFFCFE2FF),
                                     title: category.value['category'],
                                     content: Container(
                                       child: Column(
@@ -218,15 +176,22 @@ class _NewSpkChecklistScreenState extends State<NewSpkChecklistScreen> {
                                                 ) => SpkChecklistAccordion(
                                                   index: qcItem.key,
                                                   showCheckboxQC: true,
-                                                  showCheckboxDone: true,
+                                                  showCheckboxApplicator: true,
+                                                  showCheckboxInspector: true,
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 16.w,
+                                                    vertical: 8.w,
+                                                  ),
                                                   showIcon: false,
+                                                  titleStyle: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                    fontSize: 12.sp,
+                                                  ),
                                                   title:
                                                       qcItem.value['qc_item'],
                                                   content: Container(
                                                     width: double.infinity,
-                                                    padding: EdgeInsets.all(
-                                                      16.w,
-                                                    ),
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment

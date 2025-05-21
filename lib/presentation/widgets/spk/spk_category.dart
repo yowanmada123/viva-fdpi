@@ -17,9 +17,12 @@ class SpkChecklistAccordion extends StatefulWidget {
   final double borderRadius;
   final bool showIcon;
   final bool showCheckboxQC;
-  final bool showCheckboxDone;
+  final bool showCheckboxApplicator;
+  final bool showCheckboxInspector;
   final bool? checkboxValue;
-  final ValueChanged<bool?>? onCheckboxChanged;
+  final ValueChanged<bool?>? onCheckboxQCChanged;
+  final ValueChanged<bool?>? onCheckboxApplicatorChanged;
+  final ValueChanged<bool?>? onCheckboxInspectorChanged;
 
   const SpkChecklistAccordion({
     Key? key,
@@ -38,9 +41,12 @@ class SpkChecklistAccordion extends StatefulWidget {
     this.borderRadius = 0.0,
     this.showIcon = true,
     this.showCheckboxQC = false,
-    this.showCheckboxDone = false,
+    this.showCheckboxApplicator = false,
+    this.showCheckboxInspector = false,
     this.checkboxValue,
-    this.onCheckboxChanged,
+    this.onCheckboxQCChanged,
+    this.onCheckboxApplicatorChanged,
+    this.onCheckboxInspectorChanged,
   }) : super(key: key);
 
   @override
@@ -123,29 +129,57 @@ class _SpkChecklistAccordionState extends State<SpkChecklistAccordion> {
                 ),
 
                 // Checkbox placed outside the InkWell
-                if (widget.showCheckboxDone)
+                if (widget.showCheckboxApplicator)
                   SizedBox(
-                    width: 32.w,
-                    child: Checkbox(
-                      visualDensity: VisualDensity(
-                        horizontal: VisualDensity.minimumDensity,
-                        vertical: VisualDensity.minimumDensity,
-                      ),
-                      value: widget.checkboxValue ?? false,
-                      onChanged: widget.onCheckboxChanged,
+                    width: 48.w,
+                    child: Column(
+                      children: [
+                        Checkbox(
+                          visualDensity: VisualDensity(
+                            horizontal: VisualDensity.minimumDensity,
+                            vertical: VisualDensity.minimumDensity,
+                          ),
+                          value: widget.checkboxValue ?? false,
+                          onChanged: widget.onCheckboxApplicatorChanged,
+                        ),
+                        Text('Pelaksana', style: TextStyle(fontSize: 8.sp)),
+                      ],
+                    ),
+                  ),
+
+                if (widget.showCheckboxInspector)
+                  SizedBox(
+                    width: 48.w,
+                    child: Column(
+                      children: [
+                        Checkbox(
+                          visualDensity: VisualDensity(
+                            horizontal: VisualDensity.minimumDensity,
+                            vertical: VisualDensity.minimumDensity,
+                          ),
+                          value: widget.checkboxValue ?? false,
+                          onChanged: widget.onCheckboxInspectorChanged,
+                        ),
+                        Text('Pemeriksa', style: TextStyle(fontSize: 8.sp)),
+                      ],
                     ),
                   ),
 
                 if (widget.showCheckboxQC)
                   SizedBox(
-                    width: 32.w,
-                    child: Checkbox(
-                      visualDensity: VisualDensity(
-                        horizontal: VisualDensity.minimumDensity,
-                        vertical: VisualDensity.minimumDensity,
-                      ),
-                      value: widget.checkboxValue ?? false,
-                      onChanged: widget.onCheckboxChanged,
+                    width: 48.w,
+                    child: Column(
+                      children: [
+                        Checkbox(
+                          visualDensity: VisualDensity(
+                            horizontal: VisualDensity.minimumDensity,
+                            vertical: VisualDensity.minimumDensity,
+                          ),
+                          value: widget.checkboxValue ?? false,
+                          onChanged: widget.onCheckboxQCChanged,
+                        ),
+                        Text('QC', style: TextStyle(fontSize: 8.sp)),
+                      ],
                     ),
                   ),
 
