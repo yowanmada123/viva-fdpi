@@ -23,7 +23,9 @@ class ApproveChecklistBloc
     final result = await spkRepository.approveChecklist(
       qcTransId: event.qcTransId,
       idQcItem: event.idQcItem,
-      remark: event.remark,
+      remark: event.remark ?? "",
+      imgBase64: event.imgBase64 ?? '',
+      idWork: event.idWork,
     );
     result.fold(
       (failure) => emit(

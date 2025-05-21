@@ -10,6 +10,7 @@ import '../../bloc/fdpi/site/site_bloc.dart';
 import '../../data/repository/fdpi_repository.dart';
 import '../../data/repository/spk_repository.dart';
 import '../../models/errors/custom_exception.dart';
+import '../../models/fdpi/house_item.dart';
 import '../../models/fdpi/residence.dart';
 import '../../models/fdpi/site.dart';
 import 'spk_progress_list_screen.dart';
@@ -72,6 +73,7 @@ class _SpkListBody extends StatefulWidget {
 class _SpkListBodyState extends State<_SpkListBody> {
   String? _site;
   String? _cluster;
+  String? _houseId;
 
   navigateToSPKProgressListScreen(BuildContext context, String qcTransId) {
     Navigator.push(
@@ -120,6 +122,7 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                 setState(() {
                                   _site = value;
                                   _cluster = null;
+                                  _houseId = null;
                                 });
                                 context.read<ResidenceBloc>().add(
                                   LoadResidence("", "", value, ""),
@@ -161,12 +164,63 @@ class _SpkListBodyState extends State<_SpkListBody> {
                             onChanged: (value) {
                               setState(() {
                                 _cluster = value;
+                                _houseId = null;
                               });
+
+                              context.read<HouseItemBloc>().add(
+                                GetHouseItem(
+                                  "",
+                                  "",
+                                  _site!,
+                                  value!,
+                                  "",
+                                  "",
+                                  "",
+                                ),
+                              );
                             },
                           );
                         }
                         return DropdownButtonFormField<String>(
                           decoration: InputDecoration(labelText: 'Cluster'),
+                          items: [],
+                          onChanged: null,
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    BlocBuilder<HouseItemBloc, HouseItemState>(
+                      builder: (context, state) {
+                        if (state is HouseItemLoadSuccess) {
+                          final validCluster =
+                              state.houseItems.any(
+                                    (r) => r.id_house == _houseId,
+                                  )
+                                  ? _houseId
+                                  : null;
+
+                          return DropdownButtonFormField<String>(
+                            decoration: const InputDecoration(
+                              labelText: 'House Item',
+                            ),
+                            value: validCluster,
+                            items:
+                                state.houseItems.map((HouseItem item) {
+                                  return DropdownMenuItem<String>(
+                                    value: item.id_house,
+                                    child: Text(item.house_name),
+                                  );
+                                }).toList(),
+                            onChanged: (value) {
+                              print(value);
+                              setState(() {
+                                _houseId = value;
+                              });
+                            },
+                          );
+                        }
+                        return DropdownButtonFormField<String>(
+                          decoration: InputDecoration(labelText: 'House item'),
                           items: [],
                           onChanged: null,
                         );
@@ -186,6 +240,7 @@ class _SpkListBodyState extends State<_SpkListBody> {
                           GetSPKList(
                             idSite: _site ?? '',
                             idCluster: _cluster ?? '',
+                            idHouse: _houseId ?? '',
                           ),
                         );
                       },

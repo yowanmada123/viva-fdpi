@@ -256,51 +256,51 @@ class MyGridLayout extends StatelessWidget {
                   ),
                 ),
 
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  decoration: BoxDecoration(color: Color(0xFFEAF1FF)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Testing Purpose(Static User Interface)',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: max(16.sp, 16.0),
-                        ),
-                      ),
-                      SizedBox(height: 16.w),
-                      _buildMenuCard(
-                        context,
-                        getButton(
-                          SubMenu(
-                            entity_id: '',
-                            appl_id: '',
-                            menu_id: 'approval',
-                            seq_id: '',
-                            menu_caption: 'Approval',
-                            route_path: '',
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 16.w),
-                      _buildMenuCard(
-                        context,
-                        getButton(
-                          SubMenu(
-                            entity_id: '',
-                            appl_id: '',
-                            menu_id: 'testing-ui-spk',
-                            seq_id: '',
-                            menu_caption: 'SPK Checklist',
-                            route_path: '',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                // Container(
+                //   width: double.infinity,
+                //   padding: EdgeInsets.symmetric(horizontal: 24.w),
+                //   decoration: BoxDecoration(color: Color(0xFFEAF1FF)),
+                //   child: Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       Text(
+                //         'Testing Purpose(Static User Interface)',
+                //         style: TextStyle(
+                //           fontWeight: FontWeight.w600,
+                //           fontSize: max(16.sp, 16.0),
+                //         ),
+                //       ),
+                //       SizedBox(height: 16.w),
+                //       _buildMenuCard(
+                //         context,
+                //         getButton(
+                //           SubMenu(
+                //             entity_id: '',
+                //             appl_id: '',
+                //             menu_id: 'approval',
+                //             seq_id: '',
+                //             menu_caption: 'Approval',
+                //             route_path: '',
+                //           ),
+                //         ),
+                //       ),
+                //       SizedBox(height: 16.w),
+                //       _buildMenuCard(
+                //         context,
+                //         getButton(
+                //           SubMenu(
+                //             entity_id: '',
+                //             appl_id: '',
+                //             menu_id: 'testing-ui-spk',
+                //             seq_id: '',
+                //             menu_caption: 'SPK Checklist',
+                //             route_path: '',
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           ),
