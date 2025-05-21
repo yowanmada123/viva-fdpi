@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:fdpi_app/bloc/authorization/credentials/credentials_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -75,6 +76,13 @@ void main() async {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(lazy: false, create: (context) => AuthenticationBloc()),
+          BlocProvider(
+            lazy: false,
+            create:
+                (context) => CredentialsBloc(
+                  authorizationRepository: authorizationRepository,
+                ),
+          ),
         ],
         child: const MyApp(),
       ),

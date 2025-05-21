@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
+import 'package:fdpi_app/bloc/authorization/credentials/credentials_bloc.dart';
 import 'package:fdpi_app/presentation/SPK/spk_checklist_screen.dart';
 import 'package:fdpi_app/presentation/approval/approval_screen.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,7 @@ class DriverDashboardScreen extends StatelessWidget {
                 authorizationRepository: authorizationRepository,
               )..add(LoadAccessMenu()),
         ),
+        BlocProvider.value(value: context.read<CredentialsBloc>()),
       ],
       child: MyGridLayout(),
     );
@@ -48,7 +50,7 @@ class DriverDashboardScreen extends StatelessWidget {
 }
 
 class MyGridLayout extends StatelessWidget {
-  Map<String, dynamic> getButton(SubMenu submenu) {
+  Map<String, dynamic>? getButton(SubMenu submenu) {
     Map<String, Map<String, dynamic>> buttons = {
       'site': {
         'icon': Icons.map,
@@ -81,13 +83,15 @@ class MyGridLayout extends StatelessWidget {
         'description': 'Approval Pengajuan',
         'route': ApprovalScreen(title: submenu.menu_caption),
       },
-      'testing-ui-spk': {
-        'icon': Icons.edit_document,
-        'text': 'Approval Pengajuan',
-        'description': 'Approval Pengajuan',
-        'route': NewSpkChecklistScreen(),
-      },
+      // 'testing-ui-spk': {
+      //   'icon': Icons.edit_document,
+      //   'text': 'Approval Pengajuan',
+      //   'description': 'Approval Pengajuan',
+      //   'route': NewSpkChecklistScreen(),
+      // },
     };
+
+    if (!buttons.containsKey(submenu.menu_id)) return null;
 
     Map<String, dynamic> button = buttons[submenu.menu_id]!;
     button['text'] = submenu.menu_caption;

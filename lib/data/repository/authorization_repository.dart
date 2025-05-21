@@ -15,4 +15,11 @@ class AuthorizationRepository {
   ) async {
     return authorizationRest.getMenus(entityId: entityId, applId: applId);
   }
+
+  Future<Either<CustomException, Map<String, String>>> getConv(
+    String entityId,
+    String applId,
+  ) async {
+    return authorizationRest.getConv(entityId: entityId, applId: applId);
+  }
 }
