@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
+import '../../bloc/auth/authentication/authentication_bloc.dart';
 import '../../bloc/booking/booking_list/booking_bloc.dart';
 import '../../bloc/fdpi/residence/residence_bloc.dart';
 import '../../bloc/fdpi/site/site_bloc.dart';
 import '../../data/repository/booking_repository.dart';
 import '../../data/repository/fdpi_repository.dart';
 import '../../models/booking.dart';
+import '../../models/errors/custom_exception.dart';
 import '../widgets/AlertDialog/filter_booking.dart';
 import 'booking_form_screen.dart';
 
@@ -219,7 +221,30 @@ class BookingViewBody extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: BlocBuilder<BookingBloc, BookingState>(
+              child: BlocConsumer<BookingBloc, BookingState>(
+                listener: (context, state) {
+                  if (state is BookingLoadFailure) {
+                    if (state.exception is UnauthorizedException) {
+                      context.read<AuthenticationBloc>().add(
+                        SetAuthenticationStatus(isAuthenticated: false),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            "Session Anda telah habis. Silakan login kembali",
+                          ),
+                          duration: Duration(seconds: 5),
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          backgroundColor: Color(0xffEB5757),
+                        ),
+                      );
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                    }
+                  }
+                },
                 builder: (context, state) {
                   if (state is BookingLoading) {
                     return const Center(child: CircularProgressIndicator());
