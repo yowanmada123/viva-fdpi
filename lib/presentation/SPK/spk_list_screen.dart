@@ -107,7 +107,7 @@ class _SpkListBodyState extends State<_SpkListBody> {
                       children: [
                         Text('Site'),
                         SizedBox(width: 2.w),
-                        Text('(*)', style: TextStyle(color: Colors.red)),
+                        Text('*', style: TextStyle(color: Colors.red)),
                       ],
                     ),
                     BlocBuilder<SiteBloc, SiteState>(
@@ -146,13 +146,7 @@ class _SpkListBodyState extends State<_SpkListBody> {
                     ),
                     SizedBox(height: 16.w),
 
-                    Row(
-                      children: [
-                        Text('Cluster'),
-                        SizedBox(width: 2.w),
-                        Text('(*)', style: TextStyle(color: Colors.red)),
-                      ],
-                    ),
+                    Row(children: [Text('Cluster'), SizedBox(width: 2.w)]),
                     BlocBuilder<ResidenceBloc, ResidenceState>(
                       builder: (context, state) {
                         if (state is ResidenceLoadSuccess) {
@@ -250,11 +244,10 @@ class _SpkListBodyState extends State<_SpkListBody> {
                         ),
                       ),
                       onPressed: () {
-                        if (_site == null || _cluster == null) {
+                        if (_site == null) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Tolong lengkapi semua data'),
-                              backgroundColor: Colors.red,
+                            const SnackBar(
+                              content: Text("Site belum dipilih!"),
                             ),
                           );
                           return;

@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:fdpi_app/bloc/authorization/credentials/credentials_bloc.dart';
-import 'package:fdpi_app/presentation/SPK/spk_checklist_screen.dart';
 import 'package:fdpi_app/presentation/approval/approval_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
