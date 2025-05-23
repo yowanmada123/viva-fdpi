@@ -28,7 +28,6 @@ class FDPICoordinatesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("idCluster: $idCluster, idSite: $idSite");
     final fdpiRepository = context.read<FdpiRepository>();
 
     return LandscapeOrientationWrapper(

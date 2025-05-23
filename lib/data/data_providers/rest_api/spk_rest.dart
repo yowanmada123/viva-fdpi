@@ -2,10 +2,12 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:fdpi_app/models/checklistSpkProgress.dart';
 
 import '../../../models/QC/SPK.dart';
 import '../../../models/QC/SPR.dart';
 import '../../../models/checklistItem.dart';
+import '../../../models/checklistSprProgress.dart';
 import '../../../models/errors/custom_exception.dart';
 import '../../../utils/grouping_item.dart';
 import '../../../utils/net_utils.dart';
@@ -39,7 +41,6 @@ class SPKRest {
       );
 
       if (response.statusCode == 200) {
-        log('Response body: ${response.data}');
         final data = response.data;
 
         final List<SPR> items =
@@ -82,7 +83,6 @@ class SPKRest {
       );
 
       if (response.statusCode == 200) {
-        log('Response body: ${response.data}');
         final data = response.data;
 
         final List<SPK> items =
@@ -117,7 +117,6 @@ class SPKRest {
       );
 
       if (response.statusCode == 200) {
-        log('Response body: ${response.data}');
         final data = response.data;
 
         final List<ChecklistItem> items = List<ChecklistItem>.from(
@@ -143,36 +142,131 @@ class SPKRest {
     }
   }
 
-  Future<Either<CustomException, String>> approveChecklist({
+  Future<Either<CustomException, List<ChecklistSprItem>>> getSprChecklistItem({
     required String qcTransId,
-    required String idQcItem,
-    required String remark,
-    required String imgBase64,
-    required String idWork,
   }) async {
     try {
       http.options.headers['requiresToken'] = true;
       log(
-        'Request to https://v2.kencana.org/api/fpi/checklist/aprvCheckList (POST)',
+        'Request to https://v2.kencana.org/api/fpi/checklist/getCheckListDtl (POST)',
       );
 
-      final body = {
-        "qc_trans_id": qcTransId,
-        "id_qc_item": idQcItem,
-        "id_work": idWork,
-        "remark": remark,
-        "img": imgBase64,
-      };
+      final body = {"qc_trans_id": qcTransId};
 
       final response = await http.post(
-        "api/fpi/checklist/aprvCheckList",
+        "api/fpi/checklist/getCheckListDtl",
         data: body,
       );
 
       if (response.statusCode == 200) {
-        log('Response body: ${response.data}');
         final data = response.data;
 
+        List<ChecklistSprItem> allItems = [];
+
+        for (final company in data['data']) {
+          final categories = company['categories'] as List<dynamic>;
+
+          for (final category in categories) {
+            final items = category['items'] as List<dynamic>;
+
+            // Add each item with company and category info
+            for (final item in items) {
+              allItems.add(ChecklistSprItem.fromMap(item));
+            }
+          }
+        }
+
+        return Right(allItems);
+      } else {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
+  Future<Either<CustomException, List<ChecklistSpkProgress>>>
+  getSpkChecklistItem({required String qcTransId}) async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log(
+        'Request to https://v2.kencana.org/api/fpi/checklist/getCheckListDtl (POST)',
+      );
+
+      final body = {"qc_trans_id": qcTransId};
+
+      final response = await http.post(
+        "api/fpi/checklist/getCheckListDtl",
+        data: body,
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+
+        final result = List<ChecklistSpkProgress>.from(
+          data['data'].map((e) => ChecklistSpkProgress.fromMap(e)),
+        );
+
+        return Right(result);
+      } else {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
+  Future<Either<CustomException, String>> approveChecklist({
+    required String qcTransId,
+    required String idQcItem,
+    required String remark,
+    required String idWork,
+    required MultipartFile? fileImage,
+  }) async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      http.options.contentType = Headers.formUrlEncodedContentType;
+      log(
+        'Request to https://v2.kencana.org/api/fpi/checklist/aprvCheckList (POST)',
+      );
+
+      final FormData formData = FormData.fromMap({
+        "qc_trans_id": qcTransId,
+        "id_qc_item": idQcItem,
+        "id_work": idWork,
+        "remark": remark,
+        "img": fileImage,
+      });
+
+      log("Request body: $formData");
+
+      // final body = {
+      //   "qc_trans_id": qcTransId,
+      //   "id_qc_item": idQcItem,
+      //   "id_work": idWork,
+      //   "remark": remark,
+      //   "img": fileImage,
+      // };
+
+      // log("Request body: $body");
+
+      final response = await http.post(
+        "api/fpi/checklist/aprvCheckList",
+        data: formData,
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+
+        log("Success");
         return Right(data['message'] ?? "Approve Success");
       } else {
         return Left(NetUtils.parseErrorResponse(response: response.data));

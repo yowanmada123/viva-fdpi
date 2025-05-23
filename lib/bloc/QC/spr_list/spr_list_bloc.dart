@@ -15,7 +15,6 @@ class SprListBloc extends Bloc<SprListEvent, SprListState> {
   }
 
   Future<void> _getSPRList(GetSPRList event, Emitter<SprListState> emit) async {
-    print("masuk bloc");
     emit(SprListLoading());
     final result = await spkRepository.getSPRList(
       idSite: event.idSite,

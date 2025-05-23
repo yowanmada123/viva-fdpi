@@ -1,7 +1,10 @@
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
+import 'package:fdpi_app/models/checklistSprProgress.dart';
 
 import '../../models/QC/SPK.dart';
 import '../../models/QC/SPR.dart';
+import '../../models/checklistSpkProgress.dart';
 import '../../models/errors/custom_exception.dart';
 import '../data_providers/rest_api/spk_rest.dart';
 
@@ -34,6 +37,17 @@ class SPKRepository {
     );
   }
 
+  Future<Either<CustomException, List<ChecklistSpkProgress>>>
+  getSpkChecklistItem({required String qcTransId}) async {
+    return spkRest.getSpkChecklistItem(qcTransId: qcTransId);
+  }
+
+  Future<Either<CustomException, List<ChecklistSprItem>>> getSprChecklistItem({
+    required String qcTransId,
+  }) async {
+    return spkRest.getSprChecklistItem(qcTransId: qcTransId);
+  }
+
   Future<Either<CustomException, Map<String, Map<String, dynamic>>>>
   getChecklistItem({required String qcTransId}) async {
     return spkRest.getChecklistItem(qcTransId: qcTransId);
@@ -43,14 +57,14 @@ class SPKRepository {
     required String qcTransId,
     required String idQcItem,
     required String remark,
-    required String imgBase64,
+    required MultipartFile? fileImage,
     required String idWork,
   }) async {
     return spkRest.approveChecklist(
       qcTransId: qcTransId,
       idQcItem: idQcItem,
       remark: remark,
-      imgBase64: imgBase64,
+      fileImage: fileImage,
       idWork: idWork,
     );
   }

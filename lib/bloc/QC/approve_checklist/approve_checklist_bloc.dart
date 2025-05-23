@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fdpi_app/data/repository/spk_repository.dart';
 
@@ -24,7 +25,7 @@ class ApproveChecklistBloc
       qcTransId: event.qcTransId,
       idQcItem: event.idQcItem,
       remark: event.remark ?? "",
-      imgBase64: event.imgBase64 ?? '',
+      fileImage: event.fileImage,
       idWork: event.idWork,
     );
     result.fold(

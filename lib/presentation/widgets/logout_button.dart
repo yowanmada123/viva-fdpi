@@ -19,7 +19,6 @@ class LogOutButton extends StatelessWidget {
           child: BlocConsumer<LogoutBloc, LogoutState>(
             listener: (context, state) {
               if (state is LogoutFailure) {
-                print(state.exception);
                 if (state.exception is UnauthorizedException) {
                   BlocProvider.of<AuthenticationBloc>(context).add(
                     SetAuthenticationStatus(isAuthenticated: false, user: null),

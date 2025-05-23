@@ -143,7 +143,7 @@ class _SpkProgressListScreenContentState
                                                 qcTransId: qcTransId,
                                                 idQcItem: itemId,
                                                 remark: _remarkController.text,
-                                                imgBase64: '',
+                                                // imgBase64: '',
                                                 idWork: '1',
                                               ),
                                             );
@@ -265,48 +265,39 @@ class _SpkProgressListScreenContentState
                               padding: EdgeInsets.all(16.w),
                               child: Column(
                                 children:
-                                    (entry.value
-                                            as Map<String, dynamic>)['data']
-                                        .map<Widget>((item) {
-                                          return CheckboxListTile(
-                                            contentPadding: EdgeInsets.zero,
-                                            title: Text(item.qcItem),
-                                            value: item.aprvBy.isNotEmpty,
-                                            onChanged:
-                                                _isPanelEnabled(
-                                                      state,
-                                                      entry.key,
-                                                    )
-                                                    ? (bool? newValue) {
-                                                      _showApprovalDialog(
-                                                        context: context,
-                                                        qcTransId:
-                                                            widget.qcTransId,
-                                                        category: entry.key,
-                                                        itemId: item.idQcItem,
-                                                        currentApprovalStatus:
-                                                            item
-                                                                .aprvBy
-                                                                .isNotEmpty,
-                                                        itemName: item.qcItem,
-                                                        approveChecklistBloc:
-                                                            context
-                                                                .read<
-                                                                  ApproveChecklistBloc
-                                                                >(),
-                                                        checklistBloc:
-                                                            context
-                                                                .read<
-                                                                  ChecklistBloc
-                                                                >(),
-                                                      );
-                                                    }
-                                                    : null,
-                                            controlAffinity:
-                                                ListTileControlAffinity.leading,
-                                          );
-                                        })
-                                        .toList(),
+                                    (entry.value)['data'].map<Widget>((item) {
+                                      return CheckboxListTile(
+                                        contentPadding: EdgeInsets.zero,
+                                        title: Text(item.qcItem),
+                                        value: item.aprvBy.isNotEmpty,
+                                        onChanged:
+                                            _isPanelEnabled(state, entry.key)
+                                                ? (bool? newValue) {
+                                                  _showApprovalDialog(
+                                                    context: context,
+                                                    qcTransId: widget.qcTransId,
+                                                    category: entry.key,
+                                                    itemId: item.idQcItem,
+                                                    currentApprovalStatus:
+                                                        item.aprvBy.isNotEmpty,
+                                                    itemName: item.qcItem,
+                                                    approveChecklistBloc:
+                                                        context
+                                                            .read<
+                                                              ApproveChecklistBloc
+                                                            >(),
+                                                    checklistBloc:
+                                                        context
+                                                            .read<
+                                                              ChecklistBloc
+                                                            >(),
+                                                  );
+                                                }
+                                                : null,
+                                        controlAffinity:
+                                            ListTileControlAffinity.leading,
+                                      );
+                                    }).toList(),
                               ),
                             ),
                           ],

@@ -14,9 +14,6 @@ final class ApproveChecklistLoading extends ApproveChecklistState {}
 final class ApproveChecklistLoadSuccess extends ApproveChecklistState {
   final String message;
   const ApproveChecklistLoadSuccess({required this.message});
-
-  @override
-  List<Object> get props => [message];
 }
 
 final class ApproveChecklistLoadFailure extends ApproveChecklistState {
@@ -26,7 +23,4 @@ final class ApproveChecklistLoadFailure extends ApproveChecklistState {
     required this.message,
     required this.error,
   });
-
-  @override
-  List<Object> get props => [message, error];
 }

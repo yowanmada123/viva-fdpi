@@ -76,7 +76,7 @@ class ChecklistItem {
       idQcItem: map['id_qc_item'] ?? '',
       qcItem: map['qc_item'] ?? '',
       stat: map['stat'] ?? '',
-      comId: map['com_id'] ?? '',
+      comId: map['com_id'],
       comDesc: map['com_desc'] ?? '',
       clusterName: map['cluster_name'] ?? '',
       siteName: map['site_name'] ?? '',

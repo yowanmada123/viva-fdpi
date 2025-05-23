@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
+import 'package:fdpi_app/bloc/authorization/credentials/credentials_bloc.dart';
 import 'package:fdpi_app/presentation/SPK/spk_checklist_screen.dart';
 import 'package:fdpi_app/presentation/approval/approval_screen.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,9 @@ class DriverDashboardScreen extends StatelessWidget {
                 authorizationRepository: authorizationRepository,
               )..add(LoadAccessMenu()),
         ),
+        BlocProvider.value(
+          value: context.read<CredentialsBloc>()..add(CredentialsLoad()),
+        ),
       ],
       child: MyGridLayout(),
     );
@@ -48,7 +52,7 @@ class DriverDashboardScreen extends StatelessWidget {
 }
 
 class MyGridLayout extends StatelessWidget {
-  Map<String, dynamic> getButton(SubMenu submenu) {
+  Map<String, dynamic>? getButton(SubMenu submenu) {
     Map<String, Map<String, dynamic>> buttons = {
       'site': {
         'icon': Icons.map,
@@ -75,19 +79,51 @@ class MyGridLayout extends StatelessWidget {
         'description': 'Monitoring Pembangunan Rumah',
         'route': SpkListScreen(title: submenu.menu_caption),
       },
-      'approval': {
+      'approvalKasBon': {
         'icon': Icons.edit_document,
         'text': 'Approval Pengajuan',
         'description': 'Approval Pengajuan',
         'route': ApprovalScreen(title: submenu.menu_caption),
       },
-      'testing-ui-spk': {
+      'approvalKasBon': {
         'icon': Icons.edit_document,
         'text': 'Approval Pengajuan',
-        'description': 'Approval Pengajuan',
-        'route': NewSpkChecklistScreen(),
+        'description': 'Approval Kasbon',
+        'route': ApprovalScreen(title: submenu.menu_caption),
       },
+      'approvalSPB': {
+        'icon': Icons.edit_document,
+        'text': 'Approval Pengajuan',
+        'description': 'Approval SPB',
+        'route': ApprovalScreen(title: submenu.menu_caption),
+      },
+      'approvalSPK': {
+        'icon': Icons.edit_document,
+        'text': 'Approval Pengajuan',
+        'description': 'Approval SPK',
+        'route': ApprovalScreen(title: submenu.menu_caption),
+      },
+      'approvalSPR': {
+        'icon': Icons.edit_document,
+        'text': 'Approval Pengajuan',
+        'description': 'Approval SPR',
+        'route': ApprovalScreen(title: submenu.menu_caption),
+      },
+      'kasBon': {
+        'icon': Icons.request_quote,
+        'text': 'Approval Pengajuan',
+        'description': 'Kasbon',
+        'route': ApprovalScreen(title: submenu.menu_caption),
+      },
+      // 'testing-ui-spk': {
+      //   'icon': Icons.edit_document,
+      //   'text': 'Approval Pengajuan',
+      //   'description': 'Approval Pengajuan',
+      //   'route': NewSpkChecklistScreen(),
+      // },
     };
+
+    if (!buttons.containsKey(submenu.menu_id)) return null;
 
     Map<String, dynamic> button = buttons[submenu.menu_id]!;
     button['text'] = submenu.menu_caption;
@@ -101,6 +137,8 @@ class MyGridLayout extends StatelessWidget {
     'assets/images/foto-awards-3.webp',
     'assets/images/foto-awards-4.webp',
   ];
+
+  MyGridLayout({super.key});
 
   void _navigateToScreen(BuildContext context, Map<String, dynamic> button) {
     if (button['route'] == null) {

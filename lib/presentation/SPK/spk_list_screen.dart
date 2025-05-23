@@ -13,7 +13,8 @@ import '../../models/errors/custom_exception.dart';
 import '../../models/fdpi/house_item.dart';
 import '../../models/fdpi/residence.dart';
 import '../../models/fdpi/site.dart';
-import 'spk_progress_list_screen.dart';
+import 'spk_checklist_screen.dart';
+// import 'spk_progress_list_screen.dart';
 
 class SpkListScreen extends StatelessWidget {
   final String title;
@@ -79,7 +80,7 @@ class _SpkListBodyState extends State<_SpkListBody> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SpkProgressListScreen(qcTransId: qcTransId),
+        builder: (context) => NewSpkChecklistScreen(qcTransId: qcTransId),
       ),
     );
   }
@@ -102,13 +103,18 @@ class _SpkListBodyState extends State<_SpkListBody> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Row(
+                      children: [
+                        Text('Site'),
+                        SizedBox(width: 2.w),
+                        Text('(*)', style: TextStyle(color: Colors.red)),
+                      ],
+                    ),
                     BlocBuilder<SiteBloc, SiteState>(
                       builder: (context, state) {
                         if (state is SiteLoadedSuccess) {
                           return DropdownButtonFormField<String>(
-                            decoration: const InputDecoration(
-                              labelText: 'Site',
-                            ),
+                            decoration: const InputDecoration(hintText: 'Site'),
                             value: _site,
                             items:
                                 state.sites.map((Site item) {
@@ -132,13 +138,21 @@ class _SpkListBodyState extends State<_SpkListBody> {
                           );
                         }
                         return DropdownButtonFormField<String>(
-                          decoration: InputDecoration(labelText: 'Site'),
+                          decoration: InputDecoration(hintText: 'Site'),
                           items: [],
                           onChanged: null,
                         );
                       },
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 16.w),
+
+                    Row(
+                      children: [
+                        Text('Cluster'),
+                        SizedBox(width: 2.w),
+                        Text('(*)', style: TextStyle(color: Colors.red)),
+                      ],
+                    ),
                     BlocBuilder<ResidenceBloc, ResidenceState>(
                       builder: (context, state) {
                         if (state is ResidenceLoadSuccess) {
@@ -151,7 +165,7 @@ class _SpkListBodyState extends State<_SpkListBody> {
 
                           return DropdownButtonFormField<String>(
                             decoration: const InputDecoration(
-                              labelText: 'Cluster',
+                              hintText: 'Cluster',
                             ),
                             value: validCluster,
                             items:
@@ -182,13 +196,14 @@ class _SpkListBodyState extends State<_SpkListBody> {
                           );
                         }
                         return DropdownButtonFormField<String>(
-                          decoration: InputDecoration(labelText: 'Cluster'),
+                          decoration: InputDecoration(hintText: 'Cluster'),
                           items: [],
                           onChanged: null,
                         );
                       },
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 16.w),
+                    Row(children: [Text('House Item'), SizedBox(width: 2.w)]),
                     BlocBuilder<HouseItemBloc, HouseItemState>(
                       builder: (context, state) {
                         if (state is HouseItemLoadSuccess) {
@@ -201,7 +216,7 @@ class _SpkListBodyState extends State<_SpkListBody> {
 
                           return DropdownButtonFormField<String>(
                             decoration: const InputDecoration(
-                              labelText: 'House Item',
+                              hintText: 'House Item',
                             ),
                             value: validCluster,
                             items:
@@ -212,7 +227,6 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                   );
                                 }).toList(),
                             onChanged: (value) {
-                              print(value);
                               setState(() {
                                 _houseId = value;
                               });
@@ -220,7 +234,7 @@ class _SpkListBodyState extends State<_SpkListBody> {
                           );
                         }
                         return DropdownButtonFormField<String>(
-                          decoration: InputDecoration(labelText: 'House item'),
+                          decoration: InputDecoration(hintText: 'House Item'),
                           items: [],
                           onChanged: null,
                         );
@@ -236,6 +250,16 @@ class _SpkListBodyState extends State<_SpkListBody> {
                         ),
                       ),
                       onPressed: () {
+                        if (_site == null || _cluster == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Tolong lengkapi semua data'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          return;
+                        }
+
                         context.read<SpkListBloc>().add(
                           GetSPKList(
                             idSite: _site ?? '',

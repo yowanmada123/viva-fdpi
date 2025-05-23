@@ -11,17 +11,14 @@ class ApproveChecklistEventInit extends ApproveChecklistEvent {
   final String qcTransId;
   final String idQcItem;
   final String? remark;
-  final String? imgBase64;
+  final MultipartFile? fileImage;
   final String idWork;
 
   const ApproveChecklistEventInit({
     required this.qcTransId,
     required this.idQcItem,
     required this.idWork,
-    this.imgBase64,
+    this.fileImage,
     this.remark,
   });
-
-  @override
-  List<Object> get props => [qcTransId, idQcItem, remark!, imgBase64!, idWork];
 }
