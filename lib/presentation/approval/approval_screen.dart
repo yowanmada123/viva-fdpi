@@ -1,7 +1,6 @@
 // approval_screen.dart
 import 'package:fdpi_app/presentation/widgets/approval/vertical_timeline.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fdpi_app/presentation/widgets/approval/approval_card.dart';
 import 'package:fdpi_app/presentation/widgets/approval/aprrove_bottom_navigator.dart';
 import 'dart:developer';
@@ -88,69 +87,71 @@ class ApprovalScreenState extends State<ApprovalScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (notification) {
-          return true;
-        },
-        child: PageView.builder(
-          controller: _pageController,
-          scrollDirection: Axis.vertical,
-          itemCount: _requests.length + (_isLoading ? 1 : 0),
-          onPageChanged: (index) {
-            setState(() => _currentPage = index);
-            if (_currentPage >= _requests.length - 1) {
-              log("masuk sini");
-              _loadMoreRequests();
-            }
+      body: SafeArea(
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (notification) {
+            return true;
           },
-          itemBuilder: (context, index) {
-            if (index >= _requests.length) {
-              return Center(child: CircularProgressIndicator());
-            }
-            return ApprovalCard(
-              requests: _requests[index],
-              scrollController: _getController(index),
-              onReachBottom: () async {
-                int index = _currentPage;
-                log("capai bawah degan state animated $_isAnimated");
+          child: PageView.builder(
+            controller: _pageController,
+            scrollDirection: Axis.vertical,
+            itemCount: _requests.length + (_isLoading ? 1 : 0),
+            onPageChanged: (index) {
+              setState(() => _currentPage = index);
+              if (_currentPage >= _requests.length - 1) {
+                log("masuk sini");
+                _loadMoreRequests();
+              }
+            },
+            itemBuilder: (context, index) {
+              if (index >= _requests.length) {
+                return Center(child: CircularProgressIndicator());
+              }
+              return ApprovalCard(
+                requests: _requests[index],
+                scrollController: _getController(index),
+                onReachBottom: () async {
+                  int index = _currentPage;
+                  log("capai bawah degan state animated $_isAnimated");
 
-                if (_isAnimated) return;
-                setState(() {
-                  _isAnimated = true;
-                });
+                  if (_isAnimated) return;
+                  setState(() {
+                    _isAnimated = true;
+                  });
 
-                await _pageController.animateToPage(
-                  index + 1,
-                  duration: Duration(milliseconds: 300),
-                  curve: Curves.easeOut,
-                );
+                  await _pageController.animateToPage(
+                    index + 1,
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.easeOut,
+                  );
 
-                setState(() {
-                  _isAnimated = false;
-                });
-              },
-              onReachTop: () async {
-                int index = _currentPage;
-                log("capai atas degan state animated $_isAnimated");
+                  setState(() {
+                    _isAnimated = false;
+                  });
+                },
+                onReachTop: () async {
+                  int index = _currentPage;
+                  log("capai atas degan state animated $_isAnimated");
 
-                if (_isAnimated) return;
+                  if (_isAnimated) return;
 
-                setState(() {
-                  _isAnimated = true;
-                });
+                  setState(() {
+                    _isAnimated = true;
+                  });
 
-                await _pageController.animateToPage(
-                  index - 1,
-                  duration: Duration(milliseconds: 300),
-                  curve: Curves.easeOut,
-                );
+                  await _pageController.animateToPage(
+                    index - 1,
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.easeOut,
+                  );
 
-                setState(() {
-                  _isAnimated = false;
-                });
-              },
-            );
-          },
+                  setState(() {
+                    _isAnimated = false;
+                  });
+                },
+              );
+            },
+          ),
         ),
       ),
       bottomNavigationBar: ApprovalBottomBar(
@@ -158,7 +159,6 @@ class ApprovalScreenState extends State<ApprovalScreen> {
         onApprove: () => _handleApproval(_currentPage),
         onReject: () {
           // Handle reject logic
-          print("Rejected");
         },
       ),
     );

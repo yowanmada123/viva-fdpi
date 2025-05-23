@@ -15,7 +15,6 @@ class BankBloc extends Bloc<BankEvent, BankState> {
   }
 
   Future<void> _getBank(GetBank event, Emitter<BankState> emit) async {
-    print("Masuk sini bang");
     emit(BankLoading());
     final result = await masterRest.getBank();
 

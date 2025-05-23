@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ApprovalBottomBar extends StatelessWidget {
   final VoidCallback onReject;
@@ -14,26 +15,17 @@ class ApprovalBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 8,
-            offset: Offset(0, -2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Reject Button
-          Expanded(
+    return BottomNavigationBar(
+      backgroundColor: Color(0xffffffff),
+      elevation: 8.0,
+      items: [
+        BottomNavigationBarItem(
+          icon: Container(
+            padding: EdgeInsets.symmetric(vertical: 4.w, horizontal: 16.w),
+            width: double.infinity,
             child: OutlinedButton(
               onPressed: isLoading ? null : onReject,
               style: OutlinedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 16),
                 side: BorderSide(color: Colors.red),
               ),
               child: Text(
@@ -45,15 +37,15 @@ class ApprovalBottomBar extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 16),
-          // Approve Button
-          Expanded(
+          label: '',
+        ),
+        BottomNavigationBarItem(
+          icon: Container(
+            padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 16.w),
+            width: double.infinity,
             child: ElevatedButton(
               onPressed: isLoading ? null : onApprove,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                padding: EdgeInsets.symmetric(vertical: 16),
-              ),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
               child:
                   isLoading
                       ? SizedBox(
@@ -73,8 +65,9 @@ class ApprovalBottomBar extends StatelessWidget {
                       ),
             ),
           ),
-        ],
-      ),
+          label: '',
+        ),
+      ],
     );
   }
 }

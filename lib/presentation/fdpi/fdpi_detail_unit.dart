@@ -10,8 +10,7 @@ import '../../models/fdpi/house.dart';
 class FDPIDetailUnitScreen extends StatelessWidget {
   final Coordinates selectedCoordinates;
 
-  const FDPIDetailUnitScreen({Key? key, required this.selectedCoordinates})
-    : super(key: key);
+  const FDPIDetailUnitScreen({super.key, required this.selectedCoordinates});
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +23,7 @@ class FDPIDetailUnitScreen extends StatelessWidget {
 class FDPIDetailUnitView extends StatelessWidget {
   final Coordinates selectedCoordinates;
 
-  const FDPIDetailUnitView({Key? key, required this.selectedCoordinates})
-    : super(key: key);
+  const FDPIDetailUnitView({super.key, required this.selectedCoordinates});
 
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,16 @@
+import 'dart:convert';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../bloc/QC/approve_checklist/approve_checklist_bloc.dart';
-import '../../bloc/QC/checklist/checklist_bloc.dart';
+import '../../bloc/QC/spr_checklist/spr_checklist_bloc.dart';
 import '../../data/repository/spk_repository.dart';
+import '../widgets/qc_checklist/spr_checklist.dart';
 
 class SprProgressListScreen extends StatelessWidget {
   final String qcTransId;
@@ -17,8 +23,8 @@ class SprProgressListScreen extends StatelessWidget {
         BlocProvider(
           create:
               (context) =>
-                  ChecklistBloc(spkRepository: context.read<SPKRepository>())
-                    ..add(LoadChecklist(qcTransId: qcTransId)),
+                  SprChecklistBloc(spkRepository: context.read<SPKRepository>())
+                    ..add(LoadSprChecklist(qcTransId: qcTransId)),
         ),
         BlocProvider(
           create:
@@ -45,139 +51,29 @@ class _SprProgressListScreenContentState
     extends State<_SprProgressListScreenContent> {
   final TextEditingController _remarkController = TextEditingController();
 
-  void _showApprovalDialog({
-    required BuildContext context,
-    required String qcTransId,
-    required String category,
-    required String itemId,
-    required bool currentApprovalStatus,
-    required String itemName,
-    required ApproveChecklistBloc approveChecklistBloc,
-    required ChecklistBloc checklistBloc,
-  }) {
-    _remarkController.clear();
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          insetPadding: EdgeInsets.symmetric(
-            horizontal: 16.w,
-          ), // Adjust side margins
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width, // Full width
-            ),
-            child: MultiBlocProvider(
-              providers: [
-                BlocProvider.value(value: approveChecklistBloc),
-                BlocProvider.value(value: checklistBloc),
-              ],
-              child: BlocListener<ApproveChecklistBloc, ApproveChecklistState>(
-                listener: (context, state) {
-                  if (state is ApproveChecklistLoadSuccess) {
-                    checklistBloc.add(LoadChecklist(qcTransId: qcTransId));
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(state.message),
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
-                  }
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(16.w),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Remark for $itemName',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                      TextField(
-                        controller: _remarkController,
-                        maxLines: 3,
-                        decoration: InputDecoration(
-                          hintText: 'Enter your remark...',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.w),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text('Cancel'),
-                            ),
-                          ),
-                          SizedBox(width: 16),
-                          BlocBuilder<
-                            ApproveChecklistBloc,
-                            ApproveChecklistState
-                          >(
-                            builder: (context, state) {
-                              return Expanded(
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Color(0xFF1C3FAA),
-                                  ),
-                                  onPressed:
-                                      state is ApproveChecklistLoading
-                                          ? null
-                                          : () {
-                                            approveChecklistBloc.add(
-                                              ApproveChecklistEventInit(
-                                                qcTransId: qcTransId,
-                                                idQcItem: itemId,
-                                                remark: _remarkController.text,
-                                                idWork: '1',
-                                              ),
-                                            );
-                                          },
-                                  child:
-                                      state is ApproveChecklistLoading
-                                          ? CircularProgressIndicator(
-                                            color: Colors.white,
-                                          )
-                                          : Text(
-                                            'Submit',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   @override
   void dispose() {
     _remarkController.dispose();
     super.dispose();
+  }
+
+  void checkboxEvent(
+    int param,
+    String id,
+    BuildContext context,
+    String remark,
+    MultipartFile? fileImage, {
+    bool? value,
+  }) {
+    context.read<ApproveChecklistBloc>().add(
+      ApproveChecklistEventInit(
+        qcTransId: widget.qcTransId,
+        idQcItem: id,
+        idWork: param.toString(),
+        remark: remark,
+        fileImage: fileImage,
+      ),
+    );
   }
 
   @override
@@ -186,59 +82,208 @@ class _SprProgressListScreenContentState
       appBar: AppBar(
         title: Text('Bank Check List', style: TextStyle(fontSize: 20.sp)),
       ),
-      body: BlocBuilder<ChecklistBloc, ChecklistState>(
-        builder: (context, state) {
-          if (state is ChecklistLoadSuccess) {
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  for (var entry in state.checklistItem.entries)
-                    Padding(
-                      padding: EdgeInsets.all(16.w),
-                      child: Column(
-                        children:
-                            (entry.value as Map<String, dynamic>)['data']
-                                .map<Widget>((item) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8.w),
-                                    ),
-                                    margin: EdgeInsets.only(bottom: 8.w),
-                                    child: CheckboxListTile(
-                                      contentPadding: EdgeInsets.zero,
-                                      title: Text(item.qcItem),
-                                      value: item.aprvBy.isNotEmpty,
-                                      onChanged: (bool? newValue) {
-                                        _showApprovalDialog(
-                                          context: context,
-                                          qcTransId: widget.qcTransId,
-                                          category: entry.key,
-                                          itemId: item.idQcItem,
-                                          currentApprovalStatus:
-                                              item.aprvBy.isNotEmpty,
-                                          itemName: item.qcItem,
-                                          approveChecklistBloc:
-                                              context
-                                                  .read<ApproveChecklistBloc>(),
-                                          checklistBloc:
-                                              context.read<ChecklistBloc>(),
-                                        );
-                                      },
-                                      controlAffinity:
-                                          ListTileControlAffinity.leading,
-                                    ),
-                                  );
-                                })
-                                .toList(),
-                      ),
-                    ),
-                ],
+      body: BlocListener<ApproveChecklistBloc, ApproveChecklistState>(
+        listener: (context, state) {
+          if (state is ApproveChecklistLoadSuccess) {
+            context.read<SprChecklistBloc>().add(
+              LoadSprChecklist(qcTransId: widget.qcTransId),
+            );
+          }
+          if (state is ApproveChecklistLoadFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                duration: Duration(seconds: 5),
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                backgroundColor: Color(0xffEB5757),
               ),
             );
           }
-          return Center(child: CircularProgressIndicator());
         },
+        child: BlocBuilder<SprChecklistBloc, SprChecklistState>(
+          builder: (context, state) {
+            if (state is SprChecklistLoadSuccess) {
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(16.w),
+                  child: Column(
+                    children:
+                        state.sprChecklistItem.asMap().entries.map<Widget>((
+                          qcItem,
+                        ) {
+                          return SprChecklistAccordion(
+                            index: qcItem.key,
+                            title: qcItem.value.itemName,
+                            padding: EdgeInsets.all(16.w),
+                            onCheckboxApplicatorChanged:
+                                qcItem.value.statClosing == 'N'
+                                    ? (value, remark, fileImage) {
+                                      checkboxEvent(
+                                        1,
+                                        qcItem.value.idQcItem,
+                                        context,
+                                        value: value,
+                                        remark,
+                                        fileImage,
+                                      );
+                                    }
+                                    : null,
+                            showIcon: false,
+                            showCheckboxApplicator: true,
+                            checkboxApplicatorInitalValue:
+                                qcItem.value.dtAprv != null,
+                            titleStyle: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 12.sp,
+                            ),
+                            content: SizedBox(
+                              width: double.infinity,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Attachment",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.w),
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      children: [
+                                        if (qcItem.value.imgLink.isEmpty &&
+                                            qcItem.value.imgLink2.isEmpty &&
+                                            qcItem.value.imgLink3.isEmpty)
+                                          Container(
+                                            child: Text("No Attachment"),
+                                          ),
+                                        if (qcItem.value.imgLink.isNotEmpty)
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              right: 4.w,
+                                            ),
+                                            child: SizedBox(
+                                              width: 64.w,
+                                              height: 64.w,
+                                              child: Container(
+                                                clipBehavior: Clip.hardEdge,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(2),
+                                                  color: Colors.grey[300],
+                                                ),
+                                                child: CachedNetworkImage(
+                                                  imageUrl:
+                                                      qcItem.value.imgLink,
+                                                  progressIndicatorBuilder:
+                                                      (
+                                                        context,
+                                                        url,
+                                                        progress,
+                                                      ) => Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                              value:
+                                                                  progress
+                                                                      .progress,
+                                                            ),
+                                                      ),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        if (qcItem.value.imgLink2.isNotEmpty)
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              right: 4.w,
+                                            ),
+                                            child: SizedBox(
+                                              width: 64.w,
+                                              height: 64.w,
+                                              child: Container(
+                                                clipBehavior: Clip.hardEdge,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(2),
+                                                  color: Colors.grey[300],
+                                                ),
+                                                child: CachedNetworkImage(
+                                                  imageUrl:
+                                                      qcItem.value.imgLink2,
+                                                  progressIndicatorBuilder:
+                                                      (
+                                                        context,
+                                                        url,
+                                                        progress,
+                                                      ) => Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                              value:
+                                                                  progress
+                                                                      .progress,
+                                                            ),
+                                                      ),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        if (qcItem.value.imgLink3.isNotEmpty)
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              right: 4.w,
+                                            ),
+                                            child: SizedBox(
+                                              width: 64.w,
+                                              height: 64.w,
+                                              child: Container(
+                                                clipBehavior: Clip.hardEdge,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(2),
+                                                  color: Colors.grey[300],
+                                                ),
+                                                child: CachedNetworkImage(
+                                                  imageUrl:
+                                                      qcItem.value.imgLink3,
+                                                  progressIndicatorBuilder:
+                                                      (
+                                                        context,
+                                                        url,
+                                                        progress,
+                                                      ) => Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                              value:
+                                                                  progress
+                                                                      .progress,
+                                                            ),
+                                                      ),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                  ),
+                ),
+              );
+            }
+            return Center(child: CircularProgressIndicator());
+          },
+        ),
       ),
     );
   }

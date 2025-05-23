@@ -1,176 +1,198 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:fdpi_app/presentation/widgets/spk/spk_category.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
+import 'package:fdpi_app/bloc/QC/checklist/checklist_bloc.dart';
+import 'package:fdpi_app/bloc/QC/spk_checklist/spk_checklist_bloc.dart';
+import 'package:fdpi_app/presentation/widgets/qc_checklist/spk_category.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class NewSpkChecklistScreen extends StatefulWidget {
-  const NewSpkChecklistScreen({super.key});
+import '../../bloc/QC/approve_checklist/approve_checklist_bloc.dart';
+import '../../bloc/auth/authentication/authentication_bloc.dart';
+import '../../data/repository/spk_repository.dart';
+import '../../models/errors/custom_exception.dart';
+
+class NewSpkChecklistScreen extends StatelessWidget {
+  final String qcTransId;
+  const NewSpkChecklistScreen({super.key, required this.qcTransId});
 
   @override
-  _NewSpkChecklistScreenState createState() => _NewSpkChecklistScreenState();
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create:
+              (context) =>
+                  SpkChecklistBloc(spkRepository: context.read<SPKRepository>())
+                    ..add(LoadSpkChecklist(qcTransId: qcTransId)),
+        ),
+        BlocProvider(
+          create:
+              (context) => ApproveChecklistBloc(
+                spkRepository: context.read<SPKRepository>(),
+              ),
+        ),
+      ],
+      child: SpkChecklistForm(qcTransId: qcTransId),
+    );
+  }
 }
 
-class _NewSpkChecklistScreenState extends State<NewSpkChecklistScreen> {
-  final List<Map<String, dynamic>> _dummyData = [
-    {
-      'type': 'Pelunasan 30%',
-      'isExpanded': true,
-      'data': [
-        {
-          'category': 'Tanah Rata',
-          'isDone': false,
-          'data': [
-            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
-            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
-          ],
-        },
-        {
-          'category': 'Air Tanah',
-          'isDone': false,
-          'data': [
-            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
-            {
-              'qc_item': 'Wkagfhlha wkoghagja wahghlasj',
-              'isDone': null,
-              'qcApproval': null,
-            },
-          ],
-        },
-        {
-          'category': 'Wkagfhlha wkoghagja wahghlasj',
-          'isDone': false,
-          'data': [
-            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
-            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
-          ],
-        },
-      ],
-    },
-    {
-      'type': 'Pelunasan 60%',
-      'isExpanded': true,
-      'data': [
-        {
-          'category': 'Tanah Rata',
-          'isDone': false,
-          'data': [
-            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
-            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
-          ],
-        },
-        {
-          'category': 'Air Tanah',
-          'isDone': false,
-          'data': [
-            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
-            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
-          ],
-        },
-        {
-          'category': 'Kategori 3',
-          'isDone': false,
-          'data': [
-            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
-            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
-          ],
-        },
-      ],
-    },
-    {
-      'type': 'Pelunasan 90%',
-      'isExpanded': true,
-      'data': [
-        {
-          'category': 'Tanah Rata',
-          'isDone': false,
-          'data': [
-            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
-            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
-          ],
-        },
-        {
-          'category': 'Air Tanah',
-          'isDone': false,
-          'data': [
-            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
-            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
-          ],
-        },
-        {
-          'category': 'Kategori 3',
-          'isDone': false,
-          'data': [
-            {'qc_item': 'Tanah Rata', 'isDone': null, 'qcApproval': null},
-            {'qc_item': 'Pkau Bumi', 'isDone': null, 'qcApproval': null},
-          ],
-        },
-      ],
-    },
-  ];
+class SpkChecklistForm extends StatefulWidget {
+  final String qcTransId;
+  const SpkChecklistForm({super.key, required this.qcTransId});
+
+  @override
+  SpkChecklistFormState createState() => SpkChecklistFormState();
+}
+
+class SpkChecklistFormState extends State<SpkChecklistForm> {
+  void checkboxEvent(
+    int param,
+    String id,
+    BuildContext context,
+    String remark,
+    MultipartFile? fileImage, {
+    bool? value,
+  }) {
+    context.read<ApproveChecklistBloc>().add(
+      ApproveChecklistEventInit(
+        qcTransId: widget.qcTransId,
+        idQcItem: id,
+        idWork: param.toString(),
+        remark: remark,
+        fileImage: fileImage,
+      ),
+    );
+  }
+
+  final List<bool> _expandedStatus = List.generate(10, (index) => true);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('SPK Checklist')),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.all(16.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Single ExpansionPanelList containing all panels
-              ExpansionPanelList(
-                expandIconColor: Colors.white,
-                expansionCallback: (panelIndex, isExpanded) {
-                  setState(() {
-                    _dummyData[panelIndex]['isExpanded'] = isExpanded;
-                  });
-                },
-                expandedHeaderPadding: EdgeInsets.all(0),
-                children:
-                    _dummyData.map<ExpansionPanel>((item) {
-                      return ExpansionPanel(
-                        backgroundColor: const Color(0xff1f1f1f),
-                        isExpanded: item['isExpanded'],
-                        canTapOnHeader: true,
-                        headerBuilder:
-                            (context, isExpanded) => Container(
-                              padding: EdgeInsets.all(16.w),
-                              decoration: const BoxDecoration(
-                                color: Color(0xff1f1f1f),
-                              ),
-                              child: Text(
-                                item['type'],
-                                style: TextStyle(
-                                  fontSize: max(16.sp, 16.0),
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                        body: Column(
-                          children: [
-                            ...item['data']
-                                .asMap()
-                                .entries
-                                .map<Widget>(
-                                  (category) => SpkChecklistAccordion(
-                                    index: category.key,
-                                    showCheckboxQC: false,
-                                    showCheckboxApplicator: false,
-                                    initiallyExpanded: true,
-                                    backgroundColor: const Color(0xFFCFE2FF),
-                                    title: category.value['category'],
-                                    content: Container(
-                                      child: Column(
-                                        children: [
-                                          ...category.value['data']
-                                              .asMap()
-                                              .entries
-                                              .map(
+      body: BlocListener<ApproveChecklistBloc, ApproveChecklistState>(
+        listener: (context, state) {
+          if (state is ApproveChecklistLoadSuccess) {
+            context.read<SpkChecklistBloc>().add(
+              LoadSpkChecklist(qcTransId: widget.qcTransId),
+            );
+          }
+          if (state is ApproveChecklistLoadFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                duration: Duration(seconds: 5),
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                backgroundColor: Color(0xffEB5757),
+              ),
+            );
+          }
+        },
+        child: BlocConsumer<SpkChecklistBloc, SpkChecklistState>(
+          listener: (context, state) {
+            if (state is SpkChecklistLoadFailure) {
+              if (state.error is UnauthorizedException) {
+                context.read<AuthenticationBloc>().add(
+                  SetAuthenticationStatus(isAuthenticated: false),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "Session Anda telah habis. Silakan login kembali",
+                    ),
+                    duration: Duration(seconds: 5),
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    backgroundColor: Color(0xffEB5757),
+                  ),
+                );
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              }
+            }
+            if (state is ChecklistLoading) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Loading..."),
+                  duration: Duration(seconds: 5),
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4.w),
+                  ),
+                  backgroundColor: Color.fromARGB(255, 80, 80, 80),
+                ),
+              );
+            }
+          },
+          builder: (context, state) {
+            if (state is SpkChecklistLoadSuccess) {
+              return SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.all(16.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ExpansionPanelList(
+                        expandIconColor: Colors.white,
+                        expansionCallback: (panelIndex, isExpanded) {
+                          setState(() {
+                            _expandedStatus[panelIndex] = isExpanded;
+                          });
+                        },
+                        expandedHeaderPadding: EdgeInsets.all(0),
+                        children:
+                            // _dummyData.map<ExpansionPanel>((item) {
+                            state.checklistItem.asMap().entries.map<
+                              ExpansionPanel
+                            >((item) {
+                              return ExpansionPanel(
+                                backgroundColor: const Color(0xff1f1f1f),
+                                isExpanded: _expandedStatus[item.key],
+                                canTapOnHeader: true,
+                                headerBuilder:
+                                    (context, isExpanded) => Container(
+                                      padding: EdgeInsets.all(16.w),
+                                      decoration: const BoxDecoration(
+                                        color: Color(0xff1f1f1f),
+                                      ),
+                                      child: Text(
+                                        item.value.comDesc,
+                                        // item['type'],
+                                        style: TextStyle(
+                                          fontSize: max(16.sp, 16.0),
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                body: Column(
+                                  children: [
+                                    ...item.value.checklistCategories.asMap().entries.map<
+                                      Widget
+                                    >(
+                                      (category) => SpkChecklistAccordion(
+                                        index: category.key,
+                                        showCheckboxQC: false,
+                                        showCheckboxApplicator: false,
+                                        initiallyExpanded: true,
+                                        backgroundColor: const Color(
+                                          0xFFCFE2FF,
+                                        ),
+                                        title: category.value.catName,
+                                        content: Container(
+                                          child: Column(
+                                            children: [
+                                              ...category.value.checklistItems.asMap().entries.map(
                                                 (
                                                   qcItem,
                                                 ) => SpkChecklistAccordion(
@@ -183,37 +205,100 @@ class _NewSpkChecklistScreenState extends State<NewSpkChecklistScreen> {
                                                     vertical: 8.w,
                                                   ),
                                                   showIcon: false,
+                                                  onCheckboxApplicatorChanged:
+                                                      qcItem.value.statClosing ==
+                                                              'N'
+                                                          ? (
+                                                            value,
+                                                            remark,
+                                                            fileImage,
+                                                          ) {
+                                                            checkboxEvent(
+                                                              1,
+                                                              qcItem
+                                                                  .value
+                                                                  .idQcItem,
+                                                              context,
+                                                              value: value,
+                                                              remark,
+                                                              fileImage,
+                                                            );
+                                                          }
+                                                          : null,
+                                                  onCheckboxInspectorChanged:
+                                                      qcItem.value.statClosing2 ==
+                                                                  'N' &&
+                                                              qcItem
+                                                                      .value
+                                                                      .dtAprv !=
+                                                                  null
+                                                          ? (
+                                                            value,
+                                                            remark,
+                                                            fileImage,
+                                                          ) {
+                                                            checkboxEvent(
+                                                              2,
+                                                              qcItem
+                                                                  .value
+                                                                  .idQcItem,
+                                                              context,
+                                                              value: value,
+                                                              remark,
+                                                              fileImage,
+                                                            );
+                                                          }
+                                                          : null,
+                                                  onCheckboxQCChanged:
+                                                      qcItem.value.statClosing3 ==
+                                                                  'N' &&
+                                                              qcItem
+                                                                      .value
+                                                                      .dtAprv !=
+                                                                  null &&
+                                                              qcItem
+                                                                      .value
+                                                                      .dtAprv2 !=
+                                                                  null
+                                                          ? (
+                                                            value,
+                                                            remark,
+                                                            fileImage,
+                                                          ) {
+                                                            checkboxEvent(
+                                                              3,
+                                                              qcItem
+                                                                  .value
+                                                                  .idQcItem,
+                                                              context,
+                                                              value: value,
+                                                              remark,
+                                                              fileImage,
+                                                            );
+                                                          }
+                                                          : null,
+                                                  checkboxApplicatorInitalValue:
+                                                      qcItem.value.dtAprv !=
+                                                      null,
+                                                  checkboxInspectorInitalValue:
+                                                      qcItem.value.dtAprv2 !=
+                                                      null,
+                                                  checkboxQCInitalValue:
+                                                      qcItem.value.dtAprv3 !=
+                                                      null,
                                                   titleStyle: TextStyle(
                                                     fontWeight:
                                                         FontWeight.normal,
                                                     fontSize: 12.sp,
                                                   ),
-                                                  title:
-                                                      qcItem.value['qc_item'],
-                                                  content: Container(
+                                                  title: qcItem.value.itemName,
+                                                  content: SizedBox(
                                                     width: double.infinity,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        Text(
-                                                          "Remark",
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                        SizedBox(height: 4.w),
-                                                        Text(
-                                                          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                                                          maxLines: 2,
-                                                          overflow:
-                                                              TextOverflow
-                                                                  .ellipsis,
-                                                        ),
-                                                        SizedBox(height: 8.w),
-
                                                         Text(
                                                           "Attachment",
                                                           style: TextStyle(
@@ -227,14 +312,28 @@ class _NewSpkChecklistScreenState extends State<NewSpkChecklistScreen> {
                                                               Axis.horizontal,
                                                           child: Row(
                                                             children: [
-                                                              ...List.generate(
-                                                                Random().nextInt(
-                                                                      6,
-                                                                    ) +
-                                                                    1,
-                                                                (
-                                                                  index,
-                                                                ) => Padding(
+                                                              if (qcItem
+                                                                      .value
+                                                                      .imgLink
+                                                                      .isEmpty &&
+                                                                  qcItem
+                                                                      .value
+                                                                      .imgLink2
+                                                                      .isEmpty &&
+                                                                  qcItem
+                                                                      .value
+                                                                      .imgLink3
+                                                                      .isEmpty)
+                                                                Container(
+                                                                  child: Text(
+                                                                    "No Attachment",
+                                                                  ),
+                                                                ),
+                                                              if (qcItem
+                                                                  .value
+                                                                  .imgLink
+                                                                  .isNotEmpty)
+                                                                Padding(
                                                                   padding:
                                                                       EdgeInsets.only(
                                                                         right:
@@ -245,6 +344,8 @@ class _NewSpkChecklistScreenState extends State<NewSpkChecklistScreen> {
                                                                     height:
                                                                         64.w,
                                                                     child: Container(
+                                                                      clipBehavior:
+                                                                          Clip.hardEdge,
                                                                       decoration: BoxDecoration(
                                                                         borderRadius:
                                                                             BorderRadius.circular(
@@ -253,89 +354,116 @@ class _NewSpkChecklistScreenState extends State<NewSpkChecklistScreen> {
                                                                         color:
                                                                             Colors.grey[300],
                                                                       ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              GestureDetector(
-                                                                onTap: () async {
-                                                                  FilePickerResult?
-                                                                  result = await FilePicker
-                                                                      .platform
-                                                                      .pickFiles(
-                                                                        allowMultiple:
-                                                                            true,
-                                                                      );
-
-                                                                  if (result !=
-                                                                      null) {
-                                                                    List<File>
-                                                                    files =
-                                                                        result
-                                                                            .paths
-                                                                            .map(
-                                                                              (
-                                                                                path,
-                                                                              ) => File(
-                                                                                path!,
+                                                                      child: CachedNetworkImage(
+                                                                        imageUrl:
+                                                                            qcItem.value.imgLink,
+                                                                        progressIndicatorBuilder:
+                                                                            (
+                                                                              context,
+                                                                              url,
+                                                                              progress,
+                                                                            ) => Center(
+                                                                              child: CircularProgressIndicator(
+                                                                                value:
+                                                                                    progress.progress,
                                                                               ),
-                                                                            )
-                                                                            .toList();
-                                                                  } else {
-                                                                    // User canceled the picker
-                                                                  }
-                                                                },
-                                                                child: SizedBox(
-                                                                  width: 64.w,
-                                                                  height: 64.w,
-                                                                  child: Container(
-                                                                    decoration: BoxDecoration(
-                                                                      border: Border.all(
-                                                                        color: Color(
-                                                                          0xffE2E2E2,
-                                                                        ),
-                                                                      ),
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                            2,
-                                                                          ),
-                                                                      color: Color(
-                                                                        0xffF9F9F9,
-                                                                      ),
-                                                                    ),
-                                                                    child: Column(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Icon(
-                                                                          Icons
-                                                                              .upload,
-                                                                          color: Color(
-                                                                            0xff555555,
-                                                                          ),
-                                                                          size:
-                                                                              16.w,
-                                                                        ),
-                                                                        SizedBox(
-                                                                          height:
-                                                                              4.w,
-                                                                        ),
-                                                                        Text(
-                                                                          "Upload",
-                                                                          style: TextStyle(
-                                                                            color: Color(
-                                                                              0xff555555,
                                                                             ),
-                                                                            fontSize:
-                                                                                10.sp,
-                                                                          ),
-                                                                        ),
-                                                                      ],
+                                                                        fit:
+                                                                            BoxFit.cover,
+                                                                      ),
                                                                     ),
                                                                   ),
                                                                 ),
-                                                              ),
+                                                              if (qcItem
+                                                                  .value
+                                                                  .imgLink2
+                                                                  .isNotEmpty)
+                                                                Padding(
+                                                                  padding:
+                                                                      EdgeInsets.only(
+                                                                        right:
+                                                                            4.w,
+                                                                      ),
+                                                                  child: SizedBox(
+                                                                    width: 64.w,
+                                                                    height:
+                                                                        64.w,
+                                                                    child: Container(
+                                                                      clipBehavior:
+                                                                          Clip.hardEdge,
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                              2,
+                                                                            ),
+                                                                        color:
+                                                                            Colors.grey[300],
+                                                                      ),
+                                                                      child: CachedNetworkImage(
+                                                                        imageUrl:
+                                                                            qcItem.value.imgLink2,
+                                                                        progressIndicatorBuilder:
+                                                                            (
+                                                                              context,
+                                                                              url,
+                                                                              progress,
+                                                                            ) => Center(
+                                                                              child: CircularProgressIndicator(
+                                                                                value:
+                                                                                    progress.progress,
+                                                                              ),
+                                                                            ),
+                                                                        fit:
+                                                                            BoxFit.cover,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              if (qcItem
+                                                                  .value
+                                                                  .imgLink3
+                                                                  .isNotEmpty)
+                                                                Padding(
+                                                                  padding:
+                                                                      EdgeInsets.only(
+                                                                        right:
+                                                                            4.w,
+                                                                      ),
+                                                                  child: SizedBox(
+                                                                    width: 64.w,
+                                                                    height:
+                                                                        64.w,
+                                                                    child: Container(
+                                                                      clipBehavior:
+                                                                          Clip.hardEdge,
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                              2,
+                                                                            ),
+                                                                        color:
+                                                                            Colors.grey[300],
+                                                                      ),
+                                                                      child: CachedNetworkImage(
+                                                                        imageUrl:
+                                                                            qcItem.value.imgLink3,
+                                                                        progressIndicatorBuilder:
+                                                                            (
+                                                                              context,
+                                                                              url,
+                                                                              progress,
+                                                                            ) => Center(
+                                                                              child: CircularProgressIndicator(
+                                                                                value:
+                                                                                    progress.progress,
+                                                                              ),
+                                                                            ),
+                                                                        fit:
+                                                                            BoxFit.cover,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
                                                             ],
                                                           ),
                                                         ),
@@ -343,21 +471,28 @@ class _NewSpkChecklistScreenState extends State<NewSpkChecklistScreen> {
                                                     ),
                                                   ),
                                                 ),
-                                              )
-                                              .toList(),
-                                        ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                )
-                                .toList(),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-              ),
-            ],
-          ),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+
+            return SizedBox(
+              height: 100.w,
+              child: Center(child: CircularProgressIndicator()),
+            );
+          },
         ),
       ),
     );

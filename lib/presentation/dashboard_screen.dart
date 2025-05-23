@@ -42,7 +42,9 @@ class DriverDashboardScreen extends StatelessWidget {
                 authorizationRepository: authorizationRepository,
               )..add(LoadAccessMenu()),
         ),
-        BlocProvider.value(value: context.read<CredentialsBloc>()),
+        BlocProvider.value(
+          value: context.read<CredentialsBloc>()..add(CredentialsLoad()),
+        ),
       ],
       child: MyGridLayout(),
     );
@@ -77,10 +79,40 @@ class MyGridLayout extends StatelessWidget {
         'description': 'Monitoring Pembangunan Rumah',
         'route': SpkListScreen(title: submenu.menu_caption),
       },
-      'approval': {
+      'approvalKasBon': {
         'icon': Icons.edit_document,
         'text': 'Approval Pengajuan',
         'description': 'Approval Pengajuan',
+        'route': ApprovalScreen(title: submenu.menu_caption),
+      },
+      'approvalKasBon': {
+        'icon': Icons.edit_document,
+        'text': 'Approval Pengajuan',
+        'description': 'Approval Kasbon',
+        'route': ApprovalScreen(title: submenu.menu_caption),
+      },
+      'approvalSPB': {
+        'icon': Icons.edit_document,
+        'text': 'Approval Pengajuan',
+        'description': 'Approval SPB',
+        'route': ApprovalScreen(title: submenu.menu_caption),
+      },
+      'approvalSPK': {
+        'icon': Icons.edit_document,
+        'text': 'Approval Pengajuan',
+        'description': 'Approval SPK',
+        'route': ApprovalScreen(title: submenu.menu_caption),
+      },
+      'approvalSPR': {
+        'icon': Icons.edit_document,
+        'text': 'Approval Pengajuan',
+        'description': 'Approval SPR',
+        'route': ApprovalScreen(title: submenu.menu_caption),
+      },
+      'kasBon': {
+        'icon': Icons.request_quote,
+        'text': 'Approval Pengajuan',
+        'description': 'Kasbon',
         'route': ApprovalScreen(title: submenu.menu_caption),
       },
       // 'testing-ui-spk': {
@@ -105,6 +137,8 @@ class MyGridLayout extends StatelessWidget {
     'assets/images/foto-awards-3.webp',
     'assets/images/foto-awards-4.webp',
   ];
+
+  MyGridLayout({super.key});
 
   void _navigateToScreen(BuildContext context, Map<String, dynamic> button) {
     if (button['route'] == null) {

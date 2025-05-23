@@ -102,13 +102,18 @@ class _SprListBodyState extends State<_SprListBody> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Row(
+                      children: [
+                        Text('Site'),
+                        SizedBox(width: 2.w),
+                        Text('(*)', style: TextStyle(color: Colors.red)),
+                      ],
+                    ),
                     BlocBuilder<SiteBloc, SiteState>(
                       builder: (context, state) {
                         if (state is SiteLoadedSuccess) {
                           return DropdownButtonFormField<String>(
-                            decoration: const InputDecoration(
-                              labelText: 'Site',
-                            ),
+                            decoration: const InputDecoration(hintText: 'Site'),
                             value: _site,
                             items:
                                 state.sites.map((Site item) {
@@ -122,6 +127,7 @@ class _SprListBodyState extends State<_SprListBody> {
                                 setState(() {
                                   _site = value;
                                   _cluster = null;
+                                  _houseId = null;
                                 });
                                 context.read<ResidenceBloc>().add(
                                   LoadResidence("", "", value, ""),
@@ -131,13 +137,21 @@ class _SprListBodyState extends State<_SprListBody> {
                           );
                         }
                         return DropdownButtonFormField<String>(
-                          decoration: InputDecoration(labelText: 'Site'),
+                          decoration: InputDecoration(hintText: 'Site'),
                           items: [],
                           onChanged: null,
                         );
                       },
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 16.w),
+
+                    Row(
+                      children: [
+                        Text('Cluster'),
+                        SizedBox(width: 2.w),
+                        Text('(*)', style: TextStyle(color: Colors.red)),
+                      ],
+                    ),
                     BlocBuilder<ResidenceBloc, ResidenceState>(
                       builder: (context, state) {
                         if (state is ResidenceLoadSuccess) {
@@ -150,7 +164,7 @@ class _SprListBodyState extends State<_SprListBody> {
 
                           return DropdownButtonFormField<String>(
                             decoration: const InputDecoration(
-                              labelText: 'Cluster',
+                              hintText: 'Cluster',
                             ),
                             value: validCluster,
                             items:
@@ -163,6 +177,7 @@ class _SprListBodyState extends State<_SprListBody> {
                             onChanged: (value) {
                               setState(() {
                                 _cluster = value;
+                                _houseId = null;
                               });
 
                               context.read<HouseItemBloc>().add(
@@ -180,13 +195,14 @@ class _SprListBodyState extends State<_SprListBody> {
                           );
                         }
                         return DropdownButtonFormField<String>(
-                          decoration: InputDecoration(labelText: 'Cluster'),
+                          decoration: InputDecoration(hintText: 'Cluster'),
                           items: [],
                           onChanged: null,
                         );
                       },
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 16.w),
+                    Row(children: [Text('House Item'), SizedBox(width: 2.w)]),
                     BlocBuilder<HouseItemBloc, HouseItemState>(
                       builder: (context, state) {
                         if (state is HouseItemLoadSuccess) {
@@ -199,7 +215,7 @@ class _SprListBodyState extends State<_SprListBody> {
 
                           return DropdownButtonFormField<String>(
                             decoration: const InputDecoration(
-                              labelText: 'House Type',
+                              hintText: 'House Item',
                             ),
                             value: validCluster,
                             items:
@@ -217,7 +233,7 @@ class _SprListBodyState extends State<_SprListBody> {
                           );
                         }
                         return DropdownButtonFormField<String>(
-                          decoration: InputDecoration(labelText: 'House item'),
+                          decoration: InputDecoration(hintText: 'House Item'),
                           items: [],
                           onChanged: null,
                         );
@@ -233,6 +249,16 @@ class _SprListBodyState extends State<_SprListBody> {
                         ),
                       ),
                       onPressed: () {
+                        if (_site == null || _cluster == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Tolong lengkapi semua data'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          return;
+                        }
+
                         context.read<SprListBloc>().add(
                           GetSPRList(
                             idSite: _site ?? '',
