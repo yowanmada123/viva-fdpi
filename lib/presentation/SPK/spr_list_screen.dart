@@ -42,8 +42,7 @@ class SprListScreen extends StatelessWidget {
         BlocProvider(
           create:
               (context) =>
-                  SprListBloc(spkRepository: context.read<SPKRepository>())
-                    ..add(GetSPRList(idCluster: "", idHouse: "", idSite: "")),
+                  SprListBloc(spkRepository: context.read<SPKRepository>()),
         ),
       ],
       child: _SprListScreenContent(title: title),
@@ -103,7 +102,13 @@ class _SprListBodyState extends State<_SprListBody> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(children: [Text('Site'), SizedBox(width: 2.w)]),
+                    Row(
+                      children: [
+                        Text('Site'),
+                        SizedBox(width: 2.w),
+                        Text('*', style: TextStyle(color: Colors.red)),
+                      ],
+                    ),
                     BlocBuilder<SiteBloc, SiteState>(
                       builder: (context, state) {
                         if (state is SiteLoadedSuccess) {
@@ -238,6 +243,15 @@ class _SprListBodyState extends State<_SprListBody> {
                         ),
                       ),
                       onPressed: () {
+                        if (_site == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Site belum dipilih!"),
+                            ),
+                          );
+                          return;
+                        }
+
                         context.read<SprListBloc>().add(
                           GetSPRList(
                             idSite: _site ?? '',

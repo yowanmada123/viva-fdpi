@@ -43,8 +43,7 @@ class SpkListScreen extends StatelessWidget {
         BlocProvider(
           create:
               (context) =>
-                  SpkListBloc(spkRepository: context.read<SPKRepository>())
-                    ..add(GetSPKList(idCluster: "", idHouse: "", idSite: "")),
+                  SpkListBloc(spkRepository: context.read<SPKRepository>()),
         ),
       ],
       child: _SpkListScreenContent(title: title),
@@ -104,7 +103,13 @@ class _SpkListBodyState extends State<_SpkListBody> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(children: [Text('Site'), SizedBox(width: 2.w)]),
+                    Row(
+                      children: [
+                        Text('Site'),
+                        SizedBox(width: 2.w),
+                        Text('*', style: TextStyle(color: Colors.red)),
+                      ],
+                    ),
                     BlocBuilder<SiteBloc, SiteState>(
                       builder: (context, state) {
                         if (state is SiteLoadedSuccess) {
@@ -239,6 +244,15 @@ class _SpkListBodyState extends State<_SpkListBody> {
                         ),
                       ),
                       onPressed: () {
+                        if (_site == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Site belum dipilih!"),
+                            ),
+                          );
+                          return;
+                        }
+
                         context.read<SpkListBloc>().add(
                           GetSPKList(
                             idSite: _site ?? '',
