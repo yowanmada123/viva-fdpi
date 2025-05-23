@@ -43,7 +43,8 @@ class SpkListScreen extends StatelessWidget {
         BlocProvider(
           create:
               (context) =>
-                  SpkListBloc(spkRepository: context.read<SPKRepository>()),
+                  SpkListBloc(spkRepository: context.read<SPKRepository>())
+                    ..add(GetSPKList(idCluster: "", idHouse: "", idSite: "")),
         ),
       ],
       child: _SpkListScreenContent(title: title),
@@ -103,13 +104,7 @@ class _SpkListBodyState extends State<_SpkListBody> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Text('Site'),
-                        SizedBox(width: 2.w),
-                        Text('(*)', style: TextStyle(color: Colors.red)),
-                      ],
-                    ),
+                    Row(children: [Text('Site'), SizedBox(width: 2.w)]),
                     BlocBuilder<SiteBloc, SiteState>(
                       builder: (context, state) {
                         if (state is SiteLoadedSuccess) {
@@ -146,13 +141,7 @@ class _SpkListBodyState extends State<_SpkListBody> {
                     ),
                     SizedBox(height: 16.w),
 
-                    Row(
-                      children: [
-                        Text('Cluster'),
-                        SizedBox(width: 2.w),
-                        Text('(*)', style: TextStyle(color: Colors.red)),
-                      ],
-                    ),
+                    Row(children: [Text('Cluster'), SizedBox(width: 2.w)]),
                     BlocBuilder<ResidenceBloc, ResidenceState>(
                       builder: (context, state) {
                         if (state is ResidenceLoadSuccess) {
@@ -250,16 +239,6 @@ class _SpkListBodyState extends State<_SpkListBody> {
                         ),
                       ),
                       onPressed: () {
-                        if (_site == null || _cluster == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Tolong lengkapi semua data'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                          return;
-                        }
-
                         context.read<SpkListBloc>().add(
                           GetSPKList(
                             idSite: _site ?? '',

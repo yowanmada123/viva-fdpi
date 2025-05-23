@@ -42,7 +42,8 @@ class SprListScreen extends StatelessWidget {
         BlocProvider(
           create:
               (context) =>
-                  SprListBloc(spkRepository: context.read<SPKRepository>()),
+                  SprListBloc(spkRepository: context.read<SPKRepository>())
+                    ..add(GetSPRList(idCluster: "", idHouse: "", idSite: "")),
         ),
       ],
       child: _SprListScreenContent(title: title),
@@ -102,13 +103,7 @@ class _SprListBodyState extends State<_SprListBody> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Text('Site'),
-                        SizedBox(width: 2.w),
-                        Text('(*)', style: TextStyle(color: Colors.red)),
-                      ],
-                    ),
+                    Row(children: [Text('Site'), SizedBox(width: 2.w)]),
                     BlocBuilder<SiteBloc, SiteState>(
                       builder: (context, state) {
                         if (state is SiteLoadedSuccess) {
@@ -145,13 +140,7 @@ class _SprListBodyState extends State<_SprListBody> {
                     ),
                     SizedBox(height: 16.w),
 
-                    Row(
-                      children: [
-                        Text('Cluster'),
-                        SizedBox(width: 2.w),
-                        Text('(*)', style: TextStyle(color: Colors.red)),
-                      ],
-                    ),
+                    Row(children: [Text('Cluster'), SizedBox(width: 2.w)]),
                     BlocBuilder<ResidenceBloc, ResidenceState>(
                       builder: (context, state) {
                         if (state is ResidenceLoadSuccess) {
@@ -249,16 +238,6 @@ class _SprListBodyState extends State<_SprListBody> {
                         ),
                       ),
                       onPressed: () {
-                        if (_site == null || _cluster == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Tolong lengkapi semua data'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                          return;
-                        }
-
                         context.read<SprListBloc>().add(
                           GetSPRList(
                             idSite: _site ?? '',

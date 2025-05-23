@@ -17,7 +17,4 @@ class GetSPRList extends SprListEvent {
     required this.idCluster,
     required this.idHouse,
   });
-
-  @override
-  List<Object> get props => [idSite, idCluster];
 }
