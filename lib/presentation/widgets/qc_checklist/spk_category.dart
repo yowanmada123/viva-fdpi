@@ -109,32 +109,32 @@ class _SpkChecklistAccordionState extends State<SpkChecklistAccordion> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              decoration: BoxDecoration(
-                color: headerColor,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(widget.borderRadius),
-                  topRight: Radius.circular(widget.borderRadius),
-                  bottomLeft: Radius.circular(
-                    _isExpanded ? 0 : widget.borderRadius,
-                  ),
-                  bottomRight: Radius.circular(
-                    _isExpanded ? 0 : widget.borderRadius,
+            InkWell(
+              onTap: () => setState(() => _isExpanded = !_isExpanded),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: headerColor,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(widget.borderRadius),
+                    topRight: Radius.circular(widget.borderRadius),
+                    bottomLeft: Radius.circular(
+                      _isExpanded ? 0 : widget.borderRadius,
+                    ),
+                    bottomRight: Radius.circular(
+                      _isExpanded ? 0 : widget.borderRadius,
+                    ),
                   ),
                 ),
-              ),
-              padding: widget.padding ?? const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  if (widget.leading != null) ...[
-                    widget.leading!,
-                    const SizedBox(width: 12),
-                  ],
+                padding: widget.padding ?? const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    if (widget.leading != null) ...[
+                      widget.leading!,
+                      const SizedBox(width: 12),
+                    ],
 
-                  // Expanded area with InkWell wrapping just the text
-                  Expanded(
-                    child: InkWell(
-                      onTap: () => setState(() => _isExpanded = !_isExpanded),
+                    // Expanded area with InkWell wrapping just the text
+                    Expanded(
                       child: Row(
                         children: [
                           Expanded(
@@ -150,1055 +150,1058 @@ class _SpkChecklistAccordionState extends State<SpkChecklistAccordion> {
                         ],
                       ),
                     ),
-                  ),
 
-                  // Checkbox placed outside the InkWell
-                  if (widget.showCheckboxApplicator)
-                    SizedBox(
-                      width: 48.w,
-                      child: Column(
-                        children: [
-                          Checkbox(
-                            visualDensity: VisualDensity(
-                              horizontal: VisualDensity.minimumDensity,
-                              vertical: VisualDensity.minimumDensity,
-                            ),
-                            value: checkboxApplicatorValue,
-                            onChanged:
-                                widget.onCheckboxApplicatorChanged == null
-                                    ? null
-                                    : (value) {
-                                      final bloc =
-                                          BlocProvider.of<CredentialsBloc>(
-                                            context,
-                                          );
-                                      final state = bloc.state;
+                    // Checkbox placed outside the InkWell
+                    if (widget.showCheckboxApplicator)
+                      SizedBox(
+                        width: 48.w,
+                        child: Column(
+                          children: [
+                            Checkbox(
+                              visualDensity: VisualDensity(
+                                horizontal: VisualDensity.minimumDensity,
+                                vertical: VisualDensity.minimumDensity,
+                              ),
+                              value: checkboxApplicatorValue,
+                              onChanged:
+                                  widget.onCheckboxApplicatorChanged == null
+                                      ? null
+                                      : (value) {
+                                        final bloc =
+                                            BlocProvider.of<CredentialsBloc>(
+                                              context,
+                                            );
+                                        final state = bloc.state;
 
-                                      if (state is CredentialsLoadSuccess) {
-                                        if (state.credentials['CEK_LIST_1'] ==
-                                            "Y") {
-                                          // 1. Add a StatefulBuilder to update dialog state
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              String? base64Image;
-                                              String? base64ImagePayload;
-                                              MultipartFile? fileImage;
+                                        if (state is CredentialsLoadSuccess) {
+                                          if (state.credentials['CEK_LIST_1'] ==
+                                              "Y") {
+                                            // 1. Add a StatefulBuilder to update dialog state
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                String? base64Image;
+                                                String? base64ImagePayload;
+                                                MultipartFile? fileImage;
 
-                                              return StatefulBuilder(
-                                                builder: (
-                                                  context,
-                                                  setDialogState,
-                                                ) {
-                                                  return Dialog(
-                                                    backgroundColor:
-                                                        Colors.white,
-                                                    insetPadding:
-                                                        EdgeInsets.symmetric(
-                                                          horizontal: 16.w,
+                                                return StatefulBuilder(
+                                                  builder: (
+                                                    context,
+                                                    setDialogState,
+                                                  ) {
+                                                    return Dialog(
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      insetPadding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 16.w,
+                                                          ),
+                                                      child: Container(
+                                                        padding: EdgeInsets.all(
+                                                          16.w,
                                                         ),
-                                                    child: Container(
-                                                      padding: EdgeInsets.all(
-                                                        16.w,
-                                                      ),
-                                                      child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            'Konfirmasi',
-                                                            style: TextStyle(
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 16.w,
-                                                          ),
-                                                          Text(
-                                                            'Remark',
-                                                            style: TextStyle(
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
-                                                          ),
-                                                          SizedBox(height: 8.w),
-                                                          TextField(
-                                                            controller:
-                                                                remarkController,
-                                                            maxLines: 3,
-                                                            decoration: InputDecoration(
-                                                              hintText:
-                                                                  'Enter your remark...',
-                                                              border: OutlineInputBorder(
-                                                                borderRadius:
-                                                                    BorderRadius.circular(
-                                                                      10.w,
-                                                                    ),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              'Konfirmasi',
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
                                                               ),
                                                             ),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 16.w,
-                                                          ),
-                                                          Text(
-                                                            'Attachment',
-                                                            style: TextStyle(
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
+                                                            SizedBox(
+                                                              height: 16.w,
                                                             ),
-                                                          ),
-                                                          SizedBox(height: 8.w),
-                                                          FilledButton(
-                                                            style: FilledButton.styleFrom(
-                                                              backgroundColor:
-                                                                  Color.fromARGB(
-                                                                    255,
-                                                                    231,
-                                                                    231,
-                                                                    231,
-                                                                  ),
-                                                              foregroundColor:
-                                                                  Colors.black,
-                                                              shape: RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius.circular(
-                                                                      4.w,
-                                                                    ),
+                                                            Text(
+                                                              'Remark',
+                                                              style: TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
                                                               ),
                                                             ),
-                                                            onPressed: () async {
-                                                              try {
-                                                                final result = await FilePicker
-                                                                    .platform
-                                                                    .pickFiles(
-                                                                      type:
-                                                                          FileType
-                                                                              .any,
-                                                                      allowMultiple:
-                                                                          false,
-                                                                      withData:
-                                                                          true,
-                                                                    );
-
-                                                                if (result !=
-                                                                    null) {
-                                                                  final file =
-                                                                      result
-                                                                          .files
-                                                                          .single;
-
-                                                                  final MultipartFile
-                                                                  _fileImage =
-                                                                      await MultipartFile.fromFile(
-                                                                        file.path!,
-                                                                        filename:
-                                                                            file.name,
+                                                            SizedBox(
+                                                              height: 8.w,
+                                                            ),
+                                                            TextField(
+                                                              controller:
+                                                                  remarkController,
+                                                              maxLines: 3,
+                                                              decoration: InputDecoration(
+                                                                hintText:
+                                                                    'Enter your remark...',
+                                                                border: OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        10.w,
+                                                                      ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 16.w,
+                                                            ),
+                                                            Text(
+                                                              'Attachment',
+                                                              style: TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 8.w,
+                                                            ),
+                                                            FilledButton(
+                                                              style: FilledButton.styleFrom(
+                                                                backgroundColor:
+                                                                    Color.fromARGB(
+                                                                      255,
+                                                                      231,
+                                                                      231,
+                                                                      231,
+                                                                    ),
+                                                                foregroundColor:
+                                                                    Colors
+                                                                        .black,
+                                                                shape: RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        4.w,
+                                                                      ),
+                                                                ),
+                                                              ),
+                                                              onPressed: () async {
+                                                                try {
+                                                                  final result = await FilePicker
+                                                                      .platform
+                                                                      .pickFiles(
+                                                                        type:
+                                                                            FileType.any,
+                                                                        allowMultiple:
+                                                                            false,
+                                                                        withData:
+                                                                            true,
                                                                       );
 
-                                                                  if (file.size >
-                                                                      5 *
-                                                                          1024 *
-                                                                          1024) {
-                                                                    throw Exception(
-                                                                      'File too large (max 5MB)',
+                                                                  if (result !=
+                                                                      null) {
+                                                                    final file =
+                                                                        result
+                                                                            .files
+                                                                            .single;
+
+                                                                    final MultipartFile
+                                                                    _fileImage = await MultipartFile.fromFile(
+                                                                      file.path!,
+                                                                      filename:
+                                                                          file.name,
                                                                     );
+
+                                                                    if (file.size >
+                                                                        5 *
+                                                                            1024 *
+                                                                            1024) {
+                                                                      throw Exception(
+                                                                        'File too large (max 5MB)',
+                                                                      );
+                                                                    }
+
+                                                                    final bytes =
+                                                                        file.bytes!;
+                                                                    final mimeType =
+                                                                        file.extension ??
+                                                                        'application/octet-stream';
+
+                                                                    // Update dialog state only
+                                                                    setDialogState(() {
+                                                                      fileImage =
+                                                                          _fileImage;
+                                                                      base64ImagePayload =
+                                                                          'data:$mimeType;base64,${base64Encode(bytes)}';
+                                                                      base64Image =
+                                                                          base64Encode(
+                                                                            bytes,
+                                                                          );
+                                                                    });
                                                                   }
-
-                                                                  final bytes =
-                                                                      file.bytes!;
-                                                                  final mimeType =
-                                                                      file.extension ??
-                                                                      'application/octet-stream';
-
-                                                                  // Update dialog state only
-                                                                  setDialogState(() {
-                                                                    fileImage =
-                                                                        _fileImage;
-                                                                    base64ImagePayload =
-                                                                        'data:$mimeType;base64,${base64Encode(bytes)}';
-                                                                    base64Image =
-                                                                        base64Encode(
-                                                                          bytes,
-                                                                        );
-                                                                  });
-                                                                }
-                                                              } catch (e) {
-                                                                String error =
-                                                                    e.toString();
-                                                                ScaffoldMessenger.of(
-                                                                  context,
-                                                                ).showSnackBar(
-                                                                  SnackBar(
-                                                                    content:
-                                                                        Text(
-                                                                          error,
-                                                                        ),
-                                                                    duration:
-                                                                        Duration(
-                                                                          seconds:
-                                                                              2,
-                                                                        ),
-                                                                  ),
-                                                                );
-                                                              }
-                                                            },
-                                                            child: Container(
-                                                              padding:
-                                                                  EdgeInsets.symmetric(
-                                                                    vertical:
-                                                                        16.w,
-                                                                  ),
-                                                              child: Row(
-                                                                children: [
-                                                                  if (base64Image !=
-                                                                      null)
-                                                                    Container(
-                                                                      width:
-                                                                          48.w,
-                                                                      height:
-                                                                          48.w,
-                                                                      margin: EdgeInsets.only(
-                                                                        right:
-                                                                            8.w,
-                                                                      ),
-                                                                      decoration: BoxDecoration(
-                                                                        border: Border.all(
-                                                                          color:
-                                                                              Colors.grey,
-                                                                        ),
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(
-                                                                              4.w,
-                                                                            ),
-                                                                      ),
-                                                                      child: ClipRRect(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(
-                                                                              4.w,
-                                                                            ),
-                                                                        child: Image.memory(
-                                                                          base64Decode(
-                                                                            base64Image!,
-                                                                          ),
-                                                                          fit:
-                                                                              BoxFit.cover,
-                                                                          errorBuilder: (
-                                                                            context,
+                                                                } catch (e) {
+                                                                  String error =
+                                                                      e.toString();
+                                                                  ScaffoldMessenger.of(
+                                                                    context,
+                                                                  ).showSnackBar(
+                                                                    SnackBar(
+                                                                      content:
+                                                                          Text(
                                                                             error,
-                                                                            stackTrace,
-                                                                          ) {
-                                                                            return Icon(
-                                                                              Icons.error,
-                                                                            );
-                                                                          },
-                                                                        ),
+                                                                          ),
+                                                                      duration: Duration(
+                                                                        seconds:
+                                                                            2,
                                                                       ),
                                                                     ),
-                                                                  Icon(
-                                                                    Icons
-                                                                        .upload_file,
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: 8.w,
-                                                                  ),
-                                                                  Text(
-                                                                    'Upload Attachment',
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 16.w,
-                                                          ),
-                                                          Row(
-                                                            children: [
-                                                              Expanded(
-                                                                child: FilledButton(
-                                                                  style: FilledButton.styleFrom(
-                                                                    backgroundColor:
-                                                                        Color.fromARGB(
-                                                                          255,
-                                                                          175,
-                                                                          175,
-                                                                          175,
+                                                                  );
+                                                                }
+                                                              },
+                                                              child: Container(
+                                                                padding:
+                                                                    EdgeInsets.symmetric(
+                                                                      vertical:
+                                                                          16.w,
+                                                                    ),
+                                                                child: Row(
+                                                                  children: [
+                                                                    if (base64Image !=
+                                                                        null)
+                                                                      Container(
+                                                                        width:
+                                                                            48.w,
+                                                                        height:
+                                                                            48.w,
+                                                                        margin: EdgeInsets.only(
+                                                                          right:
+                                                                              8.w,
                                                                         ),
-                                                                  ),
-                                                                  child: Text(
-                                                                    'Close',
-                                                                  ),
-                                                                  onPressed: () {
-                                                                    Navigator.pop(
-                                                                      context,
-                                                                    );
-                                                                  },
+                                                                        decoration: BoxDecoration(
+                                                                          border: Border.all(
+                                                                            color:
+                                                                                Colors.grey,
+                                                                          ),
+                                                                          borderRadius: BorderRadius.circular(
+                                                                            4.w,
+                                                                          ),
+                                                                        ),
+                                                                        child: ClipRRect(
+                                                                          borderRadius: BorderRadius.circular(
+                                                                            4.w,
+                                                                          ),
+                                                                          child: Image.memory(
+                                                                            base64Decode(
+                                                                              base64Image!,
+                                                                            ),
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                            errorBuilder: (
+                                                                              context,
+                                                                              error,
+                                                                              stackTrace,
+                                                                            ) {
+                                                                              return Icon(
+                                                                                Icons.error,
+                                                                              );
+                                                                            },
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    Icon(
+                                                                      Icons
+                                                                          .upload_file,
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width:
+                                                                          8.w,
+                                                                    ),
+                                                                    Text(
+                                                                      'Upload Attachment',
+                                                                    ),
+                                                                  ],
                                                                 ),
                                                               ),
-                                                              SizedBox(
-                                                                width: 16.w,
-                                                              ),
-                                                              Expanded(
-                                                                child: FilledButton(
-                                                                  child: Text(
-                                                                    'Konfirmasi',
+                                                            ),
+                                                            SizedBox(
+                                                              height: 16.w,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Expanded(
+                                                                  child: FilledButton(
+                                                                    style: FilledButton.styleFrom(
+                                                                      backgroundColor:
+                                                                          Color.fromARGB(
+                                                                            255,
+                                                                            175,
+                                                                            175,
+                                                                            175,
+                                                                          ),
+                                                                    ),
+                                                                    child: Text(
+                                                                      'Close',
+                                                                    ),
+                                                                    onPressed: () {
+                                                                      Navigator.pop(
+                                                                        context,
+                                                                      );
+                                                                    },
                                                                   ),
-                                                                  onPressed: () {
-                                                                    Navigator.pop(
-                                                                      context,
-                                                                    );
-                                                                    String
-                                                                    remark =
-                                                                        remarkController
-                                                                            .text
-                                                                            .toString();
-                                                                    widget
-                                                                        .onCheckboxApplicatorChanged!(
-                                                                      !checkboxApplicatorValue,
-                                                                      remark,
-                                                                      fileImage,
-                                                                    );
-                                                                  },
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            },
-                                          );
-                                          // widget.onCheckboxQCChanged!(value);
-                                        } else {
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                "Doesn't have authorization",
-                                              ),
-                                              duration: Duration(seconds: 2),
-                                            ),
-                                          );
-                                        }
-                                      }
-                                    },
-                          ),
-                          Text('Pelaksana', style: TextStyle(fontSize: 8.sp)),
-                        ],
-                      ),
-                    ),
-
-                  if (widget.showCheckboxInspector)
-                    SizedBox(
-                      width: 48.w,
-                      child: Column(
-                        children: [
-                          Checkbox(
-                            visualDensity: VisualDensity(
-                              horizontal: VisualDensity.minimumDensity,
-                              vertical: VisualDensity.minimumDensity,
-                            ),
-                            value: checkboxInspectorValue,
-                            onChanged:
-                                widget.onCheckboxInspectorChanged == null
-                                    ? null
-                                    : (value) {
-                                      final bloc =
-                                          BlocProvider.of<CredentialsBloc>(
-                                            context,
-                                          );
-                                      final state = bloc.state;
-
-                                      if (state is CredentialsLoadSuccess) {
-                                        if (state.credentials['CEK_LIST_2'] ==
-                                            "Y") {
-                                          // 1. Add a StatefulBuilder to update dialog state
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              String? base64Image;
-                                              String? base64ImagePayload;
-                                              MultipartFile? fileImage;
-
-                                              return StatefulBuilder(
-                                                builder: (
-                                                  context,
-                                                  setDialogState,
-                                                ) {
-                                                  return Dialog(
-                                                    backgroundColor:
-                                                        Colors.white,
-                                                    insetPadding:
-                                                        EdgeInsets.symmetric(
-                                                          horizontal: 16.w,
+                                                                SizedBox(
+                                                                  width: 16.w,
+                                                                ),
+                                                                Expanded(
+                                                                  child: FilledButton(
+                                                                    child: Text(
+                                                                      'Konfirmasi',
+                                                                    ),
+                                                                    onPressed: () {
+                                                                      Navigator.pop(
+                                                                        context,
+                                                                      );
+                                                                      String
+                                                                      remark =
+                                                                          remarkController
+                                                                              .text
+                                                                              .toString();
+                                                                      widget
+                                                                          .onCheckboxApplicatorChanged!(
+                                                                        !checkboxApplicatorValue,
+                                                                        remark,
+                                                                        fileImage,
+                                                                      );
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
                                                         ),
-                                                    child: Container(
-                                                      padding: EdgeInsets.all(
-                                                        16.w,
                                                       ),
-                                                      child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            'Konfirmasi',
-                                                            style: TextStyle(
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                            );
+                                            // widget.onCheckboxQCChanged!(value);
+                                          } else {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  "Doesn't have authorization",
+                                                ),
+                                                duration: Duration(seconds: 2),
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      },
+                            ),
+                            Text('Pelaksana', style: TextStyle(fontSize: 8.sp)),
+                          ],
+                        ),
+                      ),
+
+                    if (widget.showCheckboxInspector)
+                      SizedBox(
+                        width: 48.w,
+                        child: Column(
+                          children: [
+                            Checkbox(
+                              visualDensity: VisualDensity(
+                                horizontal: VisualDensity.minimumDensity,
+                                vertical: VisualDensity.minimumDensity,
+                              ),
+                              value: checkboxInspectorValue,
+                              onChanged:
+                                  widget.onCheckboxInspectorChanged == null
+                                      ? null
+                                      : (value) {
+                                        final bloc =
+                                            BlocProvider.of<CredentialsBloc>(
+                                              context,
+                                            );
+                                        final state = bloc.state;
+
+                                        if (state is CredentialsLoadSuccess) {
+                                          if (state.credentials['CEK_LIST_2'] ==
+                                              "Y") {
+                                            // 1. Add a StatefulBuilder to update dialog state
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                String? base64Image;
+                                                String? base64ImagePayload;
+                                                MultipartFile? fileImage;
+
+                                                return StatefulBuilder(
+                                                  builder: (
+                                                    context,
+                                                    setDialogState,
+                                                  ) {
+                                                    return Dialog(
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      insetPadding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 16.w,
                                                           ),
-                                                          SizedBox(
-                                                            height: 16.w,
-                                                          ),
-                                                          Text(
-                                                            'Remark',
-                                                            style: TextStyle(
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
-                                                          ),
-                                                          SizedBox(height: 8.w),
-                                                          TextField(
-                                                            controller:
-                                                                remarkController,
-                                                            maxLines: 3,
-                                                            decoration: InputDecoration(
-                                                              hintText:
-                                                                  'Enter your remark...',
-                                                              border: OutlineInputBorder(
-                                                                borderRadius:
-                                                                    BorderRadius.circular(
-                                                                      10.w,
-                                                                    ),
+                                                      child: Container(
+                                                        padding: EdgeInsets.all(
+                                                          16.w,
+                                                        ),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              'Konfirmasi',
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
                                                               ),
                                                             ),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 16.w,
-                                                          ),
-                                                          Text(
-                                                            'Attachment',
-                                                            style: TextStyle(
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
+                                                            SizedBox(
+                                                              height: 16.w,
                                                             ),
-                                                          ),
-                                                          SizedBox(height: 8.w),
-                                                          FilledButton(
-                                                            style: FilledButton.styleFrom(
-                                                              backgroundColor:
-                                                                  Color.fromARGB(
-                                                                    255,
-                                                                    231,
-                                                                    231,
-                                                                    231,
-                                                                  ),
-                                                              foregroundColor:
-                                                                  Colors.black,
-                                                              shape: RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius.circular(
-                                                                      4.w,
-                                                                    ),
+                                                            Text(
+                                                              'Remark',
+                                                              style: TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
                                                               ),
                                                             ),
-                                                            onPressed: () async {
-                                                              try {
-                                                                final result = await FilePicker
-                                                                    .platform
-                                                                    .pickFiles(
-                                                                      type:
-                                                                          FileType
-                                                                              .any,
-                                                                      allowMultiple:
-                                                                          false,
-                                                                      withData:
-                                                                          true,
-                                                                    );
-
-                                                                if (result !=
-                                                                    null) {
-                                                                  final file =
-                                                                      result
-                                                                          .files
-                                                                          .single;
-
-                                                                  final MultipartFile
-                                                                  _fileImage =
-                                                                      await MultipartFile.fromFile(
-                                                                        file.path!,
-                                                                        filename:
-                                                                            file.name,
+                                                            SizedBox(
+                                                              height: 8.w,
+                                                            ),
+                                                            TextField(
+                                                              controller:
+                                                                  remarkController,
+                                                              maxLines: 3,
+                                                              decoration: InputDecoration(
+                                                                hintText:
+                                                                    'Enter your remark...',
+                                                                border: OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        10.w,
+                                                                      ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 16.w,
+                                                            ),
+                                                            Text(
+                                                              'Attachment',
+                                                              style: TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 8.w,
+                                                            ),
+                                                            FilledButton(
+                                                              style: FilledButton.styleFrom(
+                                                                backgroundColor:
+                                                                    Color.fromARGB(
+                                                                      255,
+                                                                      231,
+                                                                      231,
+                                                                      231,
+                                                                    ),
+                                                                foregroundColor:
+                                                                    Colors
+                                                                        .black,
+                                                                shape: RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        4.w,
+                                                                      ),
+                                                                ),
+                                                              ),
+                                                              onPressed: () async {
+                                                                try {
+                                                                  final result = await FilePicker
+                                                                      .platform
+                                                                      .pickFiles(
+                                                                        type:
+                                                                            FileType.any,
+                                                                        allowMultiple:
+                                                                            false,
+                                                                        withData:
+                                                                            true,
                                                                       );
 
-                                                                  if (file.size >
-                                                                      5 *
-                                                                          1024 *
-                                                                          1024) {
-                                                                    throw Exception(
-                                                                      'File too large (max 5MB)',
+                                                                  if (result !=
+                                                                      null) {
+                                                                    final file =
+                                                                        result
+                                                                            .files
+                                                                            .single;
+
+                                                                    final MultipartFile
+                                                                    _fileImage = await MultipartFile.fromFile(
+                                                                      file.path!,
+                                                                      filename:
+                                                                          file.name,
                                                                     );
+
+                                                                    if (file.size >
+                                                                        5 *
+                                                                            1024 *
+                                                                            1024) {
+                                                                      throw Exception(
+                                                                        'File too large (max 5MB)',
+                                                                      );
+                                                                    }
+
+                                                                    final bytes =
+                                                                        file.bytes!;
+                                                                    final mimeType =
+                                                                        file.extension ??
+                                                                        'application/octet-stream';
+
+                                                                    // Update dialog state only
+                                                                    setDialogState(() {
+                                                                      fileImage =
+                                                                          _fileImage;
+                                                                      base64ImagePayload =
+                                                                          'data:$mimeType;base64,${base64Encode(bytes)}';
+                                                                      base64Image =
+                                                                          base64Encode(
+                                                                            bytes,
+                                                                          );
+                                                                    });
                                                                   }
-
-                                                                  final bytes =
-                                                                      file.bytes!;
-                                                                  final mimeType =
-                                                                      file.extension ??
-                                                                      'application/octet-stream';
-
-                                                                  // Update dialog state only
-                                                                  setDialogState(() {
-                                                                    fileImage =
-                                                                        _fileImage;
-                                                                    base64ImagePayload =
-                                                                        'data:$mimeType;base64,${base64Encode(bytes)}';
-                                                                    base64Image =
-                                                                        base64Encode(
-                                                                          bytes,
-                                                                        );
-                                                                  });
-                                                                }
-                                                              } catch (e) {
-                                                                String error =
-                                                                    e.toString();
-                                                                ScaffoldMessenger.of(
-                                                                  context,
-                                                                ).showSnackBar(
-                                                                  SnackBar(
-                                                                    content:
-                                                                        Text(
-                                                                          error,
-                                                                        ),
-                                                                    duration:
-                                                                        Duration(
-                                                                          seconds:
-                                                                              2,
-                                                                        ),
-                                                                  ),
-                                                                );
-                                                              }
-                                                            },
-                                                            child: Container(
-                                                              padding:
-                                                                  EdgeInsets.symmetric(
-                                                                    vertical:
-                                                                        16.w,
-                                                                  ),
-                                                              child: Row(
-                                                                children: [
-                                                                  if (base64Image !=
-                                                                      null)
-                                                                    Container(
-                                                                      width:
-                                                                          48.w,
-                                                                      height:
-                                                                          48.w,
-                                                                      margin: EdgeInsets.only(
-                                                                        right:
-                                                                            8.w,
-                                                                      ),
-                                                                      decoration: BoxDecoration(
-                                                                        border: Border.all(
-                                                                          color:
-                                                                              Colors.grey,
-                                                                        ),
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(
-                                                                              4.w,
-                                                                            ),
-                                                                      ),
-                                                                      child: ClipRRect(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(
-                                                                              4.w,
-                                                                            ),
-                                                                        child: Image.memory(
-                                                                          base64Decode(
-                                                                            base64Image!,
-                                                                          ),
-                                                                          fit:
-                                                                              BoxFit.cover,
-                                                                          errorBuilder: (
-                                                                            context,
+                                                                } catch (e) {
+                                                                  String error =
+                                                                      e.toString();
+                                                                  ScaffoldMessenger.of(
+                                                                    context,
+                                                                  ).showSnackBar(
+                                                                    SnackBar(
+                                                                      content:
+                                                                          Text(
                                                                             error,
-                                                                            stackTrace,
-                                                                          ) {
-                                                                            return Icon(
-                                                                              Icons.error,
-                                                                            );
-                                                                          },
-                                                                        ),
+                                                                          ),
+                                                                      duration: Duration(
+                                                                        seconds:
+                                                                            2,
                                                                       ),
                                                                     ),
-                                                                  Icon(
-                                                                    Icons
-                                                                        .upload_file,
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: 8.w,
-                                                                  ),
-                                                                  Text(
-                                                                    'Upload Attachment',
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 16.w,
-                                                          ),
-                                                          Row(
-                                                            children: [
-                                                              Expanded(
-                                                                child: FilledButton(
-                                                                  style: FilledButton.styleFrom(
-                                                                    backgroundColor:
-                                                                        Color.fromARGB(
-                                                                          255,
-                                                                          175,
-                                                                          175,
-                                                                          175,
+                                                                  );
+                                                                }
+                                                              },
+                                                              child: Container(
+                                                                padding:
+                                                                    EdgeInsets.symmetric(
+                                                                      vertical:
+                                                                          16.w,
+                                                                    ),
+                                                                child: Row(
+                                                                  children: [
+                                                                    if (base64Image !=
+                                                                        null)
+                                                                      Container(
+                                                                        width:
+                                                                            48.w,
+                                                                        height:
+                                                                            48.w,
+                                                                        margin: EdgeInsets.only(
+                                                                          right:
+                                                                              8.w,
                                                                         ),
-                                                                  ),
-                                                                  child: Text(
-                                                                    'Close',
-                                                                  ),
-                                                                  onPressed: () {
-                                                                    Navigator.pop(
-                                                                      context,
-                                                                    );
-                                                                  },
+                                                                        decoration: BoxDecoration(
+                                                                          border: Border.all(
+                                                                            color:
+                                                                                Colors.grey,
+                                                                          ),
+                                                                          borderRadius: BorderRadius.circular(
+                                                                            4.w,
+                                                                          ),
+                                                                        ),
+                                                                        child: ClipRRect(
+                                                                          borderRadius: BorderRadius.circular(
+                                                                            4.w,
+                                                                          ),
+                                                                          child: Image.memory(
+                                                                            base64Decode(
+                                                                              base64Image!,
+                                                                            ),
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                            errorBuilder: (
+                                                                              context,
+                                                                              error,
+                                                                              stackTrace,
+                                                                            ) {
+                                                                              return Icon(
+                                                                                Icons.error,
+                                                                              );
+                                                                            },
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    Icon(
+                                                                      Icons
+                                                                          .upload_file,
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width:
+                                                                          8.w,
+                                                                    ),
+                                                                    Text(
+                                                                      'Upload Attachment',
+                                                                    ),
+                                                                  ],
                                                                 ),
                                                               ),
-                                                              SizedBox(
-                                                                width: 16.w,
-                                                              ),
-                                                              Expanded(
-                                                                child: FilledButton(
-                                                                  child: Text(
-                                                                    'Konfirmasi',
+                                                            ),
+                                                            SizedBox(
+                                                              height: 16.w,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Expanded(
+                                                                  child: FilledButton(
+                                                                    style: FilledButton.styleFrom(
+                                                                      backgroundColor:
+                                                                          Color.fromARGB(
+                                                                            255,
+                                                                            175,
+                                                                            175,
+                                                                            175,
+                                                                          ),
+                                                                    ),
+                                                                    child: Text(
+                                                                      'Close',
+                                                                    ),
+                                                                    onPressed: () {
+                                                                      Navigator.pop(
+                                                                        context,
+                                                                      );
+                                                                    },
                                                                   ),
-                                                                  onPressed: () {
-                                                                    Navigator.pop(
-                                                                      context,
-                                                                    );
-                                                                    String
-                                                                    remark =
-                                                                        remarkController
-                                                                            .text
-                                                                            .toString();
-                                                                    widget
-                                                                        .onCheckboxInspectorChanged!(
-                                                                      !checkboxInspectorValue,
-                                                                      remark,
-                                                                      fileImage,
-                                                                    );
-                                                                  },
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            },
-                                          );
-                                          // widget.onCheckboxQCChanged!(value);
-                                        } else {
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                "Doesn't have authorization",
-                                              ),
-                                              duration: Duration(seconds: 2),
-                                            ),
-                                          );
-                                        }
-                                      }
-                                    },
-                          ),
-                          Text('Pemeriksa', style: TextStyle(fontSize: 8.sp)),
-                        ],
-                      ),
-                    ),
-
-                  if (widget.showCheckboxQC)
-                    SizedBox(
-                      width: 48.w,
-                      child: Column(
-                        children: [
-                          Checkbox(
-                            visualDensity: VisualDensity(
-                              horizontal: VisualDensity.minimumDensity,
-                              vertical: VisualDensity.minimumDensity,
-                            ),
-                            value: checkboxQCValue,
-                            onChanged:
-                                widget.onCheckboxQCChanged == null
-                                    ? null
-                                    : (value) {
-                                      final bloc =
-                                          BlocProvider.of<CredentialsBloc>(
-                                            context,
-                                          );
-                                      final state = bloc.state;
-
-                                      if (state is CredentialsLoadSuccess) {
-                                        if (state.credentials['CEK_LIST_1'] ==
-                                            "Y") {
-                                          // 1. Add a StatefulBuilder to update dialog state
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              String? base64Image;
-                                              String? base64ImagePayload;
-                                              MultipartFile? fileImage;
-
-                                              return StatefulBuilder(
-                                                builder: (
-                                                  context,
-                                                  setDialogState,
-                                                ) {
-                                                  return Dialog(
-                                                    backgroundColor:
-                                                        Colors.white,
-                                                    insetPadding:
-                                                        EdgeInsets.symmetric(
-                                                          horizontal: 16.w,
+                                                                SizedBox(
+                                                                  width: 16.w,
+                                                                ),
+                                                                Expanded(
+                                                                  child: FilledButton(
+                                                                    child: Text(
+                                                                      'Konfirmasi',
+                                                                    ),
+                                                                    onPressed: () {
+                                                                      Navigator.pop(
+                                                                        context,
+                                                                      );
+                                                                      String
+                                                                      remark =
+                                                                          remarkController
+                                                                              .text
+                                                                              .toString();
+                                                                      widget
+                                                                          .onCheckboxInspectorChanged!(
+                                                                        !checkboxInspectorValue,
+                                                                        remark,
+                                                                        fileImage,
+                                                                      );
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
                                                         ),
-                                                    child: Container(
-                                                      padding: EdgeInsets.all(
-                                                        16.w,
                                                       ),
-                                                      child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            'Konfirmasi',
-                                                            style: TextStyle(
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                            );
+                                            // widget.onCheckboxQCChanged!(value);
+                                          } else {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  "Doesn't have authorization",
+                                                ),
+                                                duration: Duration(seconds: 2),
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      },
+                            ),
+                            Text('Pemeriksa', style: TextStyle(fontSize: 8.sp)),
+                          ],
+                        ),
+                      ),
+
+                    if (widget.showCheckboxQC)
+                      SizedBox(
+                        width: 48.w,
+                        child: Column(
+                          children: [
+                            Checkbox(
+                              visualDensity: VisualDensity(
+                                horizontal: VisualDensity.minimumDensity,
+                                vertical: VisualDensity.minimumDensity,
+                              ),
+                              value: checkboxQCValue,
+                              onChanged:
+                                  widget.onCheckboxQCChanged == null
+                                      ? null
+                                      : (value) {
+                                        final bloc =
+                                            BlocProvider.of<CredentialsBloc>(
+                                              context,
+                                            );
+                                        final state = bloc.state;
+
+                                        if (state is CredentialsLoadSuccess) {
+                                          if (state.credentials['CEK_LIST_1'] ==
+                                              "Y") {
+                                            // 1. Add a StatefulBuilder to update dialog state
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                String? base64Image;
+                                                String? base64ImagePayload;
+                                                MultipartFile? fileImage;
+
+                                                return StatefulBuilder(
+                                                  builder: (
+                                                    context,
+                                                    setDialogState,
+                                                  ) {
+                                                    return Dialog(
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      insetPadding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 16.w,
                                                           ),
-                                                          SizedBox(
-                                                            height: 16.w,
-                                                          ),
-                                                          Text(
-                                                            'Remark',
-                                                            style: TextStyle(
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
-                                                          ),
-                                                          SizedBox(height: 8.w),
-                                                          TextField(
-                                                            controller:
-                                                                remarkController,
-                                                            maxLines: 3,
-                                                            decoration: InputDecoration(
-                                                              hintText:
-                                                                  'Enter your remark...',
-                                                              border: OutlineInputBorder(
-                                                                borderRadius:
-                                                                    BorderRadius.circular(
-                                                                      10.w,
-                                                                    ),
+                                                      child: Container(
+                                                        padding: EdgeInsets.all(
+                                                          16.w,
+                                                        ),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              'Konfirmasi',
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
                                                               ),
                                                             ),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 16.w,
-                                                          ),
-                                                          Text(
-                                                            'Attachment',
-                                                            style: TextStyle(
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
+                                                            SizedBox(
+                                                              height: 16.w,
                                                             ),
-                                                          ),
-                                                          SizedBox(height: 8.w),
-                                                          FilledButton(
-                                                            style: FilledButton.styleFrom(
-                                                              backgroundColor:
-                                                                  Color.fromARGB(
-                                                                    255,
-                                                                    231,
-                                                                    231,
-                                                                    231,
-                                                                  ),
-                                                              foregroundColor:
-                                                                  Colors.black,
-                                                              shape: RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius.circular(
-                                                                      4.w,
-                                                                    ),
+                                                            Text(
+                                                              'Remark',
+                                                              style: TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
                                                               ),
                                                             ),
-                                                            onPressed: () async {
-                                                              try {
-                                                                final result = await FilePicker
-                                                                    .platform
-                                                                    .pickFiles(
-                                                                      type:
-                                                                          FileType
-                                                                              .any,
-                                                                      allowMultiple:
-                                                                          false,
-                                                                      withData:
-                                                                          true,
-                                                                    );
-
-                                                                if (result !=
-                                                                    null) {
-                                                                  final file =
-                                                                      result
-                                                                          .files
-                                                                          .single;
-
-                                                                  final MultipartFile
-                                                                  _fileImage =
-                                                                      await MultipartFile.fromFile(
-                                                                        file.path!,
-                                                                        filename:
-                                                                            file.name,
+                                                            SizedBox(
+                                                              height: 8.w,
+                                                            ),
+                                                            TextField(
+                                                              controller:
+                                                                  remarkController,
+                                                              maxLines: 3,
+                                                              decoration: InputDecoration(
+                                                                hintText:
+                                                                    'Enter your remark...',
+                                                                border: OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        10.w,
+                                                                      ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 16.w,
+                                                            ),
+                                                            Text(
+                                                              'Attachment',
+                                                              style: TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 8.w,
+                                                            ),
+                                                            FilledButton(
+                                                              style: FilledButton.styleFrom(
+                                                                backgroundColor:
+                                                                    Color.fromARGB(
+                                                                      255,
+                                                                      231,
+                                                                      231,
+                                                                      231,
+                                                                    ),
+                                                                foregroundColor:
+                                                                    Colors
+                                                                        .black,
+                                                                shape: RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        4.w,
+                                                                      ),
+                                                                ),
+                                                              ),
+                                                              onPressed: () async {
+                                                                try {
+                                                                  final result = await FilePicker
+                                                                      .platform
+                                                                      .pickFiles(
+                                                                        type:
+                                                                            FileType.any,
+                                                                        allowMultiple:
+                                                                            false,
+                                                                        withData:
+                                                                            true,
                                                                       );
 
-                                                                  if (file.size >
-                                                                      5 *
-                                                                          1024 *
-                                                                          1024) {
-                                                                    throw Exception(
-                                                                      'File too large (max 5MB)',
+                                                                  if (result !=
+                                                                      null) {
+                                                                    final file =
+                                                                        result
+                                                                            .files
+                                                                            .single;
+
+                                                                    final MultipartFile
+                                                                    _fileImage = await MultipartFile.fromFile(
+                                                                      file.path!,
+                                                                      filename:
+                                                                          file.name,
                                                                     );
+
+                                                                    if (file.size >
+                                                                        5 *
+                                                                            1024 *
+                                                                            1024) {
+                                                                      throw Exception(
+                                                                        'File too large (max 5MB)',
+                                                                      );
+                                                                    }
+
+                                                                    final bytes =
+                                                                        file.bytes!;
+                                                                    final mimeType =
+                                                                        file.extension ??
+                                                                        'application/octet-stream';
+
+                                                                    // Update dialog state only
+                                                                    setDialogState(() {
+                                                                      fileImage =
+                                                                          _fileImage;
+                                                                      base64ImagePayload =
+                                                                          'data:$mimeType;base64,${base64Encode(bytes)}';
+                                                                      base64Image =
+                                                                          base64Encode(
+                                                                            bytes,
+                                                                          );
+                                                                    });
                                                                   }
-
-                                                                  final bytes =
-                                                                      file.bytes!;
-                                                                  final mimeType =
-                                                                      file.extension ??
-                                                                      'application/octet-stream';
-
-                                                                  // Update dialog state only
-                                                                  setDialogState(() {
-                                                                    fileImage =
-                                                                        _fileImage;
-                                                                    base64ImagePayload =
-                                                                        'data:$mimeType;base64,${base64Encode(bytes)}';
-                                                                    base64Image =
-                                                                        base64Encode(
-                                                                          bytes,
-                                                                        );
-                                                                  });
-                                                                }
-                                                              } catch (e) {
-                                                                String error =
-                                                                    e.toString();
-                                                                ScaffoldMessenger.of(
-                                                                  context,
-                                                                ).showSnackBar(
-                                                                  SnackBar(
-                                                                    content:
-                                                                        Text(
-                                                                          error,
-                                                                        ),
-                                                                    duration:
-                                                                        Duration(
-                                                                          seconds:
-                                                                              2,
-                                                                        ),
-                                                                  ),
-                                                                );
-                                                              }
-                                                            },
-                                                            child: Container(
-                                                              padding:
-                                                                  EdgeInsets.symmetric(
-                                                                    vertical:
-                                                                        16.w,
-                                                                  ),
-                                                              child: Row(
-                                                                children: [
-                                                                  if (base64Image !=
-                                                                      null)
-                                                                    Container(
-                                                                      width:
-                                                                          48.w,
-                                                                      height:
-                                                                          48.w,
-                                                                      margin: EdgeInsets.only(
-                                                                        right:
-                                                                            8.w,
-                                                                      ),
-                                                                      decoration: BoxDecoration(
-                                                                        border: Border.all(
-                                                                          color:
-                                                                              Colors.grey,
-                                                                        ),
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(
-                                                                              4.w,
-                                                                            ),
-                                                                      ),
-                                                                      child: ClipRRect(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(
-                                                                              4.w,
-                                                                            ),
-                                                                        child: Image.memory(
-                                                                          base64Decode(
-                                                                            base64Image!,
-                                                                          ),
-                                                                          fit:
-                                                                              BoxFit.cover,
-                                                                          errorBuilder: (
-                                                                            context,
+                                                                } catch (e) {
+                                                                  String error =
+                                                                      e.toString();
+                                                                  ScaffoldMessenger.of(
+                                                                    context,
+                                                                  ).showSnackBar(
+                                                                    SnackBar(
+                                                                      content:
+                                                                          Text(
                                                                             error,
-                                                                            stackTrace,
-                                                                          ) {
-                                                                            return Icon(
-                                                                              Icons.error,
-                                                                            );
-                                                                          },
-                                                                        ),
+                                                                          ),
+                                                                      duration: Duration(
+                                                                        seconds:
+                                                                            2,
                                                                       ),
                                                                     ),
-                                                                  Icon(
-                                                                    Icons
-                                                                        .upload_file,
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: 8.w,
-                                                                  ),
-                                                                  Text(
-                                                                    'Upload Attachment',
-                                                                  ),
-                                                                ],
+                                                                  );
+                                                                }
+                                                              },
+                                                              child: Container(
+                                                                padding:
+                                                                    EdgeInsets.symmetric(
+                                                                      vertical:
+                                                                          16.w,
+                                                                    ),
+                                                                child: Row(
+                                                                  children: [
+                                                                    if (base64Image !=
+                                                                        null)
+                                                                      Container(
+                                                                        width:
+                                                                            48.w,
+                                                                        height:
+                                                                            48.w,
+                                                                        margin: EdgeInsets.only(
+                                                                          right:
+                                                                              8.w,
+                                                                        ),
+                                                                        decoration: BoxDecoration(
+                                                                          border: Border.all(
+                                                                            color:
+                                                                                Colors.grey,
+                                                                          ),
+                                                                          borderRadius: BorderRadius.circular(
+                                                                            4.w,
+                                                                          ),
+                                                                        ),
+                                                                        child: ClipRRect(
+                                                                          borderRadius: BorderRadius.circular(
+                                                                            4.w,
+                                                                          ),
+                                                                          child: Image.memory(
+                                                                            base64Decode(
+                                                                              base64Image!,
+                                                                            ),
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                            errorBuilder: (
+                                                                              context,
+                                                                              error,
+                                                                              stackTrace,
+                                                                            ) {
+                                                                              return Icon(
+                                                                                Icons.error,
+                                                                              );
+                                                                            },
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    Icon(
+                                                                      Icons
+                                                                          .upload_file,
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width:
+                                                                          8.w,
+                                                                    ),
+                                                                    Text(
+                                                                      'Upload Attachment',
+                                                                    ),
+                                                                  ],
+                                                                ),
                                                               ),
                                                             ),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 16.w,
-                                                          ),
-                                                          Row(
-                                                            children: [
-                                                              Expanded(
-                                                                child: FilledButton(
-                                                                  style: FilledButton.styleFrom(
-                                                                    backgroundColor:
-                                                                        Color.fromARGB(
-                                                                          255,
-                                                                          175,
-                                                                          175,
-                                                                          175,
-                                                                        ),
+                                                            SizedBox(
+                                                              height: 16.w,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Expanded(
+                                                                  child: FilledButton(
+                                                                    style: FilledButton.styleFrom(
+                                                                      backgroundColor:
+                                                                          Color.fromARGB(
+                                                                            255,
+                                                                            175,
+                                                                            175,
+                                                                            175,
+                                                                          ),
+                                                                    ),
+                                                                    child: Text(
+                                                                      'Close',
+                                                                    ),
+                                                                    onPressed: () {
+                                                                      Navigator.pop(
+                                                                        context,
+                                                                      );
+                                                                    },
                                                                   ),
-                                                                  child: Text(
-                                                                    'Close',
-                                                                  ),
-                                                                  onPressed: () {
-                                                                    Navigator.pop(
-                                                                      context,
-                                                                    );
-                                                                  },
                                                                 ),
-                                                              ),
-                                                              SizedBox(
-                                                                width: 16.w,
-                                                              ),
-                                                              Expanded(
-                                                                child: FilledButton(
-                                                                  child: Text(
-                                                                    'Konfirmasi',
-                                                                  ),
-                                                                  onPressed: () {
-                                                                    Navigator.pop(
-                                                                      context,
-                                                                    );
-                                                                    String
-                                                                    remark =
-                                                                        remarkController
-                                                                            .text
-                                                                            .toString();
-                                                                    widget
-                                                                        .onCheckboxQCChanged!(
-                                                                      !checkboxQCValue,
-                                                                      remark,
-                                                                      fileImage,
-                                                                    );
-                                                                  },
+                                                                SizedBox(
+                                                                  width: 16.w,
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
+                                                                Expanded(
+                                                                  child: FilledButton(
+                                                                    child: Text(
+                                                                      'Konfirmasi',
+                                                                    ),
+                                                                    onPressed: () {
+                                                                      Navigator.pop(
+                                                                        context,
+                                                                      );
+                                                                      String
+                                                                      remark =
+                                                                          remarkController
+                                                                              .text
+                                                                              .toString();
+                                                                      widget
+                                                                          .onCheckboxQCChanged!(
+                                                                        !checkboxQCValue,
+                                                                        remark,
+                                                                        fileImage,
+                                                                      );
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            },
-                                          );
-                                          // widget.onCheckboxQCChanged!(value);
-                                        } else {
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                "Doesn't have authorization",
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                            );
+                                            // widget.onCheckboxQCChanged!(value);
+                                          } else {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  "Doesn't have authorization",
+                                                ),
+                                                duration: Duration(seconds: 2),
                                               ),
-                                              duration: Duration(seconds: 2),
-                                            ),
-                                          );
+                                            );
+                                          }
                                         }
-                                      }
-                                    },
-                          ),
-                          Text('QC', style: TextStyle(fontSize: 8.sp)),
-                        ],
+                                      },
+                            ),
+                            Text('QC', style: TextStyle(fontSize: 8.sp)),
+                          ],
+                        ),
                       ),
-                    ),
 
-                  if (widget.trailing != null) widget.trailing!,
-                ],
+                    if (widget.trailing != null) widget.trailing!,
+                  ],
+                ),
               ),
             ),
 
