@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../data/repository/loan_repository.dart';
 import '../../../models/loan/vendor_spk.dart';
@@ -19,54 +21,85 @@ class LoanFormBloc extends Bloc<LoanFormEvent, LoanFormState> {
     on<LoanFormFirstPageChanged>(_onLoanFormFirstPageChanged);
     on<LoanFormSecondPageChanged>(_onLoanFormSecondPageChanged);
     on<FormReset>(_onFormReset);
+    on<LoanTypeChanged>(_onLoanTypeChanged);
+    on<DateLoanChanged>(_onDateLoanChanged);
+    on<RemarkChanged>(_onRemarkChanged);
+    on<AmountChanged>(_onAmountChanged);
   }
 
-  _onVendorChanged(event, state) {
-    state.emit(state.copyWith(selectedVendor: event.vendor));
+  void _onVendorChanged(VendorChanged event, Emitter<LoanFormState> emit) {
+    emit(state.copyWith(selectedVendor: event.vendor));
   }
 
-  _onSpkVendorChanged(event, state) {
-    state.emit(state.copyWith(selectedSpk: event.vendor));
+  void _onSpkVendorChanged(
+    SpkVendorChanged event,
+    Emitter<LoanFormState> emit,
+  ) {
+    emit(state.copyWith(selectedSpk: event.vendor));
   }
 
-  Future<void> _onLoanFormSubmit(event, state) async {
-    state.emit(state.copyWith(status: FormStatus.loading));
+  void _onRemarkChanged(RemarkChanged event, Emitter<LoanFormState> emit) {
+    emit(state.copyWith(remark: event.remark));
+  }
+
+  void _onAmountChanged(AmountChanged event, Emitter<LoanFormState> emit) {
+    emit(state.copyWith(amount: event.amount));
+  }
+
+  void _onLoanTypeChanged(LoanTypeChanged event, Emitter<LoanFormState> emit) {
+    emit(state.copyWith(selectedLoanType: event.loanType));
+  }
+
+  void _onDateLoanChanged(DateLoanChanged event, Emitter<LoanFormState> emit) {
+    final String _formattedDateLoan = DateFormat(
+      'dd MMM yyyy',
+    ).format(event.dateLoan);
+
+    emit(
+      state.copyWith(
+        dateLoan: event.dateLoan,
+        dateLoanFormatted: _formattedDateLoan,
+      ),
+    );
+  }
+
+  Future<void> _onLoanFormSubmit(
+    LoanFormSubmit event,
+    Emitter<LoanFormState> emit,
+  ) async {
+    emit(state.copyWith(status: FormStatus.loading));
 
     final result = await loanRepository.storeLoan(
-      vendorId: state.selectedVendor!.id,
-      spkId: state.selectedSpk!.id,
-      loanTypeId: state.selectedLoanType!.id,
-      dateLoan: state.dateLoan,
-      amount: state.amount,
-      remark: state.remark,
+      vendorId: state.selectedVendor!.vendorId,
+      loanTypeId: state.selectedLoanType!.str1,
+      dateLoan: state.dateLoanFormatted!,
+      amount: event.amount,
+      remark: state.remark!,
+      spkId: state.selectedSpk!.idSpk,
     );
+
     result.fold(
-      (error) => state.emit(
-        state.copyWith(status: FormStatus.failure, exception: error),
-      ),
-      (data) => state.emit(state.copyWith(status: FormStatus.success)),
+      (error) =>
+          emit(state.copyWith(status: FormStatus.failure, exception: error)),
+      (data) => emit(state.copyWith(status: FormStatus.success)),
     );
   }
 
-  _onFormReset(event, state) {
-    state.emit(
-      state.copyWith(
-        selectedSpk: null,
-        selectedLoanType: null,
-        dateLoan: null,
-        amount: null,
-        remark: null,
-        status: FormStatus.initial,
-        selectedVendor: null,
-      ),
-    );
+  void _onFormReset(FormReset event, Emitter<LoanFormState> emit) {
+    emit(state.resetState());
   }
 
-  _onLoanFormFirstPageChanged(event, state) {
-    state.emit(state.copyWith(status: FormStatus.initial));
+  void _onLoanFormFirstPageChanged(
+    LoanFormFirstPageChanged event,
+    Emitter<LoanFormState> emit,
+  ) {
+    emit(state.copyWith(status: FormStatus.initial));
   }
 
-  _onLoanFormSecondPageChanged(event, state) {
-    state.emit(state.copyWith(status: FormStatus.secondPage));
+  void _onLoanFormSecondPageChanged(
+    LoanFormSecondPageChanged event,
+    Emitter<LoanFormState> emit,
+  ) {
+    emit(state.copyWith(status: FormStatus.secondPage));
   }
 }

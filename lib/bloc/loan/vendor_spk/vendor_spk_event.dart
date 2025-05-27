@@ -13,3 +13,5 @@ final class VendorSpkLoadEvent extends VendorSpkEvent {
 
   const VendorSpkLoadEvent({required this.vendorId, this.activeFlag});
 }
+
+final class VendorSpkResetEvent extends VendorSpkEvent {}

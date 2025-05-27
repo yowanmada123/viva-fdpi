@@ -73,6 +73,8 @@ class LoanRest {
         "id_spk": spkId,
       };
 
+      log("Request body: $payload");
+
       final response = await dio.post(
         "api/fpi/kasbon/storeKasbon",
         data: payload,

@@ -3,29 +3,35 @@ part of 'loan_form_bloc.dart';
 class LoanFormState extends Equatable {
   final Vendor? selectedVendor;
   final LoanType? selectedLoanType;
-  final String? dateLoan;
+  final String? dateLoanFormatted;
+  final DateTime? dateLoan;
   final String? amount;
   final String? remark;
   final VendorSpk? selectedSpk;
   final FormStatus status;
+  final Exception? exception;
 
   const LoanFormState({
     this.selectedVendor,
     this.selectedLoanType,
     this.dateLoan,
+    this.dateLoanFormatted,
     this.amount,
     this.remark,
     this.selectedSpk,
+    this.exception,
     this.status = FormStatus.initial,
   });
 
   LoanFormState copyWith({
     Vendor? selectedVendor,
     LoanType? selectedLoanType,
-    String? dateLoan,
+    String? dateLoanFormatted,
+    DateTime? dateLoan,
     String? amount,
     String? remark,
     VendorSpk? selectedSpk,
+    Exception? exception,
     FormStatus? status,
   }) {
     return LoanFormState(
@@ -33,9 +39,25 @@ class LoanFormState extends Equatable {
       selectedLoanType: selectedLoanType ?? this.selectedLoanType,
       dateLoan: dateLoan ?? this.dateLoan,
       amount: amount ?? this.amount,
+      dateLoanFormatted: dateLoanFormatted ?? this.dateLoanFormatted,
       remark: remark ?? this.remark,
       selectedSpk: selectedSpk ?? this.selectedSpk,
       status: status ?? this.status,
+      exception: exception ?? this.exception,
+    );
+  }
+
+  LoanFormState resetState() {
+    return LoanFormState(
+      selectedVendor: null,
+      selectedLoanType: null,
+      dateLoan: null,
+      amount: null,
+      dateLoanFormatted: null,
+      remark: null,
+      selectedSpk: null,
+      status: FormStatus.initial,
+      exception: null,
     );
   }
 
@@ -44,10 +66,12 @@ class LoanFormState extends Equatable {
     selectedVendor,
     selectedLoanType,
     dateLoan,
+    dateLoanFormatted,
     amount,
     remark,
     selectedSpk,
     status,
+    exception,
   ];
 }
 

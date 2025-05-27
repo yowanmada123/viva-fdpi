@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:fdpi_app/models/loan/vendor_spk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +11,7 @@ import '../../bloc/master/loan_type/loan_type_bloc.dart';
 import '../../bloc/master/vendor/vendor_bloc.dart';
 import '../../data/repository/loan_repository.dart';
 import '../../data/repository/master_repository.dart';
+import '../widgets/MoneyInputWidget.dart';
 
 class LoanScreen extends StatelessWidget {
   final String title;
@@ -40,13 +44,14 @@ class LoanScreen extends StatelessWidget {
                   VendorSpkBloc(loanRepository: context.read<LoanRepository>()),
         ),
       ],
-      child: const LoanFormScreen(),
+      child: LoanFormScreen(title: title),
     );
   }
 }
 
 class LoanFormScreen extends StatefulWidget {
-  const LoanFormScreen({super.key});
+  final String title;
+  const LoanFormScreen({super.key, required this.title});
 
   @override
   State<LoanFormScreen> createState() => _LoanFormScreenState();
@@ -64,17 +69,13 @@ class _LoanFormScreenState extends State<LoanFormScreen> {
             duration: const Duration(milliseconds: 300),
             curve: Curves.linear,
           );
-          setState(() {
-            progress--;
-          });
           return false;
         }
         return true;
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Loan Form"),
-          centerTitle: true,
+          title: Text(widget.title),
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(5),
             child: Container(
@@ -95,99 +96,571 @@ class _LoanFormScreenState extends State<LoanFormScreen> {
           ),
         ),
 
-        body: PageView(
-          controller: pageController,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            SingleChildScrollView(
-              child: Container(
-                padding: EdgeInsets.all(16.w),
+        body: BlocConsumer<LoanFormBloc, LoanFormState>(
+          listener: (context, state) {
+            if (state.status == FormStatus.success) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Data Kasbon telah disimpan"),
+                  duration: Duration(seconds: 5),
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  backgroundColor: Color.fromARGB(255, 28, 170, 52),
+                ),
+              );
+              context.read<LoanFormBloc>().add(FormReset());
+              context.read<VendorSpkBloc>().add(VendorSpkResetEvent());
+              pageController.jumpToPage(0);
+            }
+          },
+          builder: (context, state) {
+            return PageView(
+              controller: pageController,
+              onPageChanged: (value) => setState(() => progress = value + 1),
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                SingleChildScrollView(
+                  child: BlocBuilder<LoanFormBloc, LoanFormState>(
+                    builder: (context, loanFormState) {
+                      return Container(
+                        padding: EdgeInsets.all(16.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Vendor"),
+                            SizedBox(height: 8.w),
+                            BlocBuilder<VendorBloc, VendorState>(
+                              builder: (context, state) {
+                                if (state is VendorLoadSuccess) {
+                                  return Container(
+                                    width: double.infinity,
+                                    child: DropdownButtonFormField(
+                                      isExpanded: true,
+                                      decoration: InputDecoration(
+                                        border: UnderlineInputBorder(),
+                                        fillColor: const Color(0xffffffff),
+                                        filled: true,
+                                        contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 0,
+                                        ),
+                                      ),
+                                      value: loanFormState.selectedVendor,
+                                      items:
+                                          state.vendors
+                                              .map(
+                                                (e) => DropdownMenuItem(
+                                                  value: e,
+                                                  child: Text(
+                                                    e.vendorName,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      fontSize: 14.sp,
+                                                    ), // Adjust font size if needed
+                                                  ),
+                                                ),
+                                              )
+                                              .toList(),
+                                      onChanged: (value) {
+                                        context.read<VendorSpkBloc>().add(
+                                          VendorSpkLoadEvent(
+                                            vendorId: value!.vendorId,
+                                          ),
+                                        );
+                                        context.read<LoanFormBloc>().add(
+                                          VendorChanged(value),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                }
+                                return Container(
+                                  width: double.infinity,
+                                  child: DropdownButtonFormField(
+                                    items: [],
+                                    onChanged: (value) {},
+                                    decoration: InputDecoration(
+                                      border: UnderlineInputBorder(),
+                                      fillColor: const Color(0xffffffff),
+                                      filled: true,
+                                      contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 0,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            SizedBox(height: 16.w),
+                            Text("SPK Vendor"),
+                            SizedBox(height: 8.w),
+                            BlocBuilder<VendorSpkBloc, VendorSpkState>(
+                              builder: (context, state) {
+                                if (state is VendorSpkLoadSuccess) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                    ),
+                                    height:
+                                        MediaQuery.of(context).size.height *
+                                            0.6 -
+                                        42.w,
+                                    width: double.infinity,
+                                    child: ListView.builder(
+                                      itemCount: state.vendorSpks.length,
+                                      itemBuilder: (context, index) {
+                                        return CheckboxListTile(
+                                          tileColor:
+                                              (index % 2 == 0
+                                                  ? Colors.white
+                                                  : Colors.grey.shade200),
+                                          title: Text(
+                                            state.vendorSpks[index].idSpk,
+                                          ),
+                                          value:
+                                              loanFormState.selectedSpk ==
+                                              state.vendorSpks[index],
+                                          onChanged: (bool? value) {
+                                            context.read<LoanFormBloc>().add(
+                                              SpkVendorChanged(
+                                                state.vendorSpks[index],
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  );
+                                }
+                                return Container(
+                                  width: double.infinity,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.6 -
+                                      42.w,
+                                  padding: EdgeInsets.all(16.w),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                  ),
+                                  child: Text(
+                                    "Harap pilih terlebih dahulu vendor",
+                                  ),
+                                );
+                              },
+                            ),
+                            SizedBox(height: 24.w),
+                            Container(
+                              width: double.infinity,
+                              child: FilledButton(
+                                style: FilledButton.styleFrom(
+                                  backgroundColor: Color(0xff1C3FAA),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4),
+                                  ), // Adjust radius here
+                                ),
+                                onPressed: () {
+                                  if (loanFormState.selectedSpk == null ||
+                                      loanFormState.selectedVendor == null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          "Pilih Vendor dan SPK terlebih dahulu",
+                                        ),
+                                        duration: Duration(seconds: 2),
+                                        behavior: SnackBarBehavior.floating,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
+                                        backgroundColor: Color(0xffff0000),
+                                      ),
+                                    );
+                                    return;
+                                  }
+                                  pageController.nextPage(
+                                    duration: Duration(seconds: 1),
+                                    curve: Curves.linear,
+                                  );
+                                },
+                                child: Text("Next"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                _LoanFormSecondStep(
+                  onBackFunction: () {
+                    pageController.previousPage(
+                      duration: Duration(seconds: 1),
+                      curve: Curves.linear,
+                    );
+                  },
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _LoanFormSecondStep extends StatefulWidget {
+  final Function onBackFunction;
+  const _LoanFormSecondStep({Key? key, required this.onBackFunction})
+    : super(key: key);
+
+  @override
+  State<_LoanFormSecondStep> createState() => _LoanFormSecondStepState();
+}
+
+class _LoanFormSecondStepState extends State<_LoanFormSecondStep> {
+  final _kasbonController = TextEditingController();
+
+  @override
+  void dispose() {
+    _kasbonController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      context.read<LoanFormBloc>().add(DateLoanChanged(pickedDate));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: BlocBuilder<LoanFormBloc, LoanFormState>(
+        builder: (context, state) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 16.w),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("Vendor"),
                     SizedBox(height: 8.w),
-                    BlocBuilder<VendorBloc, VendorState>(
-                      builder: (context, state) {
-                        if (state is VendorLoadSuccess) {
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(),
+                        fillColor: const Color(0xffffffff),
+                        filled: true,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 0,
+                        ),
+                      ),
+                      readOnly: true,
+                      initialValue:
+                          state.selectedVendor == null
+                              ? ""
+                              : state.selectedVendor!.vendorName,
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("SPK Vendor"),
+                    SizedBox(height: 8.w),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(),
+                        fillColor: const Color(0xffffffff),
+                        filled: true,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 0,
+                        ),
+                      ),
+                      readOnly: true,
+                      initialValue:
+                          state.selectedSpk == null
+                              ? ""
+                              : state.selectedSpk!.idSpk,
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Nama Site"),
+                    SizedBox(height: 8.w),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(),
+                        fillColor: const Color(0xffffffff),
+                        filled: true,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 0,
+                        ),
+                      ),
+                      readOnly: true,
+                      initialValue:
+                          state.selectedSpk == null
+                              ? ""
+                              : state.selectedSpk!.siteName,
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Nama Cluster"),
+                    SizedBox(height: 8.w),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(),
+                        fillColor: const Color(0xffffffff),
+                        filled: true,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 0,
+                        ),
+                      ),
+                      readOnly: true,
+                      initialValue:
+                          state.selectedSpk == null
+                              ? ""
+                              : state.selectedSpk!.clusterName,
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("House Item"),
+                    SizedBox(height: 8.w),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(),
+                        fillColor: const Color(0xffffffff),
+                        filled: true,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 0,
+                        ),
+                      ),
+                      readOnly: true,
+                      initialValue:
+                          state.selectedSpk == null
+                              ? ""
+                              : state.selectedSpk!.houseName,
+                    ),
+                  ],
+                ),
+              ),
+
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Tipe Kasbon"),
+                    SizedBox(height: 8.w),
+                    BlocBuilder<LoanTypeBloc, LoanTypeState>(
+                      builder: (context, loanState) {
+                        if (loanState is LoanTypeLoadSuccess) {
                           return Container(
-                            // Adjust as needed
-                            child: SizedBox(
-                              width:
-                                  double.infinity, // Takes full available width
-                              child: DropdownButtonFormField(
-                                isExpanded:
-                                    true, // Critical to prevent overflow
-                                decoration: InputDecoration(
-                                  border:
-                                      OutlineInputBorder(), // Optional: Better visual
+                            width: double.infinity,
+                            child: DropdownButtonFormField(
+                              isExpanded: true,
+                              decoration: InputDecoration(
+                                border: UnderlineInputBorder(),
+                                fillColor: const Color(0xffffffff),
+                                filled: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 0,
                                 ),
-                                items:
-                                    state.vendors
-                                        .map(
-                                          (e) => DropdownMenuItem(
-                                            value: e,
-                                            child: Text(
-                                              e.vendorName,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontSize: 14.sp,
-                                              ), // Adjust font size if needed
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                                onChanged: (value) {
-                                  context.read<VendorSpkBloc>().add(
-                                    VendorSpkLoadEvent(
-                                      vendorId: value!.vendorId,
-                                    ),
-                                  );
-                                  context.read<LoanFormBloc>().add(
-                                    VendorChanged(value),
-                                  );
-                                },
                               ),
+                              value: state.selectedLoanType,
+                              items:
+                                  loanState.loanTypes
+                                      .map(
+                                        (e) => DropdownMenuItem(
+                                          value: e,
+                                          child: Text(
+                                            e.str2,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: 14.sp,
+                                            ), // Adjust font size if needed
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                              onChanged: (value) {
+                                if (value == null) return;
+                                context.read<LoanFormBloc>().add(
+                                  LoanTypeChanged(value),
+                                );
+                              },
                             ),
                           );
                         }
                         return Container(
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: DropdownButtonFormField(
-                              items: [],
-                              onChanged: (value) {},
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
+                          width: double.infinity,
+                          child: DropdownButtonFormField(
+                            items: [],
+                            onChanged: (value) {},
+                            decoration: InputDecoration(
+                              border: UnderlineInputBorder(),
+                              fillColor: const Color(0xffffffff),
+                              filled: true,
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 0,
                               ),
                             ),
                           ),
                         );
                       },
                     ),
-                    SizedBox(height: 24.w),
-                    Container(
-                      width: double.infinity,
-                      child: FilledButton(
-                        onPressed: () {
-                          setState(() {
-                            progress++;
-                          });
-                          pageController.nextPage(
-                            duration: Duration(seconds: 1),
-                            curve: Curves.linear,
-                          );
-                        },
-                        child: Text("Next"),
+                  ],
+                ),
+              ),
+
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Nominal Kasbon"),
+                    SizedBox(height: 8.w),
+                    MoneyInputWidget(
+                      controller: _kasbonController,
+                      suffixIcon: null,
+                      maxLines: 1,
+                    ),
+                  ],
+                ),
+              ),
+
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Tanggal Transaksi Kasbon"),
+                    SizedBox(height: 8.w),
+                    TextField(
+                      decoration: InputDecoration(
+                        fillColor: const Color(0xffffffff),
+                        filled: true,
+                        prefixIcon: const Icon(Icons.calendar_today),
+                        prefixIconColor: const Color(0xff333333),
+                      ),
+                      readOnly: true,
+                      onTap: () => _selectDate(context),
+                      controller: TextEditingController(
+                        text: state.dateLoanFormatted,
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-            Text("hello world 2"),
-          ],
-        ),
+
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Remark"),
+                    SizedBox(height: 8.w),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(),
+                        fillColor: const Color(0xffffffff),
+                        filled: true,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 12,
+                        ),
+                      ),
+                      maxLines: 3,
+                      onChanged: (value) {
+                        context.read<LoanFormBloc>().add(RemarkChanged(value));
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.w),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: FilledButton(
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Color(0xffff0000),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ), // Adjust radius here
+                        ),
+                        onPressed: () {
+                          widget.onBackFunction();
+                        },
+                        child: Text("Back"),
+                      ),
+                    ),
+                    SizedBox(width: 24.w),
+                    Expanded(
+                      child: FilledButton(
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Color(0xff1C3FAA),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ), // Adjust radius here
+                        ),
+                        onPressed: () {
+                          context.read<LoanFormBloc>().add(
+                            LoanFormSubmit(amount: _kasbonController.text),
+                          );
+                        },
+                        child: Text("Submit"),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

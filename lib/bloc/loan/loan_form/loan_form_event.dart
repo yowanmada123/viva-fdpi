@@ -17,18 +17,29 @@ class SpkVendorChanged extends LoanFormEvent {
   const SpkVendorChanged(this.vendor);
 }
 
-class LoanFormSubmit extends LoanFormEvent {
-  final String dateLoan;
-  final String amount;
-  final String remark;
+class LoanTypeChanged extends LoanFormEvent {
   final LoanType loanType;
+  const LoanTypeChanged(this.loanType);
+}
 
-  const LoanFormSubmit({
-    required this.dateLoan,
-    required this.amount,
-    required this.remark,
-    required this.loanType,
-  });
+class DateLoanChanged extends LoanFormEvent {
+  final DateTime dateLoan;
+  const DateLoanChanged(this.dateLoan);
+}
+
+class RemarkChanged extends LoanFormEvent {
+  final String remark;
+  const RemarkChanged(this.remark);
+}
+
+class AmountChanged extends LoanFormEvent {
+  final String amount;
+  const AmountChanged(this.amount);
+}
+
+class LoanFormSubmit extends LoanFormEvent {
+  final String amount;
+  const LoanFormSubmit({required this.amount});
 }
 
 class LoanFormFirstPageChanged extends LoanFormEvent {

@@ -12,6 +12,7 @@ class VendorSpkBloc extends Bloc<VendorSpkEvent, VendorSpkState> {
 
   VendorSpkBloc({required this.loanRepository}) : super(VendorSpkInitial()) {
     on<VendorSpkLoadEvent>(_onVendorSpkLoadEvent);
+    on<VendorSpkResetEvent>(_onVendorSpkReset);
   }
 
   Future<void> _onVendorSpkLoadEvent(
@@ -28,5 +29,12 @@ class VendorSpkBloc extends Bloc<VendorSpkEvent, VendorSpkState> {
           emit(VendorSpkLoadFailure(exception: error, message: error.message!)),
       (data) => emit(VendorSpkLoadSuccess(vendorSpks: data)),
     );
+  }
+
+  Future<void> _onVendorSpkReset(
+    VendorSpkResetEvent event,
+    Emitter<VendorSpkState> emit,
+  ) async {
+    emit(VendorSpkInitial());
   }
 }
