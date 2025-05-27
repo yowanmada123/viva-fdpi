@@ -85,12 +85,6 @@ class MyGridLayout extends StatelessWidget {
         'description': 'Approval Pengajuan',
         'route': ApprovalScreen(title: submenu.menu_caption),
       },
-      'approvalKasBon': {
-        'icon': Icons.edit_document,
-        'text': 'Approval Pengajuan',
-        'description': 'Approval Kasbon',
-        'route': ApprovalScreen(title: submenu.menu_caption),
-      },
       'approvalSPB': {
         'icon': Icons.edit_document,
         'text': 'Approval Pengajuan',
@@ -229,32 +223,30 @@ class MyGridLayout extends StatelessWidget {
                 SizedBox(height: 12.w),
 
                 // Carousel Section
-                Container(
-                  child: CarouselSlider(
-                    options: CarouselOptions(
-                      height: 155.w,
-                      autoPlay: true,
-                      autoPlayCurve: Curves.fastOutSlowIn,
-                      autoPlayAnimationDuration: Duration(milliseconds: 1000),
-                      enlargeCenterPage: true,
-                    ),
-                    items:
-                        imagesCaraousel.map((element) {
-                          return Builder(
-                            builder: (BuildContext context) {
-                              return Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: 155.w,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                clipBehavior: Clip.hardEdge,
-                                child: Image.asset(element, fit: BoxFit.cover),
-                              );
-                            },
-                          );
-                        }).toList(),
+                CarouselSlider(
+                  options: CarouselOptions(
+                    height: 155.w,
+                    autoPlay: true,
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    autoPlayAnimationDuration: Duration(milliseconds: 1000),
+                    enlargeCenterPage: true,
                   ),
+                  items:
+                      imagesCaraousel.map((element) {
+                        return Builder(
+                          builder: (BuildContext context) {
+                            return Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: 155.w,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              clipBehavior: Clip.hardEdge,
+                              child: Image.asset(element, fit: BoxFit.cover),
+                            );
+                          },
+                        );
+                      }).toList(),
                 ),
                 SizedBox(height: 24.w),
 

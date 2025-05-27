@@ -25,6 +25,32 @@ class LoanFormBloc extends Bloc<LoanFormEvent, LoanFormState> {
     on<DateLoanChanged>(_onDateLoanChanged);
     on<RemarkChanged>(_onRemarkChanged);
     on<AmountChanged>(_onAmountChanged);
+    on<DateSelectionRequested>(_onDateSelectionRequested);
+  }
+
+  void _onDateSelectionRequested(
+    DateSelectionRequested event,
+    Emitter<LoanFormState> emit,
+  ) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: event.context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      final String formattedDateLoan = DateFormat(
+        'dd MMM yyyy',
+      ).format(pickedDate);
+
+      emit(
+        state.copyWith(
+          dateLoan: pickedDate,
+          dateLoanFormatted: formattedDateLoan,
+        ),
+      );
+    }
   }
 
   void _onVendorChanged(VendorChanged event, Emitter<LoanFormState> emit) {
@@ -51,14 +77,14 @@ class LoanFormBloc extends Bloc<LoanFormEvent, LoanFormState> {
   }
 
   void _onDateLoanChanged(DateLoanChanged event, Emitter<LoanFormState> emit) {
-    final String _formattedDateLoan = DateFormat(
+    final String formattedDateLoan = DateFormat(
       'dd MMM yyyy',
     ).format(event.dateLoan);
 
     emit(
       state.copyWith(
         dateLoan: event.dateLoan,
-        dateLoanFormatted: _formattedDateLoan,
+        dateLoanFormatted: formattedDateLoan,
       ),
     );
   }

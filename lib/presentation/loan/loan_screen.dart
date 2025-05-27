@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:fdpi_app/models/loan/vendor_spk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -134,7 +131,7 @@ class _LoanFormScreenState extends State<LoanFormScreen> {
                             BlocBuilder<VendorBloc, VendorState>(
                               builder: (context, state) {
                                 if (state is VendorLoadSuccess) {
-                                  return Container(
+                                  return SizedBox(
                                     width: double.infinity,
                                     child: DropdownButtonFormField(
                                       isExpanded: true,
@@ -177,7 +174,7 @@ class _LoanFormScreenState extends State<LoanFormScreen> {
                                     ),
                                   );
                                 }
-                                return Container(
+                                return SizedBox(
                                   width: double.infinity,
                                   child: DropdownButtonFormField(
                                     items: [],
@@ -252,7 +249,7 @@ class _LoanFormScreenState extends State<LoanFormScreen> {
                               },
                             ),
                             SizedBox(height: 24.w),
-                            Container(
+                            SizedBox(
                               width: double.infinity,
                               child: FilledButton(
                                 style: FilledButton.styleFrom(
@@ -314,8 +311,7 @@ class _LoanFormScreenState extends State<LoanFormScreen> {
 
 class _LoanFormSecondStep extends StatefulWidget {
   final Function onBackFunction;
-  const _LoanFormSecondStep({Key? key, required this.onBackFunction})
-    : super(key: key);
+  const _LoanFormSecondStep({required this.onBackFunction});
 
   @override
   State<_LoanFormSecondStep> createState() => _LoanFormSecondStepState();
@@ -331,6 +327,8 @@ class _LoanFormSecondStepState extends State<_LoanFormSecondStep> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    final loanFormBloc = context.read<LoanFormBloc>();
+
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -339,7 +337,7 @@ class _LoanFormSecondStepState extends State<_LoanFormSecondStep> {
     );
 
     if (pickedDate != null) {
-      context.read<LoanFormBloc>().add(DateLoanChanged(pickedDate));
+      loanFormBloc.add(DateLoanChanged(pickedDate));
     }
   }
 
@@ -493,7 +491,7 @@ class _LoanFormSecondStepState extends State<_LoanFormSecondStep> {
                     BlocBuilder<LoanTypeBloc, LoanTypeState>(
                       builder: (context, loanState) {
                         if (loanState is LoanTypeLoadSuccess) {
-                          return Container(
+                          return SizedBox(
                             width: double.infinity,
                             child: DropdownButtonFormField(
                               isExpanded: true,
@@ -531,7 +529,7 @@ class _LoanFormSecondStepState extends State<_LoanFormSecondStep> {
                             ),
                           );
                         }
-                        return Container(
+                        return SizedBox(
                           width: double.infinity,
                           child: DropdownButtonFormField(
                             items: [],
@@ -584,7 +582,10 @@ class _LoanFormSecondStepState extends State<_LoanFormSecondStep> {
                         prefixIconColor: const Color(0xff333333),
                       ),
                       readOnly: true,
-                      onTap: () => _selectDate(context),
+                      onTap:
+                          () => context.read<LoanFormBloc>().add(
+                            DateSelectionRequested(context),
+                          ),
                       controller: TextEditingController(
                         text: state.dateLoanFormatted,
                       ),
