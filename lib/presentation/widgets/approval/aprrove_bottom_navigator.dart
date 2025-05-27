@@ -18,11 +18,13 @@ class ApprovalBottomBar extends StatelessWidget {
     return BottomNavigationBar(
       backgroundColor: Color(0xffffffff),
       elevation: 8.0,
+      selectedFontSize: 0,
+      unselectedFontSize: 0,
       items: [
         BottomNavigationBarItem(
           icon: Container(
-            padding: EdgeInsets.symmetric(vertical: 4.w, horizontal: 16.w),
             width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
             child: OutlinedButton(
               onPressed: isLoading ? null : onReject,
               style: OutlinedButton.styleFrom(
@@ -41,11 +43,11 @@ class ApprovalBottomBar extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Container(
-            padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 16.w),
             width: double.infinity,
-            child: ElevatedButton(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
+            child: FilledButton(
               onPressed: isLoading ? null : onApprove,
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              style: FilledButton.styleFrom(backgroundColor: Colors.green),
               child:
                   isLoading
                       ? SizedBox(

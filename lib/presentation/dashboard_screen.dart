@@ -1,8 +1,6 @@
 import 'dart:math';
 
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
-import 'package:fdpi_app/bloc/authorization/credentials/credentials_bloc.dart';
-import 'package:fdpi_app/presentation/approval/approval_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,14 +8,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../bloc/auth/authentication/authentication_bloc.dart';
 import '../bloc/auth/logout/logout_bloc.dart';
 import '../bloc/authorization/access_menu/access_menu_bloc.dart';
+import '../bloc/authorization/credentials/credentials_bloc.dart';
 import '../data/repository/auth_repository.dart';
 import '../data/repository/authorization_repository.dart';
 import '../models/authorization/menu.dart';
 import '../models/errors/custom_exception.dart';
 import 'SPK/spk_list_screen.dart';
 import 'SPK/spr_list_screen.dart';
+import 'approval/approval_screen.dart';
 import 'booking/booking_screen.dart';
 import 'fdpi/fdpi_residences_screen.dart';
+import 'loan/loan_screen.dart';
 import 'widgets/bottom_navigator.dart';
 import 'widgets/logout_button.dart';
 
@@ -84,12 +85,6 @@ class MyGridLayout extends StatelessWidget {
         'description': 'Approval Pengajuan',
         'route': ApprovalScreen(title: submenu.menu_caption),
       },
-      'approvalKasBon': {
-        'icon': Icons.edit_document,
-        'text': 'Approval Pengajuan',
-        'description': 'Approval Kasbon',
-        'route': ApprovalScreen(title: submenu.menu_caption),
-      },
       'approvalSPB': {
         'icon': Icons.edit_document,
         'text': 'Approval Pengajuan',
@@ -112,7 +107,7 @@ class MyGridLayout extends StatelessWidget {
         'icon': Icons.request_quote,
         'text': 'Approval Pengajuan',
         'description': 'Kasbon',
-        'route': ApprovalScreen(title: submenu.menu_caption),
+        'route': LoanScreen(title: submenu.menu_caption),
       },
       // 'testing-ui-spk': {
       //   'icon': Icons.edit_document,
@@ -228,32 +223,30 @@ class MyGridLayout extends StatelessWidget {
                 SizedBox(height: 12.w),
 
                 // Carousel Section
-                Container(
-                  child: CarouselSlider(
-                    options: CarouselOptions(
-                      height: 155.w,
-                      autoPlay: true,
-                      autoPlayCurve: Curves.fastOutSlowIn,
-                      autoPlayAnimationDuration: Duration(milliseconds: 1000),
-                      enlargeCenterPage: true,
-                    ),
-                    items:
-                        imagesCaraousel.map((element) {
-                          return Builder(
-                            builder: (BuildContext context) {
-                              return Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: 155.w,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                clipBehavior: Clip.hardEdge,
-                                child: Image.asset(element, fit: BoxFit.cover),
-                              );
-                            },
-                          );
-                        }).toList(),
+                CarouselSlider(
+                  options: CarouselOptions(
+                    height: 155.w,
+                    autoPlay: true,
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    autoPlayAnimationDuration: Duration(milliseconds: 1000),
+                    enlargeCenterPage: true,
                   ),
+                  items:
+                      imagesCaraousel.map((element) {
+                        return Builder(
+                          builder: (BuildContext context) {
+                            return Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: 155.w,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              clipBehavior: Clip.hardEdge,
+                              child: Image.asset(element, fit: BoxFit.cover),
+                            );
+                          },
+                        );
+                      }).toList(),
                 ),
                 SizedBox(height: 24.w),
 

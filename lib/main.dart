@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:fdpi_app/bloc/authorization/credentials/credentials_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,10 +7,12 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'bloc/auth/authentication/authentication_bloc.dart';
+import 'bloc/authorization/credentials/credentials_bloc.dart';
 import 'data/data_providers/rest_api/auth_rest.dart';
 import 'data/data_providers/rest_api/authorization/authorization_rest.dart';
 import 'data/data_providers/rest_api/booking_rest.dart';
 import 'data/data_providers/rest_api/fdpi/fdpi_rest.dart';
+import 'data/data_providers/rest_api/loan/loan_rest.dart';
 import 'data/data_providers/rest_api/master/master_rest.dart';
 import 'data/data_providers/rest_api/spk_rest.dart';
 import 'data/data_providers/shared-preferences/shared_preferences_key.dart';
@@ -20,6 +21,7 @@ import 'data/repository/auth_repository.dart';
 import 'data/repository/authorization_repository.dart';
 import 'data/repository/booking_repository.dart';
 import 'data/repository/fdpi_repository.dart';
+import 'data/repository/loan_repository.dart';
 import 'data/repository/master_repository.dart';
 import 'data/repository/spk_repository.dart';
 import 'environment.dart';
@@ -50,6 +52,7 @@ void main() async {
   final bookingRest = BookingRest(dioClient);
   final masterRest = MasterRest(dioClient);
   final spkRest = SPKRest(dioClient);
+  final loanRest = LoanRest(dioClient);
 
   final authRepository = AuthRepository(
     authRest: authRest,
@@ -62,6 +65,7 @@ void main() async {
   final bookingRepository = BookingRepository(bookingRest: bookingRest);
   final masterRepository = MasterRepository(masterRest: masterRest);
   final spkRepository = SPKRepository(spkRest: spkRest);
+  final loanRepostitory = LoanRepository(loanRest: loanRest);
 
   runApp(
     MultiRepositoryProvider(
@@ -72,6 +76,7 @@ void main() async {
         RepositoryProvider.value(value: bookingRepository),
         RepositoryProvider.value(value: masterRepository),
         RepositoryProvider.value(value: spkRepository),
+        RepositoryProvider.value(value: loanRepostitory),
       ],
       child: MultiBlocProvider(
         providers: [

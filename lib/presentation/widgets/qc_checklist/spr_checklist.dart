@@ -95,32 +95,32 @@ class _SprChecklistAccordionState extends State<SprChecklistAccordion> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              decoration: BoxDecoration(
-                color: headerColor,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(widget.borderRadius),
-                  topRight: Radius.circular(widget.borderRadius),
-                  bottomLeft: Radius.circular(
-                    _isExpanded ? 0 : widget.borderRadius,
-                  ),
-                  bottomRight: Radius.circular(
-                    _isExpanded ? 0 : widget.borderRadius,
+            InkWell(
+              onTap: () => setState(() => _isExpanded = !_isExpanded),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: headerColor,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(widget.borderRadius),
+                    topRight: Radius.circular(widget.borderRadius),
+                    bottomLeft: Radius.circular(
+                      _isExpanded ? 0 : widget.borderRadius,
+                    ),
+                    bottomRight: Radius.circular(
+                      _isExpanded ? 0 : widget.borderRadius,
+                    ),
                   ),
                 ),
-              ),
-              padding: widget.padding ?? const EdgeInsets.all(0),
-              child: Row(
-                children: [
-                  if (widget.leading != null) ...[
-                    widget.leading!,
-                    const SizedBox(width: 12),
-                  ],
+                padding: widget.padding ?? const EdgeInsets.all(0),
+                child: Row(
+                  children: [
+                    if (widget.leading != null) ...[
+                      widget.leading!,
+                      const SizedBox(width: 12),
+                    ],
 
-                  // Expanded area with InkWell wrapping just the text
-                  Expanded(
-                    child: InkWell(
-                      onTap: () => setState(() => _isExpanded = !_isExpanded),
+                    // Expanded area with InkWell wrapping just the text
+                    Expanded(
                       child: Row(
                         children: [
                           Expanded(
@@ -136,34 +136,30 @@ class _SprChecklistAccordionState extends State<SprChecklistAccordion> {
                         ],
                       ),
                     ),
-                  ),
 
-                  // Checkbox placed outside the InkWell
-                  if (widget.showCheckboxApplicator)
-                    SizedBox(
-                      width: 48.w,
-                      child: Column(
-                        children: [
-                          Checkbox(
-                            visualDensity: VisualDensity(
-                              horizontal: VisualDensity.minimumDensity,
-                              vertical: VisualDensity.minimumDensity,
-                            ),
-                            value: checkboxApplicatorValue,
-                            onChanged:
-                                widget.onCheckboxApplicatorChanged == null
-                                    ? null
-                                    : (value) {
-                                      final bloc =
-                                          BlocProvider.of<CredentialsBloc>(
-                                            context,
-                                          );
-                                      final state = bloc.state;
+                    // Checkbox placed outside the InkWell
+                    if (widget.showCheckboxApplicator)
+                      SizedBox(
+                        width: 48.w,
+                        child: Column(
+                          children: [
+                            Checkbox(
+                              visualDensity: VisualDensity(
+                                horizontal: VisualDensity.minimumDensity,
+                                vertical: VisualDensity.minimumDensity,
+                              ),
+                              value: checkboxApplicatorValue,
+                              onChanged:
+                                  widget.onCheckboxApplicatorChanged == null
+                                      ? null
+                                      : (value) {
+                                        final bloc =
+                                            BlocProvider.of<CredentialsBloc>(
+                                              context,
+                                            );
+                                        final state = bloc.state;
 
-                                      if (state is CredentialsLoadSuccess) {
-                                        if (state.credentials['CEK_LIST_1'] ==
-                                            "Y") {
-                                          // 1. Add a StatefulBuilder to update dialog state
+                                        if (state is CredentialsLoadSuccess) {
                                           showDialog(
                                             context: context,
                                             builder: (context) {
@@ -473,15 +469,15 @@ class _SprChecklistAccordionState extends State<SprChecklistAccordion> {
                                             ),
                                           );
                                         }
-                                      }
-                                    },
-                          ),
-                        ],
+                                      },
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
 
-                  if (widget.trailing != null) widget.trailing!,
-                ],
+                    if (widget.trailing != null) widget.trailing!,
+                  ],
+                ),
               ),
             ),
 
