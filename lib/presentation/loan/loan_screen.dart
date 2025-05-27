@@ -211,17 +211,37 @@ class _LoanFormScreenState extends State<LoanFormScreen> {
                                       itemCount: state.vendorSpks.length,
                                       itemBuilder: (context, index) {
                                         return CheckboxListTile(
+                                          controlAffinity:
+                                              ListTileControlAffinity.leading,
                                           tileColor:
                                               (index % 2 == 0
                                                   ? Colors.white
                                                   : Colors.grey.shade200),
                                           title: Text(
-                                            state.vendorSpks[index].idSpk,
+                                            state.vendorSpks[index].idCetak,
+                                            style: TextStyle(
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.w600,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          subtitle: Text(
+                                            "${state.vendorSpks[index].siteName} - ${state.vendorSpks[index].clusterName} - ${state.vendorSpks[index].houseName}",
+                                            style: TextStyle(
+                                              fontSize: 12.sp,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
                                           ),
                                           value:
                                               loanFormState.selectedSpk ==
                                               state.vendorSpks[index],
                                           onChanged: (bool? value) {
+                                            if (value == null || !value) {
+                                              context.read<LoanFormBloc>().add(
+                                                SpkVendorChanged(null),
+                                              );
+                                              return;
+                                            }
                                             context.read<LoanFormBloc>().add(
                                               SpkVendorChanged(
                                                 state.vendorSpks[index],
@@ -326,21 +346,6 @@ class _LoanFormSecondStepState extends State<_LoanFormSecondStep> {
     super.dispose();
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final loanFormBloc = context.read<LoanFormBloc>();
-
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-
-    if (pickedDate != null) {
-      loanFormBloc.add(DateLoanChanged(pickedDate));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -397,7 +402,7 @@ class _LoanFormSecondStepState extends State<_LoanFormSecondStep> {
                       initialValue:
                           state.selectedSpk == null
                               ? ""
-                              : state.selectedSpk!.idSpk,
+                              : state.selectedSpk!.idCetak,
                     ),
                   ],
                 ),

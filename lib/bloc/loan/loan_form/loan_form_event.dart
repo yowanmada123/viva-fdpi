@@ -13,7 +13,7 @@ class VendorChanged extends LoanFormEvent {
 }
 
 class SpkVendorChanged extends LoanFormEvent {
-  final VendorSpk vendor;
+  final VendorSpk? vendor;
   const SpkVendorChanged(this.vendor);
 }
 
@@ -51,3 +51,8 @@ class LoanFormSecondPageChanged extends LoanFormEvent {
 }
 
 class FormReset extends LoanFormEvent {}
+
+class DateSelectionRequested extends LoanFormEvent {
+  final BuildContext context;
+  const DateSelectionRequested(this.context);
+}

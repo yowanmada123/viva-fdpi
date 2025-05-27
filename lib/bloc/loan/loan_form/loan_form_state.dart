@@ -61,6 +61,20 @@ class LoanFormState extends Equatable {
     );
   }
 
+  LoanFormState unSelectSpk() {
+    return LoanFormState(
+      selectedVendor: selectedVendor,
+      selectedLoanType: selectedLoanType,
+      dateLoan: dateLoan,
+      amount: amount,
+      dateLoanFormatted: dateLoanFormatted,
+      remark: remark,
+      selectedSpk: null,
+      status: status,
+      exception: exception,
+    );
+  }
+
   @override
   List<Object?> get props => [
     selectedVendor,

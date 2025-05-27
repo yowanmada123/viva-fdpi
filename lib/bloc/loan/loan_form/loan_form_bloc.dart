@@ -61,6 +61,9 @@ class LoanFormBloc extends Bloc<LoanFormEvent, LoanFormState> {
     SpkVendorChanged event,
     Emitter<LoanFormState> emit,
   ) {
+    if (event.vendor == null) {
+      emit(state.unSelectSpk());
+    }
     emit(state.copyWith(selectedSpk: event.vendor));
   }
 
