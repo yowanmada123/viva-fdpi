@@ -112,11 +112,9 @@ class _LoginFormState extends State<LoginForm> {
                 BlocConsumer<LoginFormBloc, LoginFormState>(
                   listener: (context, state) {
                     if (state is LoginFormError) {
-                      usernameController.clear();
-                      passwordController.clear();
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text("Username atau Password salah"),
+                          content: Text(state.message),
                           duration: Duration(seconds: 2),
                           behavior: SnackBarBehavior.floating,
                           shape: RoundedRectangleBorder(
@@ -144,7 +142,7 @@ class _LoginFormState extends State<LoginForm> {
                           if (username.isEmpty || password.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('Please fill in all fields.'),
+                                content: Text('Username atau password kosong'),
                                 duration: Duration(seconds: 2),
                                 behavior: SnackBarBehavior.floating,
                                 shape: RoundedRectangleBorder(

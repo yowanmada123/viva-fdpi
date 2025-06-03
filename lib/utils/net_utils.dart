@@ -1,5 +1,5 @@
 import 'package:http/http.dart';
-import 'package:dio/dio.dart' hide Response;
+import 'package:dio/dio.dart' as Dio;
 
 import '../models/errors/custom_exception.dart';
 
@@ -19,15 +19,23 @@ class NetUtils {
     }
   }
 
-  static CustomException parseDioException(DioException e) {
-    if (e.response?.statusCode == 401) {
-      return UnauthorizedException(message: e.toString());
-    } else if (e.response?.statusCode == 403) {
-      return ForbiddenException(message: e.toString());
-    } else if (e.response?.statusCode == 404) {
-      return NotFoundException(message: e.toString());
-    } else {
-      return CustomException(message: e.toString());
+  static CustomException parseDioException(Dio.DioException e) {
+    try {
+      Dio.Response response = e.response!;
+      String message =
+          response.data['message'] ?? "Terjadi kesalahan! Silakan coba lagi.";
+
+      if (response.statusCode == 401) {
+        return UnauthorizedException(message: message);
+      } else if (response.statusCode == 403) {
+        return ForbiddenException(message: message);
+      } else if (response.statusCode == 404) {
+        return NotFoundException(message: message);
+      } else {
+        return CustomException(message: message);
+      }
+    } catch (e) {
+      return CustomException(message: "Terjadi kesalahan! Silakan coba lagi.");
     }
   }
 }
