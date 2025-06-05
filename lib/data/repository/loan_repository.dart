@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import '../../models/errors/custom_exception.dart';
 import '../../models/loan/vendor_spk.dart';
+import '../../models/master/vendor.dart';
 import '../data_providers/rest_api/loan/loan_rest.dart';
 
 class LoanRepository {
@@ -32,5 +33,9 @@ class LoanRepository {
       remark: remark,
       spkId: spkId,
     );
+  }
+
+  Future<Either<CustomException, List<Vendor>>> getVendorWithSpk() async {
+    return loanRest.getVendorWithSpk();
   }
 }

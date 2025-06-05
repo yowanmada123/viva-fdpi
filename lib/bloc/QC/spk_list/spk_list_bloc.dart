@@ -16,6 +16,7 @@ class SpkListBloc extends Bloc<SpkListEvent, SpkListState> {
   Future<void> _getSPKList(GetSPKList event, Emitter<SpkListState> emit) async {
     emit(SpkListLoading());
     final result = await spkRepository.getSPKList(
+      idVendor: event.idVendor,
       idSite: event.idSite,
       idCluster: event.idCluster,
       idHouse: event.idHouse,

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -6,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:fdpi_app/bloc/QC/checklist/checklist_bloc.dart';
 import 'package:fdpi_app/bloc/QC/spk_checklist/spk_checklist_bloc.dart';
 import 'package:fdpi_app/presentation/widgets/qc_checklist/spk_category.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

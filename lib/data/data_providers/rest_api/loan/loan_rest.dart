@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 
 import '../../../../models/errors/custom_exception.dart';
 import '../../../../models/loan/vendor_spk.dart';
+import '../../../../models/master/vendor.dart';
 import '../../../../utils/net_utils.dart';
 
 class LoanRest {
@@ -89,6 +90,35 @@ class LoanRest {
       } else {
         return Left(NetUtils.parseErrorResponse(response: response.data));
       }
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
+  Future<Either<CustomException, List<Vendor>>> getVendorWithSpk() async {
+    try {
+      dio.options.headers['requiresToken'] = true;
+      log(
+        'Request to https://api-fpi.kencana.org/api/fpi/kasbon/getKasbonVendor (POST)',
+      );
+
+      final response = await dio.post("api/fpi/kasbon/getKasbonVendor");
+
+      if (response.statusCode != 200) {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+
+      final data = response.data;
+
+      final result = List<Vendor>.from(
+        data['data'].map((e) => Vendor.fromMap(e)),
+      );
+
+      return Right(result);
     } on DioException catch (e) {
       return Left(NetUtils.parseDioException(e));
     } on Exception catch (e) {
