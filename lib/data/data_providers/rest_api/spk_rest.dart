@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:fdpi_app/models/checklistSpkProgress.dart';
+import 'package:fdpi_app/models/master/vendor.dart';
 
 import '../../../models/QC/SPK.dart';
 import '../../../models/QC/SPR.dart';
@@ -271,6 +272,35 @@ class SPKRest {
       } else {
         return Left(NetUtils.parseErrorResponse(response: response.data));
       }
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
+  Future<Either<CustomException, List<Vendor>>> getVendorWithSpk() async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log(
+        'Request to https://api-fpi.kencana.org/api/fpi/checklist/getCheckListVendor (POST)',
+      );
+
+      final response = await http.post("api/fpi/checklist/getCheckListVendor");
+
+      if (response.statusCode != 200) {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+
+      final data = response.data;
+
+      final result = List<Vendor>.from(
+        data['data'].map((e) => Vendor.fromMap(e)),
+      );
+
+      return Right(result);
     } on DioException catch (e) {
       return Left(NetUtils.parseDioException(e));
     } on Exception catch (e) {

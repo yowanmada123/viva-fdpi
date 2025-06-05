@@ -1,3 +1,5 @@
+import 'package:fdpi_app/bloc/QC/vendor_has_spk/vendor_has_spk_bloc.dart';
+import 'package:fdpi_app/models/master/vendor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -43,6 +45,12 @@ class SpkListScreen extends StatelessWidget {
         BlocProvider(
           create:
               (context) =>
+                  VendorHasSpkBloc(spkRepository: context.read<SPKRepository>())
+                    ..add(GetVendorHasSpkEvent()),
+        ),
+        BlocProvider(
+          create:
+              (context) =>
                   SpkListBloc(spkRepository: context.read<SPKRepository>()),
         ),
       ],
@@ -75,6 +83,7 @@ class _SpkListBodyState extends State<_SpkListBody> {
   String? _site;
   String? _cluster;
   String? _houseId;
+  String? _vendorId;
 
   navigateToSPKProgressListScreen(BuildContext context, String qcTransId) {
     Navigator.push(
@@ -103,6 +112,44 @@ class _SpkListBodyState extends State<_SpkListBody> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Row(
+                      children: [
+                        Text('Vendor'),
+                        SizedBox(width: 2.w),
+                        Text('*', style: TextStyle(color: Colors.red)),
+                      ],
+                    ),
+                    BlocBuilder<VendorHasSpkBloc, VendorHasSpkState>(
+                      builder: (context, state) {
+                        if (state is VendorHasSpkLoadedSuccess) {
+                          return DropdownButtonFormField<String>(
+                            decoration: const InputDecoration(hintText: 'Site'),
+                            value: _vendorId,
+                            items:
+                                state.vendors.map((Vendor item) {
+                                  return DropdownMenuItem<String>(
+                                    value: item.vendorId,
+                                    child: Text(item.vendorName),
+                                  );
+                                }).toList(),
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  _vendorId = value;
+                                });
+                              }
+                            },
+                          );
+                        }
+                        return DropdownButtonFormField<String>(
+                          decoration: InputDecoration(hintText: 'Site'),
+                          items: [],
+                          onChanged: null,
+                        );
+                      },
+                    ),
+                    SizedBox(height: 16.w),
+
                     Row(
                       children: [
                         Text('Site'),

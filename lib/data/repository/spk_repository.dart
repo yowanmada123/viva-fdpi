@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:fdpi_app/models/checklistSprProgress.dart';
+import 'package:fdpi_app/models/master/vendor.dart';
 
 import '../../models/QC/SPK.dart';
 import '../../models/QC/SPR.dart';
@@ -67,5 +68,9 @@ class SPKRepository {
       fileImage: fileImage,
       idWork: idWork,
     );
+  }
+
+  Future<Either<CustomException, List<Vendor>>> getVendorWithSpk() async {
+    return spkRest.getVendorWithSpk();
   }
 }
