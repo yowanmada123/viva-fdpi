@@ -291,10 +291,12 @@ class _SpkListBodyState extends State<_SpkListBody> {
                         ),
                       ),
                       onPressed: () {
-                        if (_site == null) {
+                        if (_site == null && _vendorId == null) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text("Site belum dipilih!"),
+                              content: Text(
+                                "Silakan pilih site atau vendor terlebih dahulu.",
+                              ),
                             ),
                           );
                           return;
@@ -302,6 +304,7 @@ class _SpkListBodyState extends State<_SpkListBody> {
 
                         context.read<SpkListBloc>().add(
                           GetSPKList(
+                            idVendor: _vendorId ?? '',
                             idSite: _site ?? '',
                             idCluster: _cluster ?? '',
                             idHouse: _houseId ?? '',

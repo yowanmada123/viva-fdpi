@@ -1,3 +1,4 @@
+import 'package:fdpi_app/bloc/QC/vendor_has_spk/vendor_has_spk_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +10,7 @@ import '../../bloc/master/loan_type/loan_type_bloc.dart';
 import '../../bloc/master/vendor/vendor_bloc.dart';
 import '../../data/repository/loan_repository.dart';
 import '../../data/repository/master_repository.dart';
+import '../../data/repository/spk_repository.dart';
 import '../../models/errors/custom_exception.dart';
 import '../widgets/MoneyInputWidget.dart';
 
@@ -23,8 +25,8 @@ class LoanScreen extends StatelessWidget {
         BlocProvider(
           create:
               (_) =>
-                  VendorBloc(masterRepository: context.read<MasterRepository>())
-                    ..add(GetVendor()),
+                  VendorHasSpkBloc(spkRepository: context.read<SPKRepository>())
+                    ..add(GetVendorHasSpkEvent()),
         ),
         BlocProvider(
           create:
@@ -171,9 +173,9 @@ class _LoanFormScreenState extends State<LoanFormScreen> {
                             children: [
                               Text("Vendor"),
                               SizedBox(height: 8.w),
-                              BlocBuilder<VendorBloc, VendorState>(
+                              BlocBuilder<VendorHasSpkBloc, VendorHasSpkState>(
                                 builder: (context, state) {
-                                  if (state is VendorLoadSuccess) {
+                                  if (state is VendorHasSpkLoadedSuccess) {
                                     return SizedBox(
                                       width: double.infinity,
                                       child: DropdownButtonFormField(

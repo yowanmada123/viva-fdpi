@@ -15,11 +15,13 @@ class SPKRepository {
   SPKRepository({required this.spkRest});
 
   Future<Either<CustomException, List<SPK>>> getSPKList({
+    required String idVendor,
     required String idSite,
     required String idCluster,
     required String idHouse,
   }) async {
     return spkRest.getSPKList(
+      idVendor: idVendor,
       idSite: idSite,
       idCluster: idCluster,
       idHouse: idHouse,

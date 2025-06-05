@@ -61,6 +61,7 @@ class SPKRest {
   }
 
   Future<Either<CustomException, List<SPK>>> getSPKList({
+    required String idVendor,
     required String idSite,
     required String idCluster,
     required String idHouse,
@@ -72,6 +73,7 @@ class SPKRest {
       );
 
       final body = {
+        "id_vendor": idVendor,
         "id_site": idSite,
         "id_cluster": idCluster,
         "id_house_item": idHouse,
