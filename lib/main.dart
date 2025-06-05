@@ -46,13 +46,16 @@ void main() async {
   final dioClient = Dio(Environment.dioBaseOptions)
     ..interceptors.addAll([DioRequestTokenInterceptor()]);
 
+  final dioFdpiClient = Dio(FpiEnvironment.dioBaseOptions)
+    ..interceptors.addAll([DioRequestTokenInterceptor()]);
+
   final authRest = AuthRest(dioClient);
-  final fdpiRest = FdpiRest(dioClient);
+  final fdpiRest = FdpiRest(dioFdpiClient);
   final authorizationRest = AuthorizationRest(dioClient);
-  final bookingRest = BookingRest(dioClient);
-  final masterRest = MasterRest(dioClient);
-  final spkRest = SPKRest(dioClient);
-  final loanRest = LoanRest(dioClient);
+  final bookingRest = BookingRest(dioFdpiClient);
+  final masterRest = MasterRest(dioFdpiClient);
+  final spkRest = SPKRest(dioFdpiClient);
+  final loanRest = LoanRest(dioFdpiClient);
 
   final authRepository = AuthRepository(
     authRest: authRest,

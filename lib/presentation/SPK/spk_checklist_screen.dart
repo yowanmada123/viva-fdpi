@@ -289,7 +289,7 @@ class SpkChecklistFormState extends State<SpkChecklistForm> {
                                                   titleStyle: TextStyle(
                                                     fontWeight:
                                                         FontWeight.normal,
-                                                    fontSize: 12.sp,
+                                                    fontSize: 14.sp,
                                                   ),
                                                   title: qcItem.value.itemName,
                                                   content: SizedBox(
