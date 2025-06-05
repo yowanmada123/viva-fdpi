@@ -137,7 +137,7 @@ class _SprProgressListScreenContentState
                                 qcItem.value.dtAprv != null,
                             titleStyle: TextStyle(
                               fontWeight: FontWeight.normal,
-                              fontSize: 12.sp,
+                              fontSize: 14.sp,
                             ),
                             content: SizedBox(
                               width: double.infinity,
@@ -148,6 +148,7 @@ class _SprProgressListScreenContentState
                                     "Attachment",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
+                                      fontSize: 12.sp,
                                     ),
                                   ),
                                   SizedBox(height: 4.w),
