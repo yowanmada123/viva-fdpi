@@ -1,12 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:fdpi_app/models/checklistSprProgress.dart';
-import 'package:fdpi_app/models/master/vendor.dart';
 
 import '../../models/QC/SPK.dart';
 import '../../models/QC/SPR.dart';
 import '../../models/checklistSpkProgress.dart';
+import '../../models/checklistSprProgress.dart';
 import '../../models/errors/custom_exception.dart';
+import '../../models/fdpi/house_item_spk.dart';
+import '../../models/master/vendor.dart';
 import '../data_providers/rest_api/spk_rest.dart';
 
 class SPKRepository {
@@ -74,5 +75,19 @@ class SPKRepository {
 
   Future<Either<CustomException, List<Vendor>>> getVendorWithSpk() async {
     return spkRest.getVendorWithSpk();
+  }
+
+  Future<Either<CustomException, List<HouseItemSpk>>> getHouseWithSpk({
+    required String idSite,
+    required String idCluster,
+    required String docType,
+    String activeFlag = "Y",
+  }) async {
+    return spkRest.getHouseWithSpk(
+      idSite: idSite,
+      idCluster: idCluster,
+      docType: docType,
+      activeFlag: activeFlag,
+    );
   }
 }

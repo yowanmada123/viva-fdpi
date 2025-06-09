@@ -1,20 +1,20 @@
-import 'package:fdpi_app/bloc/QC/vendor_has_spk/vendor_has_spk_bloc.dart';
-import 'package:fdpi_app/models/master/vendor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../bloc/QC/house_item_with_spk/house_item_with_spk_bloc.dart';
 import '../../bloc/QC/spk_list/spk_list_bloc.dart';
+import '../../bloc/QC/vendor_has_spk/vendor_has_spk_bloc.dart';
 import '../../bloc/auth/authentication/authentication_bloc.dart';
-import '../../bloc/fdpi/house_item/house_item_bloc.dart';
 import '../../bloc/fdpi/residence/residence_bloc.dart';
 import '../../bloc/fdpi/site/site_bloc.dart';
 import '../../data/repository/fdpi_repository.dart';
 import '../../data/repository/spk_repository.dart';
 import '../../models/errors/custom_exception.dart';
-import '../../models/fdpi/house_item.dart';
+import '../../models/fdpi/house_item_spk.dart';
 import '../../models/fdpi/residence.dart';
 import '../../models/fdpi/site.dart';
+import '../../models/master/vendor.dart';
 import 'spk_checklist_screen.dart';
 // import 'spk_progress_list_screen.dart';
 
@@ -39,8 +39,9 @@ class SpkListScreen extends StatelessWidget {
         ),
         BlocProvider(
           create:
-              (context) =>
-                  HouseItemBloc(fdpiRepository: context.read<FdpiRepository>()),
+              (context) => HouseItemWithSpkBloc(
+                spkRepository: context.read<SPKRepository>(),
+              ),
         ),
         BlocProvider(
           create:
@@ -222,15 +223,12 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                 _houseId = null;
                               });
 
-                              context.read<HouseItemBloc>().add(
-                                GetHouseItem(
-                                  "",
-                                  "",
-                                  _site!,
-                                  value!,
-                                  "",
-                                  "",
-                                  "",
+                              context.read<HouseItemWithSpkBloc>().add(
+                                GetHouseItemWithSpkEvent(
+                                  idSite: _site!,
+                                  idCluster: value!,
+                                  docType: "SPK",
+                                  activeFlag: "Y",
                                 ),
                               );
                             },
@@ -245,13 +243,24 @@ class _SpkListBodyState extends State<_SpkListBody> {
                     ),
                     SizedBox(height: 16.w),
                     Row(children: [Text('House Item'), SizedBox(width: 2.w)]),
-                    BlocBuilder<HouseItemBloc, HouseItemState>(
+                    BlocConsumer<HouseItemWithSpkBloc, HouseItemWithSpkState>(
+                      listener: (context, state) {
+                        if (state is HouseItemWithSpkLoaded) {
+                          if (state.items.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Data house item not found'),
+                                backgroundColor: Colors.red,
+                                duration: const Duration(seconds: 2),
+                              ),
+                            );
+                          }
+                        }
+                      },
                       builder: (context, state) {
-                        if (state is HouseItemLoadSuccess) {
+                        if (state is HouseItemWithSpkLoaded) {
                           final validCluster =
-                              state.houseItems.any(
-                                    (r) => r.id_house == _houseId,
-                                  )
+                              state.items.any((r) => r.idHouse == _houseId)
                                   ? _houseId
                                   : null;
 
@@ -261,10 +270,10 @@ class _SpkListBodyState extends State<_SpkListBody> {
                             ),
                             value: validCluster,
                             items:
-                                state.houseItems.map((HouseItem item) {
+                                state.items.map((HouseItemSpk item) {
                                   return DropdownMenuItem<String>(
-                                    value: item.id_house,
-                                    child: Text(item.house_name),
+                                    value: item.idHouse,
+                                    child: Text(item.houseName),
                                   );
                                 }).toList(),
                             onChanged: (value) {

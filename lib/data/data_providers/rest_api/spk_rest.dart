@@ -10,6 +10,7 @@ import '../../../models/QC/SPR.dart';
 import '../../../models/checklistItem.dart';
 import '../../../models/checklistSprProgress.dart';
 import '../../../models/errors/custom_exception.dart';
+import '../../../models/fdpi/house_item_spk.dart';
 import '../../../utils/grouping_item.dart';
 import '../../../utils/net_utils.dart';
 
@@ -300,6 +301,50 @@ class SPKRest {
 
       final result = List<Vendor>.from(
         data['data'].map((e) => Vendor.fromMap(e)),
+      );
+
+      return Right(result);
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
+  Future<Either<CustomException, List<HouseItemSpk>>> getHouseWithSpk({
+    required String idSite,
+    required String idCluster,
+    required String docType,
+    String activeFlag = "Y",
+  }) async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log(
+        'Request to https://api-fpi.kencana.org/api/fpi/checklist/getCheckListHouse (POST)',
+      );
+
+      final payload = {
+        "id_site": idSite,
+        "id_cluster": idCluster,
+        "active_flag": activeFlag,
+        "doc_type": docType,
+      };
+
+      final response = await http.post(
+        "api/fpi/checklist/getCheckListHouse",
+        data: payload,
+      );
+
+      if (response.statusCode != 200) {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+
+      final data = response.data;
+
+      final result = List<HouseItemSpk>.from(
+        data['data'].map((e) => HouseItemSpk.fromMap(e)),
       );
 
       return Right(result);
