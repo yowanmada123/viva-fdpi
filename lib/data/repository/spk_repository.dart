@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:fdpi_app/models/attachment.dart';
 
 import '../../models/QC/SPK.dart';
 import '../../models/QC/SPR.dart';
@@ -61,7 +62,7 @@ class SPKRepository {
     required String qcTransId,
     required String idQcItem,
     required String remark,
-    required MultipartFile? fileImage,
+    required List<Attachment>? fileImage,
     required String idWork,
   }) async {
     return spkRest.approveChecklist(

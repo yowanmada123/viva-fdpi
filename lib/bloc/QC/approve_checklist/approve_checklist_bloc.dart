@@ -3,6 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fdpi_app/data/repository/spk_repository.dart';
 
+import '../../../models/attachment.dart';
+
 part 'approve_checklist_event.dart';
 part 'approve_checklist_state.dart';
 
