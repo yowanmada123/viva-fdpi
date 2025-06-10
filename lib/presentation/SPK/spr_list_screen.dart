@@ -385,7 +385,7 @@ class _SprListBodyState extends State<_SprListBody> {
                               ),
                               ...List.generate(state.sprList.length, (index) {
                                 return TableRow(
-                                  key: ValueKey(state.sprList[index].siteName),
+                                  key: ValueKey(state.sprList[index].qcTransId),
                                   decoration: BoxDecoration(
                                     border: Border(
                                       bottom: BorderSide(

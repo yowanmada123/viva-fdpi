@@ -2,15 +2,16 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:fdpi_app/models/checklistSpkProgress.dart';
-import 'package:fdpi_app/models/master/vendor.dart';
 
 import '../../../models/QC/SPK.dart';
 import '../../../models/QC/SPR.dart';
+import '../../../models/attachment.dart';
 import '../../../models/checklistItem.dart';
+import '../../../models/checklistSpkProgress.dart';
 import '../../../models/checklistSprProgress.dart';
 import '../../../models/errors/custom_exception.dart';
 import '../../../models/fdpi/house_item_spk.dart';
+import '../../../models/master/vendor.dart';
 import '../../../utils/grouping_item.dart';
 import '../../../utils/net_utils.dart';
 
@@ -233,7 +234,7 @@ class SPKRest {
     required String idQcItem,
     required String remark,
     required String idWork,
-    required MultipartFile? fileImage,
+    required List<Attachment>? fileImage,
   }) async {
     try {
       http.options.headers['requiresToken'] = true;
@@ -242,12 +243,16 @@ class SPKRest {
         'Request to https://v2.kencana.org/api/fpi/checklist/aprvCheckList (POST)',
       );
 
+      final fileAttachmentList = fileImage?.map((e) => e.file).toList();
+
+      log("fileAttachmentList: $fileAttachmentList");
+
       final FormData formData = FormData.fromMap({
         "qc_trans_id": qcTransId,
         "id_qc_item": idQcItem,
         "id_work": idWork,
         "remark": remark,
-        "img": fileImage,
+        "img": fileAttachmentList,
       });
 
       log("Request body: $formData");

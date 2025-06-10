@@ -11,7 +11,7 @@ class ApproveChecklistEventInit extends ApproveChecklistEvent {
   final String qcTransId;
   final String idQcItem;
   final String? remark;
-  final MultipartFile? fileImage;
+  final List<Attachment>? fileImage;
   final String idWork;
 
   const ApproveChecklistEventInit({

@@ -1,8 +1,4 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../bloc/QC/approve_checklist/approve_checklist_bloc.dart';
 import '../../bloc/QC/spr_checklist/spr_checklist_bloc.dart';
 import '../../data/repository/spk_repository.dart';
+import '../../models/attachment.dart';
 import '../widgets/qc_checklist/spr_checklist.dart';
 
 class SprProgressListScreen extends StatelessWidget {
@@ -62,7 +59,7 @@ class _SprProgressListScreenContentState
     String id,
     BuildContext context,
     String remark,
-    MultipartFile? fileImage, {
+    List<Attachment>? fileImage, {
     bool? value,
   }) {
     context.read<ApproveChecklistBloc>().add(

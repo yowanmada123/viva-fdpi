@@ -12,6 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../bloc/QC/approve_checklist/approve_checklist_bloc.dart';
 import '../../bloc/auth/authentication/authentication_bloc.dart';
 import '../../data/repository/spk_repository.dart';
+import '../../models/attachment.dart';
 import '../../models/errors/custom_exception.dart';
 
 class NewSpkChecklistScreen extends StatelessWidget {
@@ -54,7 +55,7 @@ class SpkChecklistFormState extends State<SpkChecklistForm> {
     String id,
     BuildContext context,
     String remark,
-    MultipartFile? fileImage, {
+    List<Attachment>? fileImage, {
     bool? value,
   }) {
     context.read<ApproveChecklistBloc>().add(
