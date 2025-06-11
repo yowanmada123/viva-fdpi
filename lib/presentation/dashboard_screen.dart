@@ -195,7 +195,7 @@ class MyGridLayout extends StatelessWidget {
                               if (authState is Authenticated &&
                                   authState.user.username.isNotEmpty) {
                                 return Text(
-                                  'Hi, ${authState.user.username}',
+                                  'Hi, ${authState.user.name1}',
                                   style: TextStyle(
                                     fontSize: max(24.sp, 24.0),
                                     fontWeight: FontWeight.w500,
