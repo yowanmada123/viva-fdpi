@@ -323,7 +323,6 @@ class _SprListBodyState extends State<_SprListBody> {
                               1: FixedColumnWidth(150),
                               2: FixedColumnWidth(120),
                               3: FixedColumnWidth(130),
-                              4: FixedColumnWidth(150),
                             },
                             children: [
                               TableRow(
@@ -367,15 +366,6 @@ class _SprListBodyState extends State<_SprListBody> {
                                     padding: EdgeInsets.all(8.w),
                                     child: Text(
                                       'Transaction ID',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.all(8.w),
-                                    child: Text(
-                                      'Action',
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -494,29 +484,6 @@ class _SprListBodyState extends State<_SprListBody> {
                                           ),
                                           child: Text(
                                             state.sprList[index].qcTransId,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    TableCell(
-                                      verticalAlignment:
-                                          TableCellVerticalAlignment.middle,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          navigateToSPRProgressListScreen(
-                                            context,
-                                            state.sprList[index].qcTransId,
-                                          );
-                                        },
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 8.w,
-                                            vertical: 2.w,
-                                          ),
-                                          child: Text(
-                                            state.sprList[index].siteName,
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
                                           ),
