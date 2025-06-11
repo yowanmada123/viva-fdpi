@@ -18,3 +18,5 @@ class LoadResidence extends ResidenceEvent {
   @override
   List<Object> get props => [idProvince, idCity, idSite, status];
 }
+
+class ResetResidenceEvent extends ResidenceEvent {}

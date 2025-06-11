@@ -13,6 +13,7 @@ class ResidenceBloc extends Bloc<ResidenceEvent, ResidenceState> {
   ResidenceBloc({required this.fdpiRepository})
     : super(const ResidenceState()) {
     on<LoadResidence>(_loadResidence);
+    on<ResetResidenceEvent>(_resetResidence);
   }
 
   void _loadResidence(LoadResidence event, Emitter<ResidenceState> emit) async {
@@ -31,5 +32,12 @@ class ResidenceBloc extends Bloc<ResidenceEvent, ResidenceState> {
       ),
       (data) => emit(ResidenceLoadSuccess(residences: data)),
     );
+  }
+
+  void _resetResidence(
+    ResetResidenceEvent event,
+    Emitter<ResidenceState> emit,
+  ) {
+    emit(const ResidenceState());
   }
 }

@@ -13,6 +13,7 @@ import '../../models/errors/custom_exception.dart';
 import '../../models/fdpi/house_item_spk.dart';
 import '../../models/fdpi/residence.dart';
 import '../../models/fdpi/site.dart';
+import '../widgets/ui/dropdown_with_clear.dart';
 import 'spr_progress_list.dart';
 
 class SprListScreen extends StatelessWidget {
@@ -112,35 +113,38 @@ class _SprListBodyState extends State<_SprListBody> {
                     ),
                     BlocBuilder<SiteBloc, SiteState>(
                       builder: (context, state) {
-                        if (state is SiteLoadedSuccess) {
-                          return DropdownButtonFormField<String>(
-                            decoration: const InputDecoration(hintText: 'Site'),
-                            value: _site,
-                            items:
-                                state.sites.map((Site item) {
-                                  return DropdownMenuItem<String>(
-                                    value: item.idSite,
-                                    child: Text(item.siteName),
-                                  );
-                                }).toList(),
-                            onChanged: (value) {
-                              if (value != null) {
-                                setState(() {
-                                  _site = value;
-                                  _cluster = null;
-                                  _houseId = null;
-                                });
-                                context.read<ResidenceBloc>().add(
-                                  LoadResidence("", "", value, ""),
-                                );
-                              }
-                            },
-                          );
-                        }
-                        return DropdownButtonFormField<String>(
-                          decoration: InputDecoration(hintText: 'Site'),
-                          items: [],
-                          onChanged: null,
+                        return DropdownWithClear<String>(
+                          value: _site,
+                          items:
+                              state is SiteLoadedSuccess
+                                  ? state.sites.map((Site item) {
+                                    return DropdownMenuItem<String>(
+                                      value: item.idSite,
+                                      child: Text(item.siteName),
+                                    );
+                                  }).toList()
+                                  : [],
+                          hintText: 'Pilih Site',
+                          onChanged: (value) {
+                            setState(() {
+                              _site = value;
+                              _cluster = null;
+                              _houseId = null;
+                            });
+
+                            if (value != null) {
+                              context.read<ResidenceBloc>().add(
+                                LoadResidence("", "", value, ""),
+                              );
+                            } else {
+                              context.read<ResidenceBloc>().add(
+                                ResetResidenceEvent(),
+                              );
+                              context.read<HouseItemWithSpkBloc>().add(
+                                ResetHouseItemWithSpkEvent(),
+                              );
+                            }
+                          },
                         );
                       },
                     ),
@@ -149,47 +153,40 @@ class _SprListBodyState extends State<_SprListBody> {
                     Row(children: [Text('Cluster'), SizedBox(width: 2.w)]),
                     BlocBuilder<ResidenceBloc, ResidenceState>(
                       builder: (context, state) {
-                        if (state is ResidenceLoadSuccess) {
-                          final validCluster =
-                              state.residences.any(
-                                    (r) => r.idCluster == _cluster,
-                                  )
-                                  ? _cluster
-                                  : null;
+                        return DropdownWithClear<String>(
+                          value: _cluster,
+                          items:
+                              state is ResidenceLoadSuccess
+                                  ? state.residences.map((Residence item) {
+                                    return DropdownMenuItem<String>(
+                                      value: item.idCluster,
+                                      child: Text(item.clusterName),
+                                    );
+                                  }).toList()
+                                  : [],
+                          hintText: 'Pilih Cluster',
+                          onChanged: (value) {
+                            setState(() {
+                              _cluster = value;
+                              _houseId = null;
+                            });
 
-                          return DropdownButtonFormField<String>(
-                            decoration: const InputDecoration(
-                              hintText: 'Cluster',
-                            ),
-                            value: validCluster,
-                            items:
-                                state.residences.map((Residence item) {
-                                  return DropdownMenuItem<String>(
-                                    value: item.idCluster,
-                                    child: Text(item.clusterName),
-                                  );
-                                }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                _cluster = value;
-                                _houseId = null;
-                              });
-
+                            if (value != null) {
                               context.read<HouseItemWithSpkBloc>().add(
                                 GetHouseItemWithSpkEvent(
                                   idSite: _site!,
-                                  idCluster: value!,
-                                  docType: "SPR",
+                                  idCluster: value,
+                                  docType: "SPK",
                                   activeFlag: "Y",
                                 ),
                               );
-                            },
-                          );
-                        }
-                        return DropdownButtonFormField<String>(
-                          decoration: InputDecoration(hintText: 'Cluster'),
-                          items: [],
-                          onChanged: null,
+                            } else {
+                              context.read<HouseItemWithSpkBloc>().add(
+                                ResetHouseItemWithSpkEvent(),
+                              );
+                            }
+                          },
+                          // dropdownWidth: double.infinity,
                         );
                       },
                     ),
@@ -202,41 +199,31 @@ class _SprListBodyState extends State<_SprListBody> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text('Data house item not found'),
+                                backgroundColor: Colors.red,
+                                duration: const Duration(seconds: 2),
                               ),
                             );
                           }
                         }
                       },
                       builder: (context, state) {
-                        if (state is HouseItemWithSpkLoaded) {
-                          final validCluster =
-                              state.items.any((r) => r.idHouse == _houseId)
-                                  ? _houseId
-                                  : null;
-
-                          return DropdownButtonFormField<String>(
-                            decoration: const InputDecoration(
-                              hintText: 'House Item',
-                            ),
-                            value: validCluster,
-                            items:
-                                state.items.map((HouseItemSpk item) {
-                                  return DropdownMenuItem<String>(
-                                    value: item.idHouse,
-                                    child: Text(item.houseName),
-                                  );
-                                }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                _houseId = value;
-                              });
-                            },
-                          );
-                        }
-                        return DropdownButtonFormField<String>(
-                          decoration: InputDecoration(hintText: 'House Item'),
-                          items: [],
-                          onChanged: null,
+                        return DropdownWithClear<String>(
+                          value: _houseId,
+                          items:
+                              state is HouseItemWithSpkLoaded
+                                  ? state.items.map((HouseItemSpk item) {
+                                    return DropdownMenuItem<String>(
+                                      value: item.idHouse,
+                                      child: Text(item.houseName),
+                                    );
+                                  }).toList()
+                                  : [],
+                          hintText: 'Pilih Rumah',
+                          onChanged: (value) {
+                            setState(() {
+                              _houseId = value;
+                            });
+                          },
                         );
                       },
                     ),
