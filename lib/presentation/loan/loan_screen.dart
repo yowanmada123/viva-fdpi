@@ -36,7 +36,8 @@ class LoanScreen extends StatelessWidget {
         BlocProvider(
           create:
               (_) =>
-                  LoanFormBloc(loanRepository: context.read<LoanRepository>()),
+                  LoanFormBloc(loanRepository: context.read<LoanRepository>())
+                    ..add(InitForm()),
         ),
         BlocProvider(
           create:

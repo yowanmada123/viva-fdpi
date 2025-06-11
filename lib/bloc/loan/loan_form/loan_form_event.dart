@@ -56,3 +56,5 @@ class DateSelectionRequested extends LoanFormEvent {
   final BuildContext context;
   const DateSelectionRequested(this.context);
 }
+
+class InitForm extends LoanFormEvent {}
