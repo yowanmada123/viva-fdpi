@@ -355,10 +355,11 @@ class _SpkListBodyState extends State<_SpkListBody> {
                       return Table(
                         columnWidths: {
                           0: const FixedColumnWidth(100),
-                          1: const FixedColumnWidth(120),
+                          1: const FixedColumnWidth(100),
                           2: const FixedColumnWidth(120),
-                          3: const FixedColumnWidth(150),
-                          4: const FixedColumnWidth(100),
+                          3: const FixedColumnWidth(120),
+                          4: const FixedColumnWidth(150),
+                          5: const FixedColumnWidth(100),
                         },
                         children: [
                           TableRow(
@@ -374,6 +375,13 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                 ),
                               ),
 
+                              Padding(
+                                padding: EdgeInsets.all(8.w),
+                                child: Text(
+                                  'Cluster',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
                               Padding(
                                 padding: EdgeInsets.all(8.w),
                                 child: Text(
@@ -448,6 +456,28 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                       icon: const Icon(
                                         Icons.edit,
                                         color: Colors.blue,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                TableCell(
+                                  verticalAlignment:
+                                      TableCellVerticalAlignment.middle,
+                                  child: GestureDetector(
+                                    onTap:
+                                        () => navigateToSPKProgressListScreen(
+                                          context,
+                                          state.spkList[index].qcTransId,
+                                        ),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 8.w,
+                                        vertical: 2.w,
+                                      ),
+                                      child: Text(
+                                        state.spkList[index].clusterName,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ),
