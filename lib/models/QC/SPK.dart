@@ -11,6 +11,9 @@ class SPK {
   final String pihak2;
   final String vendorName;
   final String qcTransId;
+  final String spkType;
+  final String spkLabel;
+
   SPK({
     required this.idSite,
     required this.siteName,
@@ -22,6 +25,8 @@ class SPK {
     required this.pihak2,
     required this.vendorName,
     required this.qcTransId,
+    required this.spkType,
+    required this.spkLabel,
   });
 
   SPK copyWith({
@@ -35,6 +40,8 @@ class SPK {
     String? pihak2,
     String? vendorName,
     String? qcTransId,
+    String? spkType,
+    String? spkLabel,
   }) {
     return SPK(
       idSite: idSite ?? this.idSite,
@@ -47,6 +54,8 @@ class SPK {
       pihak2: pihak2 ?? this.pihak2,
       vendorName: vendorName ?? this.vendorName,
       qcTransId: qcTransId ?? this.qcTransId,
+      spkType: spkType ?? this.spkType,
+      spkLabel: spkLabel ?? this.spkLabel,
     );
   }
 
@@ -62,6 +71,8 @@ class SPK {
       'pihak_2': pihak2,
       'vendor_name': vendorName,
       'qc_trans_id': qcTransId,
+      'spk_type': spkType,
+      'spk_label': spkLabel,
     };
   }
 
@@ -77,6 +88,8 @@ class SPK {
       pihak2: map['pihak_2'] ?? '',
       vendorName: map['vendor_name'] ?? '',
       qcTransId: map['qc_trans_id'] ?? '',
+      spkType: map['spk_type'] ?? '',
+      spkLabel: map['spk_label'] ?? '',
     );
   }
 
@@ -86,7 +99,7 @@ class SPK {
 
   @override
   String toString() {
-    return 'SPK(idSite: $idSite, siteName: $siteName, idCluster: $idCluster, clusterName: $clusterName, idHouse: $idHouse, houseName: $houseName, idSPK: $idSPK, pihak2: $pihak2, vendorName: $vendorName, qcTransId: $qcTransId)';
+    return 'SPK(idSite: $idSite, siteName: $siteName, idCluster: $idCluster, clusterName: $clusterName, idHouse: $idHouse, houseName: $houseName, idSPK: $idSPK, pihak2: $pihak2, vendorName: $vendorName, qcTransId: $qcTransId, spkType: $spkType, spkLabel: $spkLabel)';
   }
 
   @override
@@ -103,7 +116,9 @@ class SPK {
         other.idSPK == idSPK &&
         other.pihak2 == pihak2 &&
         other.vendorName == vendorName &&
-        other.qcTransId == qcTransId;
+        other.qcTransId == qcTransId &&
+        other.spkType == spkType &&
+        other.spkLabel == spkLabel;
   }
 
   @override
@@ -117,6 +132,8 @@ class SPK {
         idSPK.hashCode ^
         pihak2.hashCode ^
         vendorName.hashCode ^
-        qcTransId.hashCode;
+        qcTransId.hashCode ^
+        spkType.hashCode ^
+        spkLabel.hashCode;
   }
 }

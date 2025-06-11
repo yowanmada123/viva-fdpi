@@ -376,9 +376,10 @@ class _SpkListBodyState extends State<_SpkListBody> {
                       return Table(
                         columnWidths: {
                           0: const FixedColumnWidth(100),
-                          1: const FixedColumnWidth(150),
+                          1: const FixedColumnWidth(120),
                           2: const FixedColumnWidth(120),
-                          3: const FixedColumnWidth(100),
+                          3: const FixedColumnWidth(150),
+                          4: const FixedColumnWidth(100),
                         },
                         children: [
                           TableRow(
@@ -405,6 +406,13 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                 padding: EdgeInsets.all(8.w),
                                 child: Text(
                                   'Vendor',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(8.w),
+                                child: Text(
+                                  'TIPE SPK',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
@@ -503,6 +511,28 @@ class _SpkListBodyState extends State<_SpkListBody> {
                                       ),
                                       child: Text(
                                         state.spkList[index].vendorName,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                TableCell(
+                                  verticalAlignment:
+                                      TableCellVerticalAlignment.middle,
+                                  child: GestureDetector(
+                                    onTap:
+                                        () => navigateToSPKProgressListScreen(
+                                          context,
+                                          state.spkList[index].qcTransId,
+                                        ),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 8.w,
+                                        vertical: 2.w,
+                                      ),
+                                      child: Text(
+                                        state.spkList[index].spkLabel,
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                       ),
