@@ -26,6 +26,7 @@ class LoanFormBloc extends Bloc<LoanFormEvent, LoanFormState> {
     on<RemarkChanged>(_onRemarkChanged);
     on<AmountChanged>(_onAmountChanged);
     on<DateSelectionRequested>(_onDateSelectionRequested);
+    on<InitForm>(_onInitForm);
   }
 
   void _onDateSelectionRequested(
@@ -130,5 +131,14 @@ class LoanFormBloc extends Bloc<LoanFormEvent, LoanFormState> {
     Emitter<LoanFormState> emit,
   ) {
     emit(state.copyWith(status: FormStatus.secondPage));
+  }
+
+  void _onInitForm(InitForm event, Emitter<LoanFormState> emit) {
+    emit(
+      state.copyWith(
+        dateLoan: DateTime.now(),
+        dateLoanFormatted: DateFormat('dd MMM yyyy').format(DateTime.now()),
+      ),
+    );
   }
 }
