@@ -154,6 +154,7 @@ class _LoanFormScreenState extends State<LoanFormScreen> {
                     backgroundColor: Color.fromARGB(255, 243, 78, 78),
                   ),
                 );
+                context.read<LoanFormBloc>().add(FormChangeStatus());
                 return;
               }
             },
@@ -544,65 +545,78 @@ class _LoanFormSecondStepState extends State<_LoanFormSecondStep> {
                   children: [
                     Text("Tipe Kasbon"),
                     SizedBox(height: 8.w),
-                    BlocBuilder<LoanTypeBloc, LoanTypeState>(
-                      builder: (context, loanState) {
-                        if (loanState is LoanTypeLoadSuccess) {
-                          return SizedBox(
-                            width: double.infinity,
-                            child: DropdownButtonFormField(
-                              isExpanded: true,
-                              decoration: InputDecoration(
-                                border: UnderlineInputBorder(),
-                                fillColor: const Color(0xffffffff),
-                                filled: true,
-                                contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 0,
-                                ),
-                              ),
-                              value: state.selectedLoanType,
-                              items:
-                                  loanState.loanTypes
-                                      .map(
-                                        (e) => DropdownMenuItem(
-                                          value: e,
-                                          child: Text(
-                                            e.str2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              fontSize: 14.sp,
-                                            ), // Adjust font size if needed
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
-                              onChanged: (value) {
-                                if (value == null) return;
-                                context.read<LoanFormBloc>().add(
-                                  LoanTypeChanged(value),
-                                );
-                              },
-                            ),
-                          );
-                        }
-                        return SizedBox(
-                          width: double.infinity,
-                          child: DropdownButtonFormField(
-                            items: [],
-                            onChanged: (value) {},
-                            decoration: InputDecoration(
-                              border: UnderlineInputBorder(),
-                              fillColor: const Color(0xffffffff),
-                              filled: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 0,
-                              ),
-                            ),
-                          ),
-                        );
-                      },
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(),
+                        fillColor: const Color(0xffffffff),
+                        filled: true,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 0,
+                        ),
+                      ),
+                      readOnly: true,
+                      initialValue: "MONEY/CASH",
                     ),
+                    // BlocBuilder<LoanTypeBloc, LoanTypeState>(
+                    //   builder: (context, loanState) {
+                    //     if (loanState is LoanTypeLoadSuccess) {
+                    //       return SizedBox(
+                    //         width: double.infinity,
+                    //         child: DropdownButtonFormField(
+                    //           isExpanded: true,
+                    //           decoration: InputDecoration(
+                    //             border: UnderlineInputBorder(),
+                    //             fillColor: const Color(0xffffffff),
+                    //             filled: true,
+                    //             contentPadding: EdgeInsets.symmetric(
+                    //               horizontal: 12,
+                    //               vertical: 0,
+                    //             ),
+                    //           ),
+                    //           value: state.selectedLoanType,
+                    //           items:
+                    //               loanState.loanTypes
+                    //                   .map(
+                    //                     (e) => DropdownMenuItem(
+                    //                       value: e,
+                    //                       child: Text(
+                    //                         e.str2,
+                    //                         overflow: TextOverflow.ellipsis,
+                    //                         style: TextStyle(
+                    //                           fontSize: 14.sp,
+                    //                         ), // Adjust font size if needed
+                    //                       ),
+                    //                     ),
+                    //                   )
+                    //                   .toList(),
+                    //           onChanged: (value) {
+                    //             if (value == null) return;
+                    //             context.read<LoanFormBloc>().add(
+                    //               LoanTypeChanged(value),
+                    //             );
+                    //           },
+                    //         ),
+                    //       );
+                    //     }
+                    //     return SizedBox(
+                    //       width: double.infinity,
+                    //       child: DropdownButtonFormField(
+                    //         items: [],
+                    //         onChanged: (value) {},
+                    //         decoration: InputDecoration(
+                    //           border: UnderlineInputBorder(),
+                    //           fillColor: const Color(0xffffffff),
+                    //           filled: true,
+                    //           contentPadding: EdgeInsets.symmetric(
+                    //             horizontal: 12,
+                    //             vertical: 0,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     );
+                    //   },
+                    // ),
                   ],
                 ),
               ),

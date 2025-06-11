@@ -27,6 +27,7 @@ class LoanFormBloc extends Bloc<LoanFormEvent, LoanFormState> {
     on<AmountChanged>(_onAmountChanged);
     on<DateSelectionRequested>(_onDateSelectionRequested);
     on<InitForm>(_onInitForm);
+    on<FormChangeStatus>(_onFormChangeStatus);
   }
 
   void _onDateSelectionRequested(
@@ -101,9 +102,10 @@ class LoanFormBloc extends Bloc<LoanFormEvent, LoanFormState> {
 
     final result = await loanRepository.storeLoan(
       vendorId: state.selectedVendor!.vendorId,
-      loanTypeId: state.selectedLoanType!.str1,
-      dateLoan: state.dateLoanFormatted!,
-      amount: event.amount,
+      loanTypeId:
+          state.selectedLoanType == null ? 'M' : state.selectedLoanType!.str1,
+      dateLoan: DateFormat('yyyy-MM-dd').format(state.dateLoan!),
+      amount: event.amount.replaceAll(',', ''),
       remark: state.remark!,
       spkId: state.selectedSpk!.idSpk,
     );
@@ -140,5 +142,12 @@ class LoanFormBloc extends Bloc<LoanFormEvent, LoanFormState> {
         dateLoanFormatted: DateFormat('dd MMM yyyy').format(DateTime.now()),
       ),
     );
+  }
+
+  void _onFormChangeStatus(
+    FormChangeStatus event,
+    Emitter<LoanFormState> emit,
+  ) {
+    emit(state.copyWith(status: FormStatus.initial));
   }
 }
