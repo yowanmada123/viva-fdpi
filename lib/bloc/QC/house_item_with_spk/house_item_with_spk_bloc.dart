@@ -13,6 +13,7 @@ class HouseItemWithSpkBloc
   HouseItemWithSpkBloc({required this.spkRepository})
     : super(HouseItemWithSpkInitial()) {
     on<GetHouseItemWithSpkEvent>(_onGetHouseItemWithSpkEvent);
+    on<ResetHouseItemWithSpkEvent>(_onResetHouseItemWithSpkEvent);
   }
 
   Future<void> _onGetHouseItemWithSpkEvent(
@@ -32,5 +33,12 @@ class HouseItemWithSpkBloc
       ),
       (data) => emit(HouseItemWithSpkLoaded(items: data)),
     );
+  }
+
+  Future<void> _onResetHouseItemWithSpkEvent(
+    ResetHouseItemWithSpkEvent event,
+    Emitter<HouseItemWithSpkState> emit,
+  ) async {
+    emit(HouseItemWithSpkInitial());
   }
 }

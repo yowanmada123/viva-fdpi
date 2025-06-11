@@ -23,3 +23,5 @@ class GetHouseItemWithSpkEvent extends HouseItemWithSpkEvent {
   @override
   List<Object> get props => [idSite, idCluster, docType];
 }
+
+class ResetHouseItemWithSpkEvent extends HouseItemWithSpkEvent {}
