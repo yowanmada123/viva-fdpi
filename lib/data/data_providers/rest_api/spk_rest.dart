@@ -75,7 +75,7 @@ class SPKRest {
       );
 
       final body = {
-        "id_vendor": idVendor,
+        "vendor_id": idVendor,
         "id_site": idSite,
         "id_cluster": idCluster,
         "id_house_item": idHouse,
