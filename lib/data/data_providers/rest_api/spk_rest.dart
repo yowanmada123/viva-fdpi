@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 
 import '../../../models/QC/SPK.dart';
 import '../../../models/QC/SPR.dart';
+import '../../../models/QC/detail_approve.dart';
 import '../../../models/attachment.dart';
 import '../../../models/checklistItem.dart';
 import '../../../models/checklistSpkProgress.dart';
@@ -351,6 +352,44 @@ class SPKRest {
       final result = List<HouseItemSpk>.from(
         data['data'].map((e) => HouseItemSpk.fromMap(e)),
       );
+
+      return Right(result);
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
+  Future<Either<CustomException, DetailApproveResponse>> getDetailApproveDetail(
+    DetailApproveRequest detailApproveRequest,
+  ) async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log(
+        'Request to https://api-fpi.kencana.org/api/fpi/checklist/getAprvDtl (POST)',
+      );
+
+      final payload = {
+        "qc_trans_id": detailApproveRequest.qcTransId,
+        "id_qc_item": detailApproveRequest.idQcItem,
+        "id_work": detailApproveRequest.idWork,
+      };
+
+      final response = await http.post(
+        "api/fpi/checklist/getAprvDtl",
+        data: payload,
+      );
+
+      if (response.statusCode != 200) {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+
+      final data = response.data;
+
+      final result = DetailApproveResponse.fromMap(data['data']);
 
       return Right(result);
     } on DioException catch (e) {

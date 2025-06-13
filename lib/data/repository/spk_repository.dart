@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:fdpi_app/models/QC/detail_approve.dart';
 import 'package:fdpi_app/models/attachment.dart';
 
 import '../../models/QC/SPK.dart';
@@ -90,5 +91,11 @@ class SPKRepository {
       docType: docType,
       activeFlag: activeFlag,
     );
+  }
+
+  Future<Either<CustomException, DetailApproveResponse>> getDetailApproveDetail(
+    DetailApproveRequest detailApproveRequest,
+  ) async {
+    return spkRest.getDetailApproveDetail(detailApproveRequest);
   }
 }
