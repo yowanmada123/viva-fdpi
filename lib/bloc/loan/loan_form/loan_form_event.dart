@@ -58,3 +58,5 @@ class DateSelectionRequested extends LoanFormEvent {
 }
 
 class InitForm extends LoanFormEvent {}
+
+class FormChangeStatus extends LoanFormEvent {}
