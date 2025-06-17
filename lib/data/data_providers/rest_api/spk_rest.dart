@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 
 import '../../../models/QC/SPK.dart';
 import '../../../models/QC/SPR.dart';
+import '../../../models/QC/detail_approve.dart';
 import '../../../models/attachment.dart';
 import '../../../models/checklistItem.dart';
 import '../../../models/checklistSpkProgress.dart';
@@ -235,6 +236,8 @@ class SPKRest {
     required String remark,
     required String idWork,
     required List<Attachment>? fileImage,
+    required String longitude,
+    required String latitude,
   }) async {
     try {
       http.options.headers['requiresToken'] = true;
@@ -252,7 +255,9 @@ class SPKRest {
         "id_qc_item": idQcItem,
         "id_work": idWork,
         "remark": remark,
-        "img": fileAttachmentList,
+        "img[]": fileAttachmentList,
+        "longitude": longitude,
+        "latitude": latitude,
       });
 
       log("Request body: $formData");
@@ -351,6 +356,130 @@ class SPKRest {
       final result = List<HouseItemSpk>.from(
         data['data'].map((e) => HouseItemSpk.fromMap(e)),
       );
+
+      return Right(result);
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
+  Future<Either<CustomException, DetailApproveResponse>> getDetailApproveDetail(
+    DetailApproveRequest detailApproveRequest,
+  ) async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log(
+        'Request to https://api-fpi.kencana.org/api/fpi/checklist/getAprvDtl (POST)',
+      );
+
+      final payload = {
+        "qc_trans_id": detailApproveRequest.qcTransId,
+        "id_qc_item": detailApproveRequest.idQcItem,
+        "id_work": detailApproveRequest.idWork,
+      };
+
+      final response = await http.post(
+        "api/fpi/checklist/getAprvDtl",
+        data: payload,
+      );
+
+      if (response.statusCode != 200) {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+
+      final data = response.data;
+
+      final result = DetailApproveResponse.fromMap(data['data'][0]);
+
+      return Right(result);
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
+  Future<Either<CustomException, String>> unapproveChecklist({
+    required String qcTransId,
+    required String idQcItem,
+    required String idWork,
+  }) async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log(
+        'Request to https://api-fpi.kencana.org/api/fpi/checklist/cancelAprvCheckList  (POST)',
+      );
+
+      final payload = {
+        "qc_trans_id": qcTransId,
+        "id_qc_item": idQcItem,
+        "id_work": idWork,
+      };
+
+      final response = await http.post(
+        "api/fpi/checklist/cancelAprvCheckList",
+        data: payload,
+      );
+
+      if (response.statusCode != 200) {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+
+      final result = "Success";
+
+      return Right(result);
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
+  Future<Either<CustomException, String>> updateApproveChecklist({
+    required String qcTransId,
+    required String idQcItem,
+    required String idWork,
+    required String remark,
+    required List<Attachment>? fileImage,
+    required List<String> deleteImage,
+    required String longitude,
+    required String latitude,
+  }) async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log(
+        'Request to https://api-fpi.kencana.org/api/fpi/checklist/updateAprvCheckList (POST)',
+      );
+
+      final payload = {
+        "qc_trans_id": qcTransId,
+        "id_qc_item": idQcItem,
+        "id_work": idWork,
+        "remark": remark,
+        "img[]": fileImage?.map((e) => e.file).toList(),
+        "removed_file": deleteImage,
+        "longitude": longitude,
+        "latitude": latitude,
+      };
+
+      final response = await http.post(
+        "api/fpi/checklist/updateAprvCheckList",
+        data: payload,
+      );
+
+      if (response.statusCode != 200) {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+
+      final result = "Success";
 
       return Right(result);
     } on DioException catch (e) {

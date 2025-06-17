@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
+import 'package:fdpi_app/bloc/QC/approve_detail/approve_detail_bloc.dart';
 import 'package:fdpi_app/bloc/QC/checklist/checklist_bloc.dart';
 import 'package:fdpi_app/bloc/QC/spk_checklist/spk_checklist_bloc.dart';
 import 'package:fdpi_app/presentation/widgets/qc_checklist/spk_category.dart';
@@ -35,6 +36,12 @@ class NewSpkChecklistScreen extends StatelessWidget {
                 spkRepository: context.read<SPKRepository>(),
               ),
         ),
+        BlocProvider(
+          create:
+              (context) => ApproveDetailBloc(
+                spkRepository: context.read<SPKRepository>(),
+              ),
+        ),
       ],
       child: SpkChecklistForm(qcTransId: qcTransId),
     );
@@ -65,6 +72,46 @@ class SpkChecklistFormState extends State<SpkChecklistForm> {
         idWork: param.toString(),
         remark: remark,
         fileImage: fileImage,
+      ),
+    );
+  }
+
+  void unapproveChecklist(int param, String id, BuildContext context) {
+    context.read<ApproveChecklistBloc>().add(
+      ApproveChecklistCancel(
+        qcTransId: widget.qcTransId,
+        idQcItem: id,
+        idWork: param.toString(),
+      ),
+    );
+  }
+
+  void updateChecklist(
+    int param,
+    String id,
+    BuildContext context,
+    String remark,
+    List<Attachment>? fileImage,
+    List<String> deleteImage,
+  ) {
+    context.read<ApproveChecklistBloc>().add(
+      ApproveChecklistUpdate(
+        qcTransId: widget.qcTransId,
+        idQcItem: id,
+        idWork: param.toString(),
+        remark: remark,
+        fileImage: fileImage,
+        deleteImage: deleteImage,
+      ),
+    );
+  }
+
+  Future<void> loadApproveDetail(int idWork, String idQcItem) async {
+    context.read<ApproveDetailBloc>().add(
+      LoadApproveDetail(
+        qcTransId: widget.qcTransId,
+        idQcItem: idQcItem,
+        idWork: idWork.toString(),
       ),
     );
   }
@@ -184,9 +231,6 @@ class SpkChecklistFormState extends State<SpkChecklistForm> {
                                         showCheckboxQC: false,
                                         showCheckboxApplicator: false,
                                         initiallyExpanded: true,
-                                        backgroundColor: const Color(
-                                          0xFFCFE2FF,
-                                        ),
                                         title: category.value.catName,
                                         content: Container(
                                           child: Column(
@@ -199,11 +243,37 @@ class SpkChecklistFormState extends State<SpkChecklistForm> {
                                                   showCheckboxQC: true,
                                                   showCheckboxApplicator: true,
                                                   showCheckboxInspector: true,
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal: 16.w,
-                                                    vertical: 8.w,
-                                                  ),
                                                   showIcon: false,
+                                                  onApproveDetail: (idWork) {
+                                                    loadApproveDetail(
+                                                      idWork,
+                                                      qcItem.value.idQcItem,
+                                                    );
+                                                  },
+                                                  onUnapproveChecklist: (
+                                                    idWork,
+                                                  ) {
+                                                    unapproveChecklist(
+                                                      idWork,
+                                                      qcItem.value.idQcItem,
+                                                      context,
+                                                    );
+                                                  },
+                                                  onUpdateChecklist: (
+                                                    idWork,
+                                                    remark,
+                                                    fileImage,
+                                                    deleteImage,
+                                                  ) {
+                                                    updateChecklist(
+                                                      idWork,
+                                                      qcItem.value.idQcItem,
+                                                      context,
+                                                      remark,
+                                                      fileImage,
+                                                      deleteImage,
+                                                    );
+                                                  },
                                                   onCheckboxApplicatorChanged:
                                                       qcItem.value.statClosing ==
                                                               'N'
@@ -285,14 +355,12 @@ class SpkChecklistFormState extends State<SpkChecklistForm> {
                                                   checkboxQCInitalValue:
                                                       qcItem.value.dtAprv3 !=
                                                       null,
-                                                  titleStyle: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    fontSize: 14.sp,
-                                                  ),
                                                   title: qcItem.value.itemName,
-                                                  content: SizedBox(
+                                                  content: Container(
                                                     width: double.infinity,
+                                                    padding: EdgeInsets.all(
+                                                      8.w,
+                                                    ),
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment

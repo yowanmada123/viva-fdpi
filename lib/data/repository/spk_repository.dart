@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:fdpi_app/models/QC/detail_approve.dart';
 import 'package:fdpi_app/models/attachment.dart';
 
 import '../../models/QC/SPK.dart';
@@ -64,6 +65,8 @@ class SPKRepository {
     required String remark,
     required List<Attachment>? fileImage,
     required String idWork,
+    required String longitude,
+    required String latitude,
   }) async {
     return spkRest.approveChecklist(
       qcTransId: qcTransId,
@@ -71,6 +74,8 @@ class SPKRepository {
       remark: remark,
       fileImage: fileImage,
       idWork: idWork,
+      longitude: longitude,
+      latitude: latitude,
     );
   }
 
@@ -89,6 +94,46 @@ class SPKRepository {
       idCluster: idCluster,
       docType: docType,
       activeFlag: activeFlag,
+    );
+  }
+
+  Future<Either<CustomException, DetailApproveResponse>> getDetailApproveDetail(
+    DetailApproveRequest detailApproveRequest,
+  ) async {
+    return spkRest.getDetailApproveDetail(detailApproveRequest);
+  }
+
+  Future<Either<CustomException, String>> unapproveChecklist({
+    required String qcTransId,
+    required String idQcItem,
+    required String idWork,
+  }) async {
+    return spkRest.unapproveChecklist(
+      qcTransId: qcTransId,
+      idQcItem: idQcItem,
+      idWork: idWork,
+    );
+  }
+
+  Future<Either<CustomException, String>> updateApproveChecklist({
+    required String qcTransId,
+    required String idQcItem,
+    required String idWork,
+    required String remark,
+    required List<Attachment>? fileImage,
+    required List<String> deleteImage,
+    required String longitude,
+    required String latitude,
+  }) async {
+    return spkRest.updateApproveChecklist(
+      qcTransId: qcTransId,
+      idQcItem: idQcItem,
+      idWork: idWork,
+      remark: remark,
+      fileImage: fileImage,
+      deleteImage: deleteImage,
+      longitude: longitude,
+      latitude: latitude,
     );
   }
 }
