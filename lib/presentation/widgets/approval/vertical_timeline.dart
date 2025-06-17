@@ -38,13 +38,22 @@ class TimelineProgress extends StatelessWidget {
                     height: 12.w,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: colors[step.status],
+                      color:
+                          step.status == null
+                              ? Colors.grey
+                              : colors[step.status],
                     ),
                   ),
                   // Connector (except for last item)
                   if (!isLast)
                     Expanded(
-                      child: Container(width: 2, color: colors[step.status]),
+                      child: Container(
+                        width: 2,
+                        color:
+                            step.status == null
+                                ? Colors.grey
+                                : colors[step.status],
+                      ),
                     ),
                 ],
               ),
@@ -95,14 +104,14 @@ class TimelineProgress extends StatelessWidget {
 class TimelineStep {
   final String header;
   final String detail;
-  final TimelineStatus status;
+  final TimelineStatus? status;
   final Widget? additionalContent;
   final IconData? icon;
 
   TimelineStep({
     required this.header,
     required this.detail,
-    required this.status,
+    this.status,
     this.additionalContent,
     this.icon,
   });

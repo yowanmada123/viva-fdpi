@@ -16,6 +16,7 @@ import '../models/errors/custom_exception.dart';
 import 'SPK/spk_list_screen.dart';
 import 'SPK/spr_list_screen.dart';
 import 'approval/approval_screen.dart';
+import 'approval/approval_spb_screen.dart';
 import 'booking/booking_screen.dart';
 import 'fdpi/fdpi_residences_screen.dart';
 import 'loan/loan_screen.dart';
@@ -89,7 +90,7 @@ class MyGridLayout extends StatelessWidget {
         'icon': Icons.edit_document,
         'text': 'Approval Pengajuan',
         'description': 'Approval SPB',
-        'route': ApprovalScreen(title: submenu.menu_caption),
+        'route': ApprovalSpbScreen(title: submenu.menu_caption),
       },
       'approvalSPK': {
         'icon': Icons.edit_document,
