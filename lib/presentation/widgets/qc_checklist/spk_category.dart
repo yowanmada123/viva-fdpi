@@ -485,11 +485,11 @@ class _CheckboxConfirmationDialogState
                             child: FilledButton(
                               child: const Text('Konfirmasi'),
                               onPressed: () {
-                                Navigator.pop(context);
                                 widget.onConfirmed(
                                   _remarkController.text,
                                   _attachments,
                                 );
+                                Navigator.pop(context);
                               },
                             ),
                           ),
@@ -505,8 +505,8 @@ class _CheckboxConfirmationDialogState
                               ),
                               child: const Text('Unapprove'),
                               onPressed: () {
-                                Navigator.pop(context);
                                 widget.onUnapproveChecklist?.call();
+                                Navigator.pop(context);
                               },
                             ),
                           ),
@@ -515,12 +515,12 @@ class _CheckboxConfirmationDialogState
                             child: FilledButton(
                               child: const Text('Update'),
                               onPressed: () {
-                                Navigator.pop(context);
                                 widget.onUpdateChecklist?.call(
                                   _remarkController.text,
                                   _attachments,
                                   [],
                                 );
+                                Navigator.pop(context);
                               },
                             ),
                           ),
