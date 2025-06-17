@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fdpi_app/data/repository/spk_repository.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../../models/attachment.dart';
 
@@ -19,11 +20,58 @@ class ApproveChecklistBloc
     on<ApproveChecklistUpdate>(_onUpdateApproveChecklist);
   }
 
+  Future<bool> _checkAndRequestPermission() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return false;
+    }
+
+    if (permission == LocationPermission.denied) {
+      throw Exception('Izin lokasi tidak diberikan.');
+    }
+
+    return true;
+  }
+
+  Future<void> _checkLocationRequirements() async {
+    final granted = await _checkAndRequestPermission();
+    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    if (!granted) {
+      await Geolocator.openAppSettings();
+      throw Exception('Izin lokasi tidak diberikan');
+    }
+
+    if (!serviceEnabled) {
+      await Geolocator.openLocationSettings();
+      throw Exception('Layanan lokasi tidak aktif');
+    }
+  }
+
+  Future<Position> _getCurrentLocation() async {
+    final locationSettings = const LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 100,
+    );
+
+    return await Geolocator.getCurrentPosition(
+      locationSettings: locationSettings,
+    );
+  }
+
   Future<void> _approveChecklistEventInit(
     ApproveChecklistEventInit event,
     Emitter<ApproveChecklistState> emit,
   ) async {
     emit(ApproveChecklistLoading());
+
+    final position = await _getCurrentLocation();
+    await _checkLocationRequirements();
 
     final result = await spkRepository.approveChecklist(
       qcTransId: event.qcTransId,
@@ -31,6 +79,8 @@ class ApproveChecklistBloc
       remark: event.remark ?? "",
       fileImage: event.fileImage,
       idWork: event.idWork,
+      latitude: position.latitude.toString(),
+      longitude: position.longitude.toString(),
     );
     result.fold(
       (failure) => emit(
@@ -63,6 +113,10 @@ class ApproveChecklistBloc
     Emitter<ApproveChecklistState> emit,
   ) async {
     emit(ApproveChecklistLoading());
+
+    final position = await _getCurrentLocation();
+    await _checkLocationRequirements();
+
     final result = await spkRepository.updateApproveChecklist(
       qcTransId: event.qcTransId,
       idQcItem: event.idQcItem,
@@ -70,6 +124,8 @@ class ApproveChecklistBloc
       remark: event.remark ?? "",
       fileImage: event.fileImage,
       deleteImage: event.deleteImage,
+      latitude: position.latitude.toString(),
+      longitude: position.longitude.toString(),
     );
     result.fold(
       (failure) => emit(

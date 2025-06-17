@@ -236,6 +236,8 @@ class SPKRest {
     required String remark,
     required String idWork,
     required List<Attachment>? fileImage,
+    required String longitude,
+    required String latitude,
   }) async {
     try {
       http.options.headers['requiresToken'] = true;
@@ -254,6 +256,8 @@ class SPKRest {
         "id_work": idWork,
         "remark": remark,
         "img[]": fileAttachmentList,
+        "longitude": longitude,
+        "latitude": latitude,
       });
 
       log("Request body: $formData");
@@ -446,6 +450,8 @@ class SPKRest {
     required String remark,
     required List<Attachment>? fileImage,
     required List<String> deleteImage,
+    required String longitude,
+    required String latitude,
   }) async {
     try {
       http.options.headers['requiresToken'] = true;
@@ -460,6 +466,8 @@ class SPKRest {
         "remark": remark,
         "img[]": fileImage?.map((e) => e.file).toList(),
         "removed_file": deleteImage,
+        "longitude": longitude,
+        "latitude": latitude,
       };
 
       final response = await http.post(

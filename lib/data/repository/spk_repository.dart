@@ -65,6 +65,8 @@ class SPKRepository {
     required String remark,
     required List<Attachment>? fileImage,
     required String idWork,
+    required String longitude,
+    required String latitude,
   }) async {
     return spkRest.approveChecklist(
       qcTransId: qcTransId,
@@ -72,6 +74,8 @@ class SPKRepository {
       remark: remark,
       fileImage: fileImage,
       idWork: idWork,
+      longitude: longitude,
+      latitude: latitude,
     );
   }
 
@@ -118,6 +122,8 @@ class SPKRepository {
     required String remark,
     required List<Attachment>? fileImage,
     required List<String> deleteImage,
+    required String longitude,
+    required String latitude,
   }) async {
     return spkRest.updateApproveChecklist(
       qcTransId: qcTransId,
@@ -126,6 +132,8 @@ class SPKRepository {
       remark: remark,
       fileImage: fileImage,
       deleteImage: deleteImage,
+      longitude: longitude,
+      latitude: latitude,
     );
   }
 }
