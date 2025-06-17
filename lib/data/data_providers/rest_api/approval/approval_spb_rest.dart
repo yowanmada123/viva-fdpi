@@ -19,7 +19,7 @@ class ApprovalSpbRest {
     required String idCluster,
     required String idHouse,
     String approvalType = "",
-    String approvalStatus = "",
+    String approvalStatus = "O",
   }) async {
     try {
       http.options.headers['requiresToken'] = true;
