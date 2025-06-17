@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../bloc/QC/approve_checklist/approve_checklist_bloc.dart';
+import '../../bloc/QC/approve_detail/approve_detail_bloc.dart';
 import '../../bloc/QC/spr_checklist/spr_checklist_bloc.dart';
 import '../../data/repository/spk_repository.dart';
 import '../../models/attachment.dart';
@@ -26,6 +27,12 @@ class SprProgressListScreen extends StatelessWidget {
         BlocProvider(
           create:
               (context) => ApproveChecklistBloc(
+                spkRepository: context.read<SPKRepository>(),
+              ),
+        ),
+        BlocProvider(
+          create:
+              (context) => ApproveDetailBloc(
                 spkRepository: context.read<SPKRepository>(),
               ),
         ),
@@ -73,6 +80,46 @@ class _SprProgressListScreenContentState
     );
   }
 
+  void unapproveChecklist(int param, String id, BuildContext context) {
+    context.read<ApproveChecklistBloc>().add(
+      ApproveChecklistCancel(
+        qcTransId: widget.qcTransId,
+        idQcItem: id,
+        idWork: param.toString(),
+      ),
+    );
+  }
+
+  void updateChecklist(
+    int param,
+    String id,
+    BuildContext context,
+    String remark,
+    List<Attachment>? fileImage,
+    List<String> deleteImage,
+  ) {
+    context.read<ApproveChecklistBloc>().add(
+      ApproveChecklistUpdate(
+        qcTransId: widget.qcTransId,
+        idQcItem: id,
+        idWork: param.toString(),
+        remark: remark,
+        fileImage: fileImage,
+        deleteImage: deleteImage,
+      ),
+    );
+  }
+
+  Future<void> loadApproveDetail(int idWork, String idQcItem) async {
+    context.read<ApproveDetailBloc>().add(
+      LoadApproveDetail(
+        qcTransId: widget.qcTransId,
+        idQcItem: idQcItem,
+        idWork: idWork.toString(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,7 +161,31 @@ class _SprProgressListScreenContentState
                           return SprChecklistAccordion(
                             index: qcItem.key,
                             title: qcItem.value.itemName,
-                            padding: EdgeInsets.all(16.w),
+                            onApproveDetail: (idWork) {
+                              loadApproveDetail(idWork, qcItem.value.idQcItem);
+                            },
+                            onUnapproveChecklist: (idWork) {
+                              unapproveChecklist(
+                                idWork,
+                                qcItem.value.idQcItem,
+                                context,
+                              );
+                            },
+                            onUpdateChecklist: (
+                              idWork,
+                              remark,
+                              fileImage,
+                              deleteImage,
+                            ) {
+                              updateChecklist(
+                                idWork,
+                                qcItem.value.idQcItem,
+                                context,
+                                remark,
+                                fileImage,
+                                deleteImage,
+                              );
+                            },
                             onCheckboxApplicatorChanged:
                                 qcItem.value.statClosing == 'N'
                                     ? (value, remark, fileImage) {
@@ -132,10 +203,6 @@ class _SprProgressListScreenContentState
                             showCheckboxApplicator: true,
                             checkboxApplicatorInitalValue:
                                 qcItem.value.dtAprv != null,
-                            titleStyle: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 14.sp,
-                            ),
                             content: SizedBox(
                               width: double.infinity,
                               child: Column(
