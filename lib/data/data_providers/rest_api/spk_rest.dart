@@ -253,7 +253,7 @@ class SPKRest {
         "id_qc_item": idQcItem,
         "id_work": idWork,
         "remark": remark,
-        "img": fileAttachmentList,
+        "img[]": fileAttachmentList,
       });
 
       log("Request body: $formData");
@@ -389,7 +389,89 @@ class SPKRest {
 
       final data = response.data;
 
-      final result = DetailApproveResponse.fromMap(data['data']);
+      final result = DetailApproveResponse.fromMap(data['data'][0]);
+
+      return Right(result);
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
+  Future<Either<CustomException, String>> unapproveChecklist({
+    required String qcTransId,
+    required String idQcItem,
+    required String idWork,
+  }) async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log(
+        'Request to https://api-fpi.kencana.org/api/fpi/checklist/cancelAprvCheckList  (POST)',
+      );
+
+      final payload = {
+        "qc_trans_id": qcTransId,
+        "id_qc_item": idQcItem,
+        "id_work": idWork,
+      };
+
+      final response = await http.post(
+        "api/fpi/checklist/cancelAprvCheckList",
+        data: payload,
+      );
+
+      if (response.statusCode != 200) {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+
+      final result = "Success";
+
+      return Right(result);
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
+  Future<Either<CustomException, String>> updateApproveChecklist({
+    required String qcTransId,
+    required String idQcItem,
+    required String idWork,
+    required String remark,
+    required List<Attachment>? fileImage,
+    required List<String> deleteImage,
+  }) async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log(
+        'Request to https://api-fpi.kencana.org/api/fpi/checklist/updateAprvCheckList (POST)',
+      );
+
+      final payload = {
+        "qc_trans_id": qcTransId,
+        "id_qc_item": idQcItem,
+        "id_work": idWork,
+        "remark": remark,
+        "img[]": fileImage?.map((e) => e.file).toList(),
+        "removed_file": deleteImage,
+      };
+
+      final response = await http.post(
+        "api/fpi/checklist/updateAprvCheckList",
+        data: payload,
+      );
+
+      if (response.statusCode != 200) {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+
+      final result = "Success";
 
       return Right(result);
     } on DioException catch (e) {

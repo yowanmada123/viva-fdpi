@@ -98,4 +98,34 @@ class SPKRepository {
   ) async {
     return spkRest.getDetailApproveDetail(detailApproveRequest);
   }
+
+  Future<Either<CustomException, String>> unapproveChecklist({
+    required String qcTransId,
+    required String idQcItem,
+    required String idWork,
+  }) async {
+    return spkRest.unapproveChecklist(
+      qcTransId: qcTransId,
+      idQcItem: idQcItem,
+      idWork: idWork,
+    );
+  }
+
+  Future<Either<CustomException, String>> updateApproveChecklist({
+    required String qcTransId,
+    required String idQcItem,
+    required String idWork,
+    required String remark,
+    required List<Attachment>? fileImage,
+    required List<String> deleteImage,
+  }) async {
+    return spkRest.updateApproveChecklist(
+      qcTransId: qcTransId,
+      idQcItem: idQcItem,
+      idWork: idWork,
+      remark: remark,
+      fileImage: fileImage,
+      deleteImage: deleteImage,
+    );
+  }
 }

@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:fdpi_app/bloc/QC/approve_detail/approve_detail_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +12,21 @@ import 'approval_section.dart';
 typedef CheckboxCallback =
     void Function(bool value, String remark, List<Attachment>? base64);
 typedef ApproveDetailCallback = void Function(int idWok);
+typedef UnapproveChecklistCallback = void Function(int idWork);
+typedef UpdateApproveChecklistCallback =
+    void Function(
+      int idWork,
+      String remark,
+      List<Attachment>? fileImage,
+      List<String> deleteImage,
+    );
+
+typedef UpdateCallback =
+    void Function(
+      String remark,
+      List<Attachment>? fileImage,
+      List<String> deleteImage,
+    );
 
 class SpkChecklistAccordion extends StatelessWidget {
   final int index;
@@ -27,6 +44,8 @@ class SpkChecklistAccordion extends StatelessWidget {
   final CheckboxCallback? onCheckboxQCChanged;
   final CheckboxCallback? onCheckboxInspectorChanged;
   final ApproveDetailCallback? onApproveDetail;
+  final UnapproveChecklistCallback? onUnapproveChecklist;
+  final UpdateApproveChecklistCallback? onUpdateChecklist;
 
   const SpkChecklistAccordion({
     super.key,
@@ -45,6 +64,8 @@ class SpkChecklistAccordion extends StatelessWidget {
     this.onCheckboxApplicatorChanged,
     this.onCheckboxInspectorChanged,
     this.onApproveDetail,
+    this.onUnapproveChecklist,
+    this.onUpdateChecklist,
   });
 
   @override
@@ -67,6 +88,8 @@ class SpkChecklistAccordion extends StatelessWidget {
         onCheckboxApplicatorChanged: onCheckboxApplicatorChanged,
         onCheckboxInspectorChanged: onCheckboxInspectorChanged,
         onApproveDetail: onApproveDetail,
+        onUnapproveChecklist: onUnapproveChecklist,
+        onUpdateChecklist: onUpdateChecklist,
       ),
     );
   }
@@ -88,6 +111,8 @@ class _AccordionContent extends StatefulWidget {
   final CheckboxCallback? onCheckboxQCChanged;
   final CheckboxCallback? onCheckboxInspectorChanged;
   final ApproveDetailCallback? onApproveDetail;
+  final UnapproveChecklistCallback? onUnapproveChecklist;
+  final UpdateApproveChecklistCallback? onUpdateChecklist;
 
   const _AccordionContent({
     required this.index,
@@ -105,6 +130,8 @@ class _AccordionContent extends StatefulWidget {
     this.onCheckboxApplicatorChanged,
     this.onCheckboxInspectorChanged,
     this.onApproveDetail,
+    this.onUnapproveChecklist,
+    this.onUpdateChecklist,
   });
 
   @override
@@ -144,6 +171,8 @@ class _AccordionContentState extends State<_AccordionContent> {
           onCheckboxApplicatorChanged: widget.onCheckboxApplicatorChanged,
           onCheckboxInspectorChanged: widget.onCheckboxInspectorChanged,
           onApproveDetail: widget.onApproveDetail,
+          onUnapproveChecklist: widget.onUnapproveChecklist,
+          onUpdateChecklist: widget.onUpdateChecklist,
           onHeaderTap: () => setState(() => _isExpanded = !_isExpanded),
         ),
         _ContentSection(
@@ -172,6 +201,8 @@ class _HeaderSection extends StatelessWidget {
   final CheckboxCallback? onCheckboxInspectorChanged;
   final ApproveDetailCallback? onApproveDetail;
   final VoidCallback onHeaderTap;
+  final UnapproveChecklistCallback? onUnapproveChecklist;
+  final UpdateApproveChecklistCallback? onUpdateChecklist;
 
   const _HeaderSection({
     required this.title,
@@ -189,6 +220,8 @@ class _HeaderSection extends StatelessWidget {
     this.onCheckboxInspectorChanged,
     this.onApproveDetail,
     required this.onHeaderTap,
+    this.onUnapproveChecklist,
+    this.onUpdateChecklist,
   });
 
   @override
@@ -226,6 +259,10 @@ class _HeaderSection extends StatelessWidget {
                 authorizationKey: 'CEK_LIST_1',
                 onChanged: onCheckboxApplicatorChanged,
                 onBeforeDialog: () => onApproveDetail?.call(1),
+                onUnapproveChecklist: () => onUnapproveChecklist?.call(1),
+                onUpdateChecklist:
+                    (remark, file, deleteImage) =>
+                        onUpdateChecklist?.call(1, remark, file, deleteImage),
               ),
             if (showCheckboxInspector)
               _AuthorizedCheckbox(
@@ -234,6 +271,10 @@ class _HeaderSection extends StatelessWidget {
                 authorizationKey: 'CEK_LIST_2',
                 onChanged: onCheckboxInspectorChanged,
                 onBeforeDialog: () => onApproveDetail?.call(2),
+                onUnapproveChecklist: () => onUnapproveChecklist?.call(2),
+                onUpdateChecklist:
+                    (remark, file, deleteImage) =>
+                        onUpdateChecklist?.call(2, remark, file, deleteImage),
               ),
             if (showCheckboxQC)
               _AuthorizedCheckbox(
@@ -242,6 +283,10 @@ class _HeaderSection extends StatelessWidget {
                 authorizationKey: 'CEK_LIST_1',
                 onChanged: onCheckboxQCChanged,
                 onBeforeDialog: () => onApproveDetail?.call(3),
+                onUnapproveChecklist: () => onUnapproveChecklist?.call(3),
+                onUpdateChecklist:
+                    (remark, file, deleteImage) =>
+                        onUpdateChecklist?.call(3, remark, file, deleteImage),
               ),
           ],
         ),
@@ -256,6 +301,8 @@ class _AuthorizedCheckbox extends StatelessWidget {
   final String authorizationKey;
   final CheckboxCallback? onChanged;
   final VoidCallback? onBeforeDialog;
+  final VoidCallback? onUnapproveChecklist;
+  final UpdateCallback? onUpdateChecklist;
 
   const _AuthorizedCheckbox({
     required this.value,
@@ -263,6 +310,8 @@ class _AuthorizedCheckbox extends StatelessWidget {
     required this.authorizationKey,
     this.onChanged,
     this.onBeforeDialog,
+    this.onUnapproveChecklist,
+    this.onUpdateChecklist,
   });
 
   @override
@@ -314,6 +363,9 @@ class _AuthorizedCheckbox extends StatelessWidget {
               onChanged?.call(!value, remark, attachments);
             },
             approveDetailBloc: approveDetailBloc,
+            onUnapproveChecklist: onUnapproveChecklist,
+            onUpdateChecklist: onUpdateChecklist,
+            value: value,
           ),
     );
   }
@@ -322,10 +374,16 @@ class _AuthorizedCheckbox extends StatelessWidget {
 class _CheckboxConfirmationDialog extends StatefulWidget {
   final void Function(String remark, List<Attachment>? attachments) onConfirmed;
   final ApproveDetailBloc approveDetailBloc;
+  final bool value;
+  final VoidCallback? onUnapproveChecklist;
+  final UpdateCallback? onUpdateChecklist;
 
   const _CheckboxConfirmationDialog({
     required this.onConfirmed,
     required this.approveDetailBloc,
+    required this.value,
+    this.onUnapproveChecklist,
+    this.onUpdateChecklist,
   });
 
   @override
@@ -410,32 +468,64 @@ class _CheckboxConfirmationDialogState
                       },
                     ),
                     SizedBox(height: 16.w),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: FilledButton(
-                            style: FilledButton.styleFrom(
-                              backgroundColor: const Color(0xFFAFAFAF),
+                    if (!widget.value)
+                      Row(
+                        children: [
+                          Expanded(
+                            child: FilledButton(
+                              style: FilledButton.styleFrom(
+                                backgroundColor: const Color(0xFFAFAFAF),
+                              ),
+                              child: const Text('Close'),
+                              onPressed: () => Navigator.pop(context),
                             ),
-                            child: const Text('Close'),
-                            onPressed: () => Navigator.pop(context),
                           ),
-                        ),
-                        SizedBox(width: 16.w),
-                        Expanded(
-                          child: FilledButton(
-                            child: const Text('Konfirmasi'),
-                            onPressed: () {
-                              Navigator.pop(context);
-                              widget.onConfirmed(
-                                _remarkController.text,
-                                _attachments,
-                              );
-                            },
+                          SizedBox(width: 16.w),
+                          Expanded(
+                            child: FilledButton(
+                              child: const Text('Konfirmasi'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                widget.onConfirmed(
+                                  _remarkController.text,
+                                  _attachments,
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
+                    if (widget.value)
+                      Row(
+                        children: [
+                          Expanded(
+                            child: FilledButton(
+                              style: FilledButton.styleFrom(
+                                backgroundColor: const Color(0xFFAFAFAF),
+                              ),
+                              child: const Text('Unapprove'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                widget.onUnapproveChecklist?.call();
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 16.w),
+                          Expanded(
+                            child: FilledButton(
+                              child: const Text('Update'),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                widget.onUpdateChecklist?.call(
+                                  _remarkController.text,
+                                  _attachments,
+                                  [],
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
                   ],
                 ),
               );

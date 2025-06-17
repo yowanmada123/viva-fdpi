@@ -76,6 +76,36 @@ class SpkChecklistFormState extends State<SpkChecklistForm> {
     );
   }
 
+  void unapproveChecklist(int param, String id, BuildContext context) {
+    context.read<ApproveChecklistBloc>().add(
+      ApproveChecklistCancel(
+        qcTransId: widget.qcTransId,
+        idQcItem: id,
+        idWork: param.toString(),
+      ),
+    );
+  }
+
+  void updateChecklist(
+    int param,
+    String id,
+    BuildContext context,
+    String remark,
+    List<Attachment>? fileImage,
+    List<String> deleteImage,
+  ) {
+    context.read<ApproveChecklistBloc>().add(
+      ApproveChecklistUpdate(
+        qcTransId: widget.qcTransId,
+        idQcItem: id,
+        idWork: param.toString(),
+        remark: remark,
+        fileImage: fileImage,
+        deleteImage: deleteImage,
+      ),
+    );
+  }
+
   Future<void> loadApproveDetail(int idWork, String idQcItem) async {
     context.read<ApproveDetailBloc>().add(
       LoadApproveDetail(
@@ -218,6 +248,30 @@ class SpkChecklistFormState extends State<SpkChecklistForm> {
                                                     loadApproveDetail(
                                                       idWork,
                                                       qcItem.value.idQcItem,
+                                                    );
+                                                  },
+                                                  onUnapproveChecklist: (
+                                                    idWork,
+                                                  ) {
+                                                    unapproveChecklist(
+                                                      idWork,
+                                                      qcItem.value.idQcItem,
+                                                      context,
+                                                    );
+                                                  },
+                                                  onUpdateChecklist: (
+                                                    idWork,
+                                                    remark,
+                                                    fileImage,
+                                                    deleteImage,
+                                                  ) {
+                                                    updateChecklist(
+                                                      idWork,
+                                                      qcItem.value.idQcItem,
+                                                      context,
+                                                      remark,
+                                                      fileImage,
+                                                      deleteImage,
                                                     );
                                                   },
                                                   onCheckboxApplicatorChanged:

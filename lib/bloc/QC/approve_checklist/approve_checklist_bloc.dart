@@ -15,6 +15,8 @@ class ApproveChecklistBloc
   ApproveChecklistBloc({required this.spkRepository})
     : super(ApproveChecklistInitial()) {
     on<ApproveChecklistEventInit>(_approveChecklistEventInit);
+    on<ApproveChecklistCancel>(_approveChecklistCancel);
+    on<ApproveChecklistUpdate>(_onUpdateApproveChecklist);
   }
 
   Future<void> _approveChecklistEventInit(
@@ -29,6 +31,45 @@ class ApproveChecklistBloc
       remark: event.remark ?? "",
       fileImage: event.fileImage,
       idWork: event.idWork,
+    );
+    result.fold(
+      (failure) => emit(
+        ApproveChecklistLoadFailure(message: failure.message!, error: failure),
+      ),
+      (data) => emit(ApproveChecklistLoadSuccess(message: data)),
+    );
+  }
+
+  Future<void> _approveChecklistCancel(
+    ApproveChecklistCancel event,
+    Emitter<ApproveChecklistState> emit,
+  ) async {
+    emit(ApproveChecklistLoading());
+    final result = await spkRepository.unapproveChecklist(
+      qcTransId: event.qcTransId,
+      idQcItem: event.idQcItem,
+      idWork: event.idWork,
+    );
+    result.fold(
+      (failure) => emit(
+        ApproveChecklistLoadFailure(message: failure.message!, error: failure),
+      ),
+      (data) => emit(ApproveChecklistLoadSuccess(message: data)),
+    );
+  }
+
+  Future<void> _onUpdateApproveChecklist(
+    ApproveChecklistUpdate event,
+    Emitter<ApproveChecklistState> emit,
+  ) async {
+    emit(ApproveChecklistLoading());
+    final result = await spkRepository.updateApproveChecklist(
+      qcTransId: event.qcTransId,
+      idQcItem: event.idQcItem,
+      idWork: event.idWork,
+      remark: event.remark ?? "",
+      fileImage: event.fileImage,
+      deleteImage: event.deleteImage,
     );
     result.fold(
       (failure) => emit(
