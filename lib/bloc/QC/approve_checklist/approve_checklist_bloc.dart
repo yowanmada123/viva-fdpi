@@ -1,9 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fdpi_app/data/repository/spk_repository.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../../data/repository/spk_repository.dart';
 import '../../../models/attachment.dart';
 
 part 'approve_checklist_event.dart';

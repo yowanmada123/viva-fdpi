@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
+import '../../../../models/approval_spb/approval_spb_detail.dart';
 import '../../../../models/approval_spb/approve_spb_request.dart';
 import '../../../../models/approval_spb/spb.dart';
 import '../../../../models/errors/custom_exception.dart';
@@ -109,6 +110,38 @@ class ApprovalSpbRest {
       } else {
         return Left(NetUtils.parseErrorResponse(response: response.data));
       }
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
+  Future<Either<CustomException, ApprovalSpbDetail>> getSpbDetail({
+    required String idSpb,
+  }) async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log(
+        'Request to https://api-fpi.kencana.org/api/fpi/master/getDocumentStatus (POST)',
+      );
+
+      final body = {"doc_id": idSpb, "doc_type": "SPB"};
+
+      final response = await http.post(
+        "api/fpi/master/getDocumentStatus",
+        data: body,
+      );
+
+      if (response.statusCode != 200) {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+
+      final data = response.data;
+
+      return Right(ApprovalSpbDetail.fromMap(data['data'][0]));
     } on DioException catch (e) {
       return Left(NetUtils.parseDioException(e));
     } on Exception catch (e) {

@@ -1,15 +1,15 @@
 // approval_screen.dart
 import 'package:fdpi_app/bloc/approval_spb/approval_spb_list/approval_spb_list_bloc.dart';
+import 'package:fdpi_app/bloc/approval_spb/approve_spb/approve_spb_bloc.dart';
 import 'package:fdpi_app/bloc/auth/authentication/authentication_bloc.dart';
 import 'package:fdpi_app/data/repository/approval_spb.dart';
 import 'package:fdpi_app/models/approval_spb/spb.dart';
 import 'package:fdpi_app/models/errors/custom_exception.dart';
-import 'package:flutter/material.dart';
 import 'package:fdpi_app/presentation/widgets/approval/aprrove_bottom_navigator.dart';
-import 'dart:developer';
-
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/approval_spb/approval_spb_detail/approval_spb_detail_bloc.dart';
 import '../widgets/approval/approval_spb_card.dart';
 
 class ApprovalSpbScreen extends StatefulWidget {
@@ -23,59 +23,69 @@ class ApprovalSpbScreen extends StatefulWidget {
 class ApprovalSpbScreenState extends State<ApprovalSpbScreen> {
   final PageController _pageController = PageController();
   final List<ScrollController> _scrollControllers = [];
-  final List<Spb> _requests = [];
   int _currentPage = 0;
-  bool _isLoading = false;
   bool _isAnimated = false;
+  bool _initialDetailLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    _loadInitialRequests();
     _initializeControllers();
   }
 
   void _initializeControllers() {
-    // Initialize 3 controllers for sliding window
     for (int i = 0; i < 3; i++) {
       _scrollControllers.add(ScrollController());
     }
   }
 
-  Future<void> _loadInitialRequests() async {
-    setState(() => _isLoading = true);
-    // Simulate API call
-    await Future.delayed(Duration(seconds: 1));
-    setState(() {
-      _isLoading = false;
-    });
-  }
+  void _handleApproval(int index, List<Spb> spbList, BuildContext context) {
+    context.read<ApproveSpbBloc>().add(
+      ApproveSpbLoad(
+        idSpb: spbList[index].idSpb,
+        typeAprv: "approve1",
+        status: "approve",
+      ),
+    );
 
-  void _loadMoreRequests() {
-    log("masuk sini request $_isLoading");
-    if (_isLoading) return;
-    setState(() => _isLoading = true);
+    context.read<ApprovalSpbDetailBloc>().add(
+      ApprovalSpbDetailLoad(idSpb: spbList[index].idSpb),
+    );
+
+    if (index >= spbList.length) return;
 
     setState(() {
-      _isLoading = false;
-    });
-  }
-
-  void _handleApproval(int index) {
-    setState(() {
-      _requests.removeAt(index);
-      if (_currentPage >= _requests.length) {
-        _currentPage = _requests.length - 1;
+      spbList.removeAt(index);
+      if (_currentPage >= spbList.length) {
+        _currentPage = spbList.length - 1;
       }
     });
-    if (_currentPage == _requests.length - 1) {
-      log("masuk sini");
-      _loadMoreRequests();
-    }
+  }
+
+  void _handleReject(int index, List<Spb> spbList, BuildContext context) {
+    context.read<ApproveSpbBloc>().add(
+      ApproveSpbLoad(
+        idSpb: spbList[index].idSpb,
+        typeAprv: "approve1",
+        status: "reject",
+      ),
+    );
+
+    context.read<ApprovalSpbDetailBloc>().add(
+      ApprovalSpbDetailLoad(idSpb: spbList[index].idSpb),
+    );
+
+    if (index >= spbList.length) return;
+
+    setState(() {
+      spbList.removeAt(index);
+      if (_currentPage >= spbList.length) {
+        _currentPage = spbList.length - 1;
+      }
+    });
   }
 
   ScrollController _getController(int index) {
-    // Recycle controllers using modulo
     return _scrollControllers[index % 3];
   }
 
@@ -90,11 +100,27 @@ class ApprovalSpbScreenState extends State<ApprovalSpbScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create:
-          (context) => ApprovalSpbListBloc(
-            approvalSpbRepository: context.read<ApprovalSpbRepository>(),
-          )..add(GetSpbListEvent()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create:
+              (context) => ApprovalSpbListBloc(
+                approvalSpbRepository: context.read<ApprovalSpbRepository>(),
+              )..add(GetSpbListEvent()),
+        ),
+        BlocProvider(
+          create:
+              (context) => ApprovalSpbDetailBloc(
+                approvalSpbRepository: context.read<ApprovalSpbRepository>(),
+              ),
+        ),
+        BlocProvider(
+          create:
+              (context) => ApproveSpbBloc(
+                approvalSpbRepository: context.read<ApprovalSpbRepository>(),
+              ),
+        ),
+      ],
       child: Scaffold(
         appBar: AppBar(title: Text(widget.title)),
         body: SafeArea(
@@ -125,6 +151,18 @@ class ApprovalSpbScreenState extends State<ApprovalSpbScreen> {
                   context,
                 ).showSnackBar(SnackBar(content: Text(state.message)));
               }
+
+              // Handle initial detail load
+              if (state is ApprovalSpbListSuccess &&
+                  !_initialDetailLoaded &&
+                  state.spbList.isNotEmpty) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  context.read<ApprovalSpbDetailBloc>().add(
+                    ApprovalSpbDetailLoad(idSpb: state.spbList[0].idSpb),
+                  );
+                });
+                _initialDetailLoaded = true;
+              }
             },
             builder: (context, state) {
               if (state is ApprovalSpbListInitial ||
@@ -135,67 +173,55 @@ class ApprovalSpbScreenState extends State<ApprovalSpbScreen> {
                 return Center(child: Text(state.message));
               }
               if (state is ApprovalSpbListSuccess) {
-                _requests.addAll(state.spbList);
                 return NotificationListener<ScrollNotification>(
-                  onNotification: (notification) {
-                    return true;
-                  },
+                  onNotification: (notification) => true,
                   child: PageView.builder(
                     controller: _pageController,
                     scrollDirection: Axis.vertical,
-                    itemCount: _requests.length + (_isLoading ? 1 : 0),
+                    itemCount: state.spbList.length,
                     onPageChanged: (index) {
                       setState(() => _currentPage = index);
-                      if (_currentPage >= _requests.length - 1) {
-                        log("masuk sini");
-                        _loadMoreRequests();
+                      if (index < state.spbList.length) {
+                        context.read<ApprovalSpbDetailBloc>().add(
+                          ApprovalSpbDetailLoad(
+                            idSpb: state.spbList[index].idSpb,
+                          ),
+                        );
                       }
                     },
                     itemBuilder: (context, index) {
-                      if (index >= _requests.length) {
-                        return Center(child: CircularProgressIndicator());
-                      }
                       return ApprovalSpbCard(
-                        requests: _requests[index],
+                        requests: state.spbList[index],
                         scrollController: _getController(index),
                         onReachBottom: () async {
-                          int index = _currentPage;
-                          log("capai bawah degan state animated $_isAnimated");
-
                           if (_isAnimated) return;
-                          setState(() {
-                            _isAnimated = true;
-                          });
+                          setState(() => _isAnimated = true);
 
-                          await _pageController.animateToPage(
-                            index + 1,
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.easeOut,
-                          );
+                          final nextPage = index + 1;
+                          if (nextPage < state.spbList.length) {
+                            await _pageController.animateToPage(
+                              nextPage,
+                              duration: Duration(milliseconds: 300),
+                              curve: Curves.easeOut,
+                            );
+                          }
 
-                          setState(() {
-                            _isAnimated = false;
-                          });
+                          setState(() => _isAnimated = false);
                         },
                         onReachTop: () async {
-                          int index = _currentPage;
-                          log("capai atas degan state animated $_isAnimated");
-
                           if (_isAnimated) return;
+                          setState(() => _isAnimated = true);
 
-                          setState(() {
-                            _isAnimated = true;
-                          });
+                          final prevPage = index - 1;
+                          if (prevPage >= 0) {
+                            await _pageController.animateToPage(
+                              prevPage,
+                              duration: Duration(milliseconds: 300),
+                              curve: Curves.easeOut,
+                            );
+                          }
 
-                          await _pageController.animateToPage(
-                            index - 1,
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.easeOut,
-                          );
-
-                          setState(() {
-                            _isAnimated = false;
-                          });
+                          setState(() => _isAnimated = false);
                         },
                       );
                     },
@@ -206,13 +232,24 @@ class ApprovalSpbScreenState extends State<ApprovalSpbScreen> {
             },
           ),
         ),
-        bottomNavigationBar: ApprovalBottomBar(
-          isLoading: false,
-          onApprove: () => _handleApproval(_currentPage),
-          onReject: () {
-            // Handle reject logic
-          },
-        ),
+        bottomNavigationBar:
+            BlocBuilder<ApprovalSpbListBloc, ApprovalSpbListState>(
+              builder: (context, state) {
+                if (state is! ApprovalSpbListSuccess) {
+                  return SizedBox.shrink();
+                }
+
+                return ApprovalBottomBar(
+                  isLoading: false,
+                  onApprove:
+                      () =>
+                          _handleApproval(_currentPage, state.spbList, context),
+                  onReject: () {
+                    _handleReject(_currentPage, state.spbList, context);
+                  },
+                );
+              },
+            ),
       ),
     );
   }

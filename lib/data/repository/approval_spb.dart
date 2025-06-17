@@ -1,9 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:fdpi_app/data/data_providers/rest_api/approval/approval_spb_rest.dart';
 
+import '../../models/approval_spb/approval_spb_detail.dart';
 import '../../models/approval_spb/approve_spb_request.dart';
 import '../../models/approval_spb/spb.dart';
 import '../../models/errors/custom_exception.dart';
+import '../data_providers/rest_api/approval/approval_spb_rest.dart';
 
 class ApprovalSpbRepository {
   final ApprovalSpbRest approvalSpbRest;
@@ -36,5 +37,11 @@ class ApprovalSpbRepository {
     required ApproveSpbRequest data,
   }) async {
     return approvalSpbRest.rejectSpb(data: data);
+  }
+
+  Future<Either<CustomException, ApprovalSpbDetail>> getSpbDetail({
+    required String idSpb,
+  }) async {
+    return approvalSpbRest.getSpbDetail(idSpb: idSpb);
   }
 }

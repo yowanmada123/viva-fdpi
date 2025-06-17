@@ -1,9 +1,10 @@
 // approval_card.dart
+import 'package:fdpi_app/bloc/approval_spb/approval_spb_detail/approval_spb_detail_bloc.dart';
 import 'package:fdpi_app/models/approval_spb/spb.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'attachment_list.dart';
-import 'request_detail_list.dart';
+
 import 'vertical_timeline.dart';
 
 class ApprovalSpbCard extends StatefulWidget {
@@ -33,10 +34,10 @@ class _ApprovalSpbCardState extends State<ApprovalSpbCard> {
 
   void _handleScroll() {
     final position = widget.scrollController.position;
-    if (position.pixels >= position.maxScrollExtent * 1.00) {
+    if (position.pixels >= position.maxScrollExtent) {
       widget.onReachBottom();
     }
-    if (position.pixels <= position.minScrollExtent * 1.00) {
+    if (position.pixels <= position.minScrollExtent) {
       widget.onReachTop();
     }
   }
@@ -59,15 +60,87 @@ class _ApprovalSpbCardState extends State<ApprovalSpbCard> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(8.w),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Pengajuan SPB untuk ${widget.requests.sbkName}",
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 320.w),
-            ],
+          child: BlocBuilder<ApprovalSpbDetailBloc, ApprovalSpbDetailState>(
+            builder: (context, state) {
+              if (state is ApprovalSpbDetailSuccess) {
+                return Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 16.w,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Pengajuan SPB untuk ${widget.requests.sbkName}",
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 16.w),
+                      Text(
+                        "Site: ${widget.requests.siteName}",
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 16.w),
+                      Text(
+                        "Cluster: ${widget.requests.clusterName}",
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 16.w),
+                      Text(
+                        "House: ${widget.requests.houseName}",
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 16.w),
+                      Text(
+                        "Kategori Bangunan: ${widget.requests.category}",
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TimelineProgress(
+                        steps: [
+                          TimelineStep(
+                            header: "Pengajuan",
+                            detail: state.spbDetail.wCreatedBy,
+                          ),
+                          TimelineStep(
+                            header: "Approve 1",
+                            detail: state.spbDetail.wAprv1By,
+                          ),
+                          TimelineStep(
+                            header: "Approve 2",
+                            detail: state.spbDetail.wAprv2By,
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 320.w),
+                    ],
+                  ),
+                );
+              }
+
+              if (state is ApprovalSpbDetailFailure) {
+                return Center(child: Text(state.message));
+              }
+
+              return Container(
+                padding: EdgeInsets.all(16.w),
+                child: Center(child: CircularProgressIndicator()),
+              );
+            },
           ),
         ),
       ),
