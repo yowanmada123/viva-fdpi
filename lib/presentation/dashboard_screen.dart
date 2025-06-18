@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
+import 'package:fdpi_app/presentation/approval/approval_spk_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -96,7 +97,7 @@ class MyGridLayout extends StatelessWidget {
         'icon': Icons.edit_document,
         'text': 'Approval Pengajuan',
         'description': 'Approval SPK',
-        'route': ApprovalScreen(title: submenu.menu_caption),
+        'route': ApprovalSpkScreen(title: submenu.menu_caption),
       },
       'approvalSPR': {
         'icon': Icons.edit_document,

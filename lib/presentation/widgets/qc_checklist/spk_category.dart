@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:fdpi_app/bloc/QC/approve_detail/approve_detail_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -419,7 +417,7 @@ class _CheckboxConfirmationDialogState
                 );
               }
 
-              _remarkController.text = state.detailApproveResponse.remark ?? '';
+              _remarkController.text = state.detailApproveResponse.remark;
 
               return Container(
                 padding: EdgeInsets.all(16.w),
