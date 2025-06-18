@@ -297,7 +297,7 @@ class _CheckboxConfirmationDialogState
                 );
               }
 
-              _remarkController.text = state.detailApproveResponse.remark ?? '';
+              _remarkController.text = state.detailApproveResponse.remark;
 
               return Container(
                 padding: EdgeInsets.all(16.w),

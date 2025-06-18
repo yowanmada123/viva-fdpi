@@ -69,6 +69,8 @@ class AuthorizationRest {
           result[item['var_id']] = item['var_value'];
         }
 
+        print("result: $result");
+
         return Right(result);
       } else {
         return Left(NetUtils.parseErrorResponse(response: response.data));

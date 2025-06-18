@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:fdpi_app/data/data_providers/rest_api/approval/approval_spb_rest.dart';
 import 'package:fdpi_app/data/repository/approval_spb.dart';
+import 'package:fdpi_app/data/repository/approval_spk.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'bloc/auth/authentication/authentication_bloc.dart';
 import 'bloc/authorization/credentials/credentials_bloc.dart';
+import 'data/data_providers/rest_api/approval/approval_spk_rest.dart';
 import 'data/data_providers/rest_api/auth_rest.dart';
 import 'data/data_providers/rest_api/authorization/authorization_rest.dart';
 import 'data/data_providers/rest_api/booking_rest.dart';
@@ -59,6 +61,7 @@ void main() async {
   final spkRest = SPKRest(dioFdpiClient);
   final loanRest = LoanRest(dioFdpiClient);
   final approvalSpbRest = ApprovalSpbRest(dioFdpiClient);
+  final approvalSpkRest = ApprovalSpkRest(dioFdpiClient);
 
   final authRepository = AuthRepository(
     authRest: authRest,
@@ -75,6 +78,9 @@ void main() async {
   final approvalSpbRepository = ApprovalSpbRepository(
     approvalSpbRest: approvalSpbRest,
   );
+  final approvalSpkRepository = ApprovalSpkRepository(
+    approvalSpkRest: approvalSpkRest,
+  );
 
   runApp(
     MultiRepositoryProvider(
@@ -87,6 +93,7 @@ void main() async {
         RepositoryProvider.value(value: spkRepository),
         RepositoryProvider.value(value: loanRepostitory),
         RepositoryProvider.value(value: approvalSpbRepository),
+        RepositoryProvider.value(value: approvalSpkRepository),
       ],
       child: MultiBlocProvider(
         providers: [
