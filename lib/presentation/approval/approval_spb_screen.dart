@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/approval_spb/approval_spb_detail/approval_spb_detail_bloc.dart';
+import '../../bloc/authorization/credentials/credentials_bloc.dart';
 import '../widgets/approval/approval_spb_card.dart';
 
 class ApprovalSpbScreen extends StatefulWidget {
@@ -40,22 +41,60 @@ class ApprovalSpbScreenState extends State<ApprovalSpbScreen> {
   }
 
   void _handleApproval(int index, List<Spb> spbList, BuildContext context) {
-    if (spbList[index].aprv1By == "") {
-      context.read<ApproveSpbBloc>().add(
-        ApproveSpbLoad(
-          idSpb: spbList[index].idSpb,
-          typeAprv: "approve1",
-          status: "approve",
-        ),
-      );
-    } else {
-      context.read<ApproveSpbBloc>().add(
-        ApproveSpbLoad(
-          idSpb: spbList[index].idSpb,
-          typeAprv: "approve2",
-          status: "approve",
-        ),
-      );
+    final credentialState = context.read<CredentialsBloc>().state;
+
+    if (spbList[index].aprv1By == "" && spbList[index].rejectBy == "") {
+      if (credentialState is CredentialsLoadSuccess) {
+        if (credentialState.credentials["APPROVALSPB1"] == "Y") {
+          context.read<ApproveSpbBloc>().add(
+            ApproveSpbLoad(
+              idSpb: spbList[index].idSpb,
+              typeAprv: "approve1",
+              status: "approve",
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Anda tidak memiliki permission untuk approve SPB"),
+            ),
+          );
+          return;
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Anda tidak memiliki permission untuk approve SPB"),
+          ),
+        );
+        return;
+      }
+    } else if (spbList[index].aprv2By == "" && spbList[index].reject2By == "") {
+      if (credentialState is CredentialsLoadSuccess) {
+        if (credentialState.credentials["APPROVALSPB2"] == "Y") {
+          context.read<ApproveSpbBloc>().add(
+            ApproveSpbLoad(
+              idSpb: spbList[index].idSpb,
+              typeAprv: "approve2",
+              status: "approve",
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Anda tidak memiliki permission untuk approve SPB"),
+            ),
+          );
+          return;
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Anda tidak memiliki permission untuk approve SPB"),
+          ),
+        );
+        return;
+      }
     }
 
     context.read<ApprovalSpbDetailBloc>().add(
@@ -73,22 +112,60 @@ class ApprovalSpbScreenState extends State<ApprovalSpbScreen> {
   }
 
   void _handleReject(int index, List<Spb> spbList, BuildContext context) {
-    if (spbList[index].aprv1By == "") {
-      context.read<ApproveSpbBloc>().add(
-        ApproveSpbLoad(
-          idSpb: spbList[index].idSpb,
-          typeAprv: "approve1",
-          status: "reject",
-        ),
-      );
-    } else {
-      context.read<ApproveSpbBloc>().add(
-        ApproveSpbLoad(
-          idSpb: spbList[index].idSpb,
-          typeAprv: "approve2",
-          status: "reject",
-        ),
-      );
+    final credentialState = context.read<CredentialsBloc>().state;
+
+    if (spbList[index].aprv1By == "" && spbList[index].rejectBy == "") {
+      if (credentialState is CredentialsLoadSuccess) {
+        if (credentialState.credentials["APPROVALSPB1"] == "Y") {
+          context.read<ApproveSpbBloc>().add(
+            ApproveSpbLoad(
+              idSpb: spbList[index].idSpb,
+              typeAprv: "approve1",
+              status: "reject",
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Anda tidak memiliki permission untuk approve SPB"),
+            ),
+          );
+          return;
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Anda tidak memiliki permission untuk approve SPB"),
+          ),
+        );
+        return;
+      }
+    } else if (spbList[index].aprv2By == "" && spbList[index].reject2By == "") {
+      if (credentialState is CredentialsLoadSuccess) {
+        if (credentialState.credentials["APPROVALSPB2"] == "Y") {
+          context.read<ApproveSpbBloc>().add(
+            ApproveSpbLoad(
+              idSpb: spbList[index].idSpb,
+              typeAprv: "approve2",
+              status: "reject",
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Anda tidak memiliki permission untuk approve SPB"),
+            ),
+          );
+          return;
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Anda tidak memiliki permission untuk approve SPB"),
+          ),
+        );
+        return;
+      }
     }
 
     context.read<ApprovalSpbDetailBloc>().add(

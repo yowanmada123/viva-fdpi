@@ -1,20 +1,15 @@
 // approval_screen.dart
-import 'package:fdpi_app/bloc/approval_spb/approval_spb_list/approval_spb_list_bloc.dart';
-import 'package:fdpi_app/bloc/approval_spb/approve_spb/approve_spb_bloc.dart';
 import 'package:fdpi_app/bloc/auth/authentication/authentication_bloc.dart';
-import 'package:fdpi_app/data/repository/approval_spb.dart';
-import 'package:fdpi_app/models/approval_spb/spb.dart';
+import 'package:fdpi_app/bloc/authorization/credentials/credentials_bloc.dart';
 import 'package:fdpi_app/models/errors/custom_exception.dart';
 import 'package:fdpi_app/presentation/widgets/approval/aprrove_bottom_navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/approval_spb/approval_spb_detail/approval_spb_detail_bloc.dart';
 import '../../bloc/approval_spk/approval_spk_list/approval_spk_list_bloc.dart';
 import '../../bloc/approval_spk/approve_spk/approve_spk_bloc.dart';
 import '../../data/repository/approval_spk.dart';
 import '../../models/approval_spk/approval_spk.dart';
-import '../widgets/approval/approval_spb_card.dart';
 import '../widgets/approval/approval_spk_card.dart';
 
 class ApprovalSpkScreen extends StatefulWidget {
@@ -30,7 +25,6 @@ class ApprovalSpkScreenState extends State<ApprovalSpkScreen> {
   final List<ScrollController> _scrollControllers = [];
   int _currentPage = 0;
   bool _isAnimated = false;
-  bool _initialDetailLoaded = false;
 
   @override
   void initState() {
@@ -49,24 +43,50 @@ class ApprovalSpkScreenState extends State<ApprovalSpkScreen> {
     List<ApprovalSpk> spkList,
     BuildContext context,
   ) {
+    final credentialState = context.read<CredentialsBloc>().state;
     if (spkList[index].aprv1By == "" && spkList[index].rejectBy == "") {
-      context.read<ApproveSpkBloc>().add(
-        ApproveSpkLoad(
-          idSpk: spkList[index].idSpk,
-          spkType: spkList[index].spkType,
-          typeAprv: "approve1",
-          status: "approve",
-        ),
-      );
-    } else {
-      context.read<ApproveSpkBloc>().add(
-        ApproveSpkLoad(
-          idSpk: spkList[index].idSpk,
-          spkType: spkList[index].spkType,
-          typeAprv: "approve2",
-          status: "approve",
-        ),
-      );
+      print("masuk approve 1");
+      if (credentialState is CredentialsLoadSuccess) {
+        print("masuk credential success 1 ${credentialState.credentials}");
+        if (credentialState.credentials["APPROVALSPK1"] == "Y") {
+          context.read<ApproveSpkBloc>().add(
+            ApproveSpkLoad(
+              idSpk: spkList[index].idSpk,
+              spkType: spkList[index].spkType,
+              typeAprv: "approve1",
+              status: "approve",
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Anda tidak memiliki permission untuk approve SPK"),
+            ),
+          );
+          return;
+        }
+      }
+    } else if (spkList[index].aprv2By == "" && spkList[index].reject2By == "") {
+      print("masuk approve 2");
+      if (credentialState is CredentialsLoadSuccess) {
+        if (credentialState.credentials["APPROVALSPK2"] == "Y") {
+          context.read<ApproveSpkBloc>().add(
+            ApproveSpkLoad(
+              idSpk: spkList[index].idSpk,
+              spkType: spkList[index].spkType,
+              typeAprv: "approve2",
+              status: "approve",
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Anda tidak memiliki permission untuk approve SPK"),
+            ),
+          );
+          return;
+        }
+      }
     }
 
     if (index >= spkList.length) return;
@@ -84,24 +104,47 @@ class ApprovalSpkScreenState extends State<ApprovalSpkScreen> {
     List<ApprovalSpk> spkList,
     BuildContext context,
   ) {
+    final credentialState = context.read<CredentialsBloc>().state;
     if (spkList[index].aprv1By == "" && spkList[index].rejectBy == "") {
-      context.read<ApproveSpkBloc>().add(
-        ApproveSpkLoad(
-          idSpk: spkList[index].idSpk,
-          spkType: spkList[index].spkType,
-          typeAprv: "approve1",
-          status: "reject",
-        ),
-      );
+      if (credentialState is CredentialsLoadSuccess) {
+        if (credentialState.credentials["APPROVALSPK1"] == "Y") {
+          context.read<ApproveSpkBloc>().add(
+            ApproveSpkLoad(
+              idSpk: spkList[index].idSpk,
+              spkType: spkList[index].spkType,
+              typeAprv: "approve1",
+              status: "reject",
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Anda tidak memiliki permission untuk approve SPK"),
+            ),
+          );
+          return;
+        }
+      }
     } else {
-      context.read<ApproveSpkBloc>().add(
-        ApproveSpkLoad(
-          idSpk: spkList[index].idSpk,
-          spkType: spkList[index].spkType,
-          typeAprv: "approve2",
-          status: "reject",
-        ),
-      );
+      if (credentialState is CredentialsLoadSuccess) {
+        if (credentialState.credentials["APPROVALSPK2"] == "Y") {
+          context.read<ApproveSpkBloc>().add(
+            ApproveSpkLoad(
+              idSpk: spkList[index].idSpk,
+              spkType: spkList[index].spkType,
+              typeAprv: "approve2",
+              status: "reject",
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Anda tidak memiliki permission untuk approve SPK"),
+            ),
+          );
+          return;
+        }
+      }
     }
 
     if (index >= spkList.length) return;
