@@ -1,9 +1,15 @@
 // approval_screen.dart
-import 'package:fdpi_app/presentation/widgets/approval/vertical_timeline.dart';
-import 'package:flutter/material.dart';
+import 'package:fdpi_app/bloc/approval_loan/approval_loan_list/approval_loan_list_bloc.dart';
+import 'package:fdpi_app/bloc/approval_loan/approve_loan/approve_loan_bloc.dart';
+import 'package:fdpi_app/bloc/auth/authentication/authentication_bloc.dart';
+import 'package:fdpi_app/bloc/authorization/credentials/credentials_bloc.dart';
+import 'package:fdpi_app/data/repository/approval_loan_repository.dart';
+import 'package:fdpi_app/models/approval_loan/approval_loan.dart';
+import 'package:fdpi_app/models/errors/custom_exception.dart';
 import 'package:fdpi_app/presentation/widgets/approval/approval_card.dart';
 import 'package:fdpi_app/presentation/widgets/approval/aprrove_bottom_navigator.dart';
-import 'dart:developer';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ApprovalScreen extends StatefulWidget {
   final String title;
@@ -16,15 +22,12 @@ class ApprovalScreen extends StatefulWidget {
 class ApprovalScreenState extends State<ApprovalScreen> {
   final PageController _pageController = PageController();
   final List<ScrollController> _scrollControllers = [];
-  final List<Map<String, dynamic>> _requests = [];
   int _currentPage = 0;
-  bool _isLoading = false;
   bool _isAnimated = false;
 
   @override
   void initState() {
     super.initState();
-    _loadInitialRequests();
     _initializeControllers();
   }
 
@@ -35,38 +38,92 @@ class ApprovalScreenState extends State<ApprovalScreen> {
     }
   }
 
-  Future<void> _loadInitialRequests() async {
-    setState(() => _isLoading = true);
-    // Simulate API call
-    await Future.delayed(Duration(seconds: 1));
+  void _handleApproval(
+    int index,
+    List<ApprovalLoan> loanList,
+    BuildContext context,
+  ) {
+    final credentialState = context.read<CredentialsBloc>().state;
+    if (loanList[index].userAprv1.trim() == "") {
+      if (credentialState is CredentialsLoadSuccess) {
+        if (credentialState.credentials["APPROVALBON1"] == "Y") {
+          context.read<ApproveLoanBloc>().add(
+            ApproveLoanLoad(
+              trId: loanList[index].trId,
+              typeAprv: "approve1",
+              status: "approve",
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Anda tidak memiliki permission untuk approve KasBon"),
+            ),
+          );
+          return;
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Anda tidak memiliki permission untuk approve KasBon"),
+          ),
+        );
+        return;
+      }
+    }
     setState(() {
-      _requests.addAll(_demoRequests);
-      _isLoading = false;
-    });
-  }
-
-  void _loadMoreRequests() {
-    log("masuk sini request $_isLoading");
-    if (_isLoading) return;
-    setState(() => _isLoading = true);
-
-    setState(() {
-      _requests.addAll([_demoRequests[0]]);
-      _isLoading = false;
-    });
-  }
-
-  void _handleApproval(int index) {
-    setState(() {
-      _requests.removeAt(index);
-      if (_currentPage >= _requests.length) {
-        _currentPage = _requests.length - 1;
+      loanList.removeAt(index);
+      if (_currentPage >= loanList.length) {
+        _currentPage = loanList.length - 1;
       }
     });
-    if (_currentPage == _requests.length - 1) {
-      log("masuk sini");
-      _loadMoreRequests();
+    if (_currentPage == loanList.length - 1) {
+      _pageController.animateToPage(
+        _currentPage,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
     }
+  }
+
+  void _handleReject(int index, List<ApprovalLoan> loanList, BuildContext context) {
+    final credentialState = context.read<CredentialsBloc>().state;
+
+    if (loanList[index].userAprv1.trim() == "") {
+      if (credentialState is CredentialsLoadSuccess) {
+        if (credentialState.credentials["APPROVALBON1"] == "Y") {
+          context.read<ApproveLoanBloc>().add(
+            ApproveLoanLoad(
+              trId: loanList[index].trId,
+              typeAprv: "approve1",
+              status: "reject",
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Anda tidak memiliki permission untuk approve SPB"),
+            ),
+          );
+          return;
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Anda tidak memiliki permission untuk approve SPB"),
+          ),
+        );
+        return;
+      }
+    }
+    if (index >= loanList.length) return;
+
+    setState(() {
+      loanList.removeAt(index);
+      if (_currentPage >= loanList.length) {
+        _currentPage = loanList.length - 1;
+      }
+    });
   }
 
   ScrollController _getController(int index) {
@@ -85,143 +142,148 @@ class ApprovalScreenState extends State<ApprovalScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
-      body: SafeArea(
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (notification) {
-            return true;
-          },
-          child: PageView.builder(
-            controller: _pageController,
-            scrollDirection: Axis.vertical,
-            itemCount: _requests.length + (_isLoading ? 1 : 0),
-            onPageChanged: (index) {
-              setState(() => _currentPage = index);
-              if (_currentPage >= _requests.length - 1) {
-                log("masuk sini");
-                _loadMoreRequests();
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ApprovalLoanListBloc>(
+          create:
+              (context) => ApprovalLoanListBloc(
+                approvalLoanRepository: context.read<ApprovalLoanRepository>(),
+              )..add(
+                GetLoanListEvent(
+                  vendorId: "",
+                  approvalType: "",
+                  approvalStatus: "O",
+                ),
+              ),
+        ),
+        BlocProvider(
+          create:
+              (context) => ApproveLoanBloc(
+                approvalLoanRepository: context.read<ApprovalLoanRepository>(),
+              ),
+        ),
+      ],
+      child: Scaffold(
+        appBar: AppBar(title: Text(widget.title)),
+        body: SafeArea(
+          child: BlocConsumer<ApprovalLoanListBloc, ApprovalLoanListState>(
+              listener: (context, state) {
+                if (state is ApprovalLoanListLoadFailure) {
+                  if (state.error is UnauthorizedException) {
+                    context.read<AuthenticationBloc>().add(
+                      SetAuthenticationStatus(isAuthenticated: false),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "Session Anda telah habis. Silakan login kembali",
+                        ),
+                        duration: Duration(seconds: 5),
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        backgroundColor: Color(0xffEB5757),
+                      ),
+                    );
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    return;
+                  }
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(state.message)));
+                }
+              },
+              builder: (context, state) {
+                if (state is ApprovalLoanListInitial ||
+                    state is ApprovalLoanListLoading) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (state is ApprovalLoanListLoadFailure) {
+                  return Center(child: Text(state.message));
+                }
+                if (state is ApprovalLoanListLoadSuccess) {
+                  return NotificationListener<ScrollNotification>(
+                    onNotification: (notification) {
+                      return true;
+                    },
+                    child: PageView.builder(
+                    controller: _pageController,
+                    scrollDirection: Axis.vertical,
+                    itemCount: state.loanList.length,
+                    onPageChanged: (index) {
+                      setState(() => _currentPage = index);
+                    },
+                    itemBuilder: (context, index) {
+                      if (index >= state.loanList.length) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      return ApprovalCard(
+                        requests: state.loanList[index],
+                        scrollController: _getController(index),
+                        onReachBottom: () async {
+                          int index = _currentPage;
+
+                          if (_isAnimated) return;
+                          setState(() {
+                            _isAnimated = true;
+                          });
+
+                          await _pageController.animateToPage(
+                              index + 1,
+                              duration: Duration(milliseconds: 300),
+                              curve: Curves.easeOut,
+                            );
+
+                          setState(() {
+                            _isAnimated = false;
+                          });
+                        },
+                        onReachTop: () async {
+                          int index = _currentPage;
+
+                          if (_isAnimated) return;
+
+                          setState(() {
+                            _isAnimated = true;
+                          });
+
+                          await _pageController.animateToPage(
+                              index - 1,
+                              duration: Duration(milliseconds: 300),
+                              curve: Curves.easeOut,
+                            );
+
+                          setState(() {
+                            _isAnimated = false;
+                          });
+                        },
+                      );
+                    },
+                  )
+                );
               }
-            },
-            itemBuilder: (context, index) {
-              if (index >= _requests.length) {
-                return Center(child: CircularProgressIndicator());
-              }
-              return ApprovalCard(
-                requests: _requests[index],
-                scrollController: _getController(index),
-                onReachBottom: () async {
-                  int index = _currentPage;
-                  log("capai bawah degan state animated $_isAnimated");
-
-                  if (_isAnimated) return;
-                  setState(() {
-                    _isAnimated = true;
-                  });
-
-                  await _pageController.animateToPage(
-                    index + 1,
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.easeOut,
-                  );
-
-                  setState(() {
-                    _isAnimated = false;
-                  });
-                },
-                onReachTop: () async {
-                  int index = _currentPage;
-                  log("capai atas degan state animated $_isAnimated");
-
-                  if (_isAnimated) return;
-
-                  setState(() {
-                    _isAnimated = true;
-                  });
-
-                  await _pageController.animateToPage(
-                    index - 1,
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.easeOut,
-                  );
-
-                  setState(() {
-                    _isAnimated = false;
-                  });
-                },
-              );
+              return Container();
             },
           ),
         ),
-      ),
-      bottomNavigationBar: ApprovalBottomBar(
-        isLoading: false,
-        onApprove: () => _handleApproval(_currentPage),
-        onReject: () {
-          // Handle reject logic
-        },
+        bottomNavigationBar: BlocBuilder<
+          ApprovalLoanListBloc,
+          ApprovalLoanListState
+        >(
+          builder: (context, state) {
+            if (state is! ApprovalLoanListLoadSuccess) {
+              return SizedBox.shrink();
+            }
+
+            return ApprovalBottomBar(
+              isLoading: false,
+              onApprove: () => _handleApproval(_currentPage, state.loanList, context),
+              onReject: () => _handleReject(_currentPage, state.loanList, context),
+            );
+          },
+        ),
       ),
     );
   }
-
-  final List<Map<String, dynamic>> _demoRequests = [
-    {
-      "date": "12 Juni 2024",
-      "title": "Belanja Kebutuhan IT",
-      "requested_by": "Didik Prasetyo",
-      "step": [
-        TimelineStep(
-          header: "Diajukan",
-          detail: "Didik Prasetyo (Manager IT), 12 Juni 2024",
-          status: TimelineStatus.approved,
-        ),
-        TimelineStep(
-          header: "Persetujuan Pertama",
-          detail: "Sutrisno Slamet (Direksi), 14 Juni 2024",
-          status: TimelineStatus.approved,
-        ),
-        TimelineStep(
-          header: "Persetujuan Kedua",
-          detail: "Joko Sutisno (Direksi 2), 14 Juni 2024",
-          status: TimelineStatus.waiting,
-        ),
-      ],
-      "request_detail": [
-        '1 Unit PC, Intel Ultra Core 5 122H, 32 GB RAM, 1TB SSD',
-        '1 Unit PC, Intel Ultra Core 5 122H, 32 GB RAM, 1TB SSD',
-        '1 Unit PC, Intel Ultra Core 5 122H, 32 GB RAM, 1TB SSD',
-        '1 Unit PC, Intel Ultra Core 5 122H, 32 GB RAM, 1TB SSD',
-        '1 Unit PC, Intel Ultra Core 5 122H, 32 GB RAM, 1TB SSD',
-      ],
-    },
-    {
-      "date": "12 Juni 2024",
-      "title": "Belanja Kebutuhan IT 2",
-      "requested_by": "Didik Prasetyo",
-      "step": [
-        TimelineStep(
-          header: "Diajukan",
-          detail: "Didik Prasetyo (Manager IT), 12 Juni 2024",
-          status: TimelineStatus.approved,
-        ),
-        TimelineStep(
-          header: "Persetujuan Pertama",
-          detail: "Sutrisno Slamet (Direksi), 14 Juni 2024",
-          status: TimelineStatus.approved,
-        ),
-        TimelineStep(
-          header: "Persetujuan Kedua",
-          detail: "Joko Sutisno (Direksi 2), 14 Juni 2024",
-          status: TimelineStatus.waiting,
-        ),
-      ],
-      "request_detail": [
-        '1 Unit PC, Intel Ultra Core 5 122H, 32 GB RAM, 1TB SSD',
-        '1 Unit PC, Intel Ultra Core 5 122H, 32 GB RAM, 1TB SSD',
-        '1 Unit PC, Intel Ultra Core 5 122H, 32 GB RAM, 1TB SSD',
-        '1 Unit PC, Intel Ultra Core 5 122H, 32 GB RAM, 1TB SSD',
-        '1 Unit PC, Intel Ultra Core 5 122H, 32 GB RAM, 1TB SSD',
-      ],
-    },
-  ];
 }
