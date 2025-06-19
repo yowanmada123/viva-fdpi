@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:fdpi_app/data/data_providers/rest_api/approval/approval_loan_rest.dart';
 import 'package:fdpi_app/data/data_providers/rest_api/approval/approval_spb_rest.dart';
+import 'package:fdpi_app/data/repository/approval_loan_repository.dart';
 import 'package:fdpi_app/data/repository/approval_spb.dart';
 import 'package:fdpi_app/data/repository/approval_spk.dart';
 import 'package:flutter/foundation.dart';
@@ -8,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'bloc/auth/authentication/authentication_bloc.dart';
 import 'bloc/authorization/credentials/credentials_bloc.dart';
@@ -35,6 +38,7 @@ import 'utils/interceptors/dio_request_token_interceptor.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('id_ID', null);
 
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory:
@@ -62,6 +66,7 @@ void main() async {
   final loanRest = LoanRest(dioFdpiClient);
   final approvalSpbRest = ApprovalSpbRest(dioFdpiClient);
   final approvalSpkRest = ApprovalSpkRest(dioFdpiClient);
+  final approvalLoanRest = ApprovalLoanRest(dioFdpiClient);
 
   final authRepository = AuthRepository(
     authRest: authRest,
@@ -81,6 +86,9 @@ void main() async {
   final approvalSpkRepository = ApprovalSpkRepository(
     approvalSpkRest: approvalSpkRest,
   );
+  final approvalLoanRepository = ApprovalLoanRepository(
+    approvalLoanRest: approvalLoanRest,
+  );
 
   runApp(
     MultiRepositoryProvider(
@@ -94,6 +102,7 @@ void main() async {
         RepositoryProvider.value(value: loanRepostitory),
         RepositoryProvider.value(value: approvalSpbRepository),
         RepositoryProvider.value(value: approvalSpkRepository),
+        RepositoryProvider.value(value: approvalLoanRepository),
       ],
       child: MultiBlocProvider(
         providers: [

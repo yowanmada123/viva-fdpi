@@ -1,12 +1,14 @@
 // approval_card.dart
+import 'package:fdpi_app/bloc/approval_loan/approval_loan_list/approval_loan_list_bloc.dart';
+import 'package:fdpi_app/models/approval_loan/approval_loan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'attachment_list.dart';
-import 'request_detail_list.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'vertical_timeline.dart';
 
 class ApprovalCard extends StatefulWidget {
-  final Map<String, dynamic> requests;
+  final ApprovalLoan requests;
   final ScrollController scrollController;
   final VoidCallback onReachBottom;
   final VoidCallback onReachTop;
@@ -58,23 +60,46 @@ class _ApprovalCardState extends State<ApprovalCard> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(8.w),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildSectionTitle(widget.requests['title']),
-              _buildInfoRow("Tanggal Pengajuan", widget.requests['date']),
-              _buildInfoRow("Diajukan oleh", widget.requests['requested_by']),
-              _buildSection(
-                "Detail Pengajuan",
-                RequestDetailList(details: widget.requests['request_detail']),
-              ),
-              _buildSection("Attachments", AttachmentList()),
-              _buildSection(
-                "Proses Pengajuan",
-                TimelineProgress(steps: widget.requests['step']),
-              ),
-              SizedBox(height: 40.w),
-            ],
+          child: BlocBuilder<ApprovalLoanListBloc, ApprovalLoanListState>(
+            builder: (context, state) {
+              if (state is ApprovalLoanListLoading) {
+                return Center(child: CircularProgressIndicator());
+              } else if (state is ApprovalLoanListLoadFailure) {
+                return Center(child: Text(state.message));
+              } else if (state is ApprovalLoanListLoadSuccess) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildSectionTitle(widget.requests.office),
+                    _buildInfoRow(
+                      "Tanggal Pengajuan",
+                      DateFormat(
+                        "d MMMM yyyy",
+                        'id_ID',
+                      ).format(DateTime.parse(widget.requests.dtKb)),
+                    ),
+                    _buildInfoRow("Diajukan oleh", widget.requests.vendorName),
+                    _buildSection(
+                      "Proses Pengajuan",
+                      TimelineProgress(
+                        steps: [
+                          TimelineStep(
+                            header: "Pengajuan",
+                            detail: widget.requests.wCreatedBy,
+                          ),
+                          TimelineStep(
+                            header: "Approve 1",
+                            detail: widget.requests.wAprv1By,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 40.w),
+                  ],
+                );
+              }
+              return Center(child: Text("No data available"));
+            },
           ),
         ),
       ),
