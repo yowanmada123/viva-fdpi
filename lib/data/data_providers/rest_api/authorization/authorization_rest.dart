@@ -19,9 +19,9 @@ class AuthorizationRest {
     try {
       dio.options.headers['requiresToken'] = true;
 
-      log('Request to https://v2.kencana.org/api/viva/mobile/getMenu (POST)');
+      log('Request to https://v2.kencana.org/api/mobile/getMenu (POST)');
       final data = {"entity_id": entityId, "appl_id": applId};
-      final response = await dio.post("api/viva/mobile/getMenu", data: data);
+      final response = await dio.post("api/mobile/getMenu", data: data);
 
       if (response.statusCode == 200) {
         log('Response body: ${response.data}');
@@ -54,10 +54,10 @@ class AuthorizationRest {
       dio.options.headers['requiresToken'] = true;
 
       log(
-        'Request to https://v2.kencana.org/api/viva/mobile/getEnvConf (POST)',
+        'Request to https://v2.kencana.org/api/mobile/getEnvConf (POST)',
       );
       final data = {"entity_id": entityId, "appl_id": applId};
-      final response = await dio.post("api/viva/mobile/getEnvConf", data: data);
+      final response = await dio.post("api/mobile/getEnvConf", data: data);
 
       if (response.statusCode == 200) {
         log('Response body: ${response.data}');
