@@ -2,8 +2,8 @@
 import 'package:fdpi_app/models/approval_spk/approval_spk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'vertical_timeline.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class ApprovalSpkCard extends StatefulWidget {
   final ApprovalSpk requests;
@@ -24,6 +24,12 @@ class ApprovalSpkCard extends StatefulWidget {
 }
 
 class _ApprovalSpkCardState extends State<ApprovalSpkCard> {
+  String currencyFormat(String value) {
+    final number = double.tryParse(value) ?? 0;
+    final formatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
+    return formatter.format(number);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -87,24 +93,71 @@ class _ApprovalSpkCardState extends State<ApprovalSpkCard> {
                 style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 16.w),
+              // Text(
+              //   "Remark QC",
+              //   style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+              // ),
+              // SizedBox(height: 8.w),
+              // HtmlWidget(
+              //   widget.requests.remarkQc,
+              //   textStyle: TextStyle(fontSize: 14.sp),
+              // ),
+              // SizedBox(height: 16.w),
+              // Text(
+              //   "Remark Approval",
+              //   style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+              // ),
+              // SizedBox(height: 8.w),
+              // HtmlWidget(
+              //   widget.requests.remarks,
+              //   textStyle: TextStyle(fontSize: 14.sp),
+              // ),
+              // SizedBox(height: 16.w),
               Text(
-                "Remark QC",
+                "Article",
                 style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8.w),
-              HtmlWidget(
-                widget.requests.remarkQc,
-                textStyle: TextStyle(fontSize: 14.sp),
-              ),
-              SizedBox(height: 16.w),
-              Text(
-                "Remark Approval",
-                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8.w),
-              HtmlWidget(
-                widget.requests.remarks,
-                textStyle: TextStyle(fontSize: 14.sp),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: widget.requests.article.length,
+                itemBuilder: (context, index) {
+                  final article = widget.requests.article[index];
+                  final String description = article.description;
+                  final String qty = double.tryParse(article.qty)?.toStringAsFixed(0) ?? '0';
+                  final String uom = article.uom;
+                  final String price = currencyFormat(article.hargaSatuan);
+
+                  return Card(
+                    elevation: 2,
+                    color: Theme.of(context).colorScheme.surfaceBright,
+                    margin: EdgeInsets.symmetric(vertical: 4.w),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    child: Padding(
+                      padding: EdgeInsets.all(8.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            description,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 4.w),
+                          Text(
+                            "Jumlah: $qty",
+                            style: TextStyle(fontSize: 14.sp),
+                          ),
+                          Text(
+                            "Harga Satuan: $price/$uom",
+                            style: TextStyle(fontSize: 14.sp),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
               SizedBox(height: 16.w),
               Text(
