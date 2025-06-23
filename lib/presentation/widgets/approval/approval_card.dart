@@ -42,6 +42,13 @@ class _ApprovalCardState extends State<ApprovalCard> {
     }
   }
 
+  String formatCurrency(dynamic amount) {
+    final number = double.tryParse(amount.toString()) ?? 0;
+    final formatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
+    return formatter.format(number);
+  }
+
+
   @override
   void dispose() {
     widget.scrollController.removeListener(_handleScroll);
@@ -79,6 +86,8 @@ class _ApprovalCardState extends State<ApprovalCard> {
                       ).format(DateTime.parse(widget.requests.dtKb)),
                     ),
                     _buildInfoRow("Diajukan oleh", widget.requests.vendorName),
+                    _buildInfoRow("Jumlah KasBon", formatCurrency(widget.requests.kbAmt)),
+                    _buildInfoRow("Remark", widget.requests.remark),
                     _buildSection(
                       "Proses Pengajuan",
                       TimelineProgress(
