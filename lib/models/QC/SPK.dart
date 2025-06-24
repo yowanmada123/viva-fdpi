@@ -1,5 +1,21 @@
 import 'dart:convert';
 
+class SPKGroupedByClusterHome {
+  final String idCluster;
+  final String clusterName;
+  final String idHouse;
+  final String houseName;
+  final List<SPK> spks;
+
+  SPKGroupedByClusterHome({
+    required this.idCluster,
+    required this.clusterName,
+    required this.idHouse,
+    required this.houseName,
+    required this.spks,
+  });
+}
+
 class SPK {
   final String idSite;
   final String siteName;

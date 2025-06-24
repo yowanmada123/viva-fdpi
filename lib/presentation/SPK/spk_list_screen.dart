@@ -16,8 +16,8 @@ import '../../models/fdpi/house_item_spk.dart';
 import '../../models/fdpi/residence.dart';
 import '../../models/fdpi/site.dart';
 import '../../models/master/vendor.dart';
+import '../widgets/group_spk_list.dart';
 import 'spk_checklist_screen.dart';
-// import 'spk_progress_list_screen.dart';
 
 class SpkListScreen extends StatelessWidget {
   final String title;
@@ -99,490 +99,273 @@ class _SpkListBodyState extends State<_SpkListBody> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(16.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.w),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text('Vendor'),
-                        SizedBox(width: 2.w),
-                        Text('*', style: TextStyle(color: Colors.red)),
-                      ],
-                    ),
-                    BlocBuilder<VendorHasSpkBloc, VendorHasSpkState>(
-                      builder: (context, state) {
-                        return DropdownWithClear<String>(
-                          value: _vendorId,
-                          items:
-                              state is VendorHasSpkLoadedSuccess
-                                  ? state.vendors.map((Vendor item) {
-                                    return DropdownMenuItem<String>(
-                                      value: item.vendorId,
-                                      child: Text(item.vendorName),
-                                    );
-                                  }).toList()
-                                  : [],
-                          hintText: 'Pilih Vendor',
-                          onChanged: (value) {
-                            setState(() {
-                              _vendorId = value;
-                            });
-                          },
-                          // dropdownWidth: double.infinity,
-                        );
-                      },
-                    ),
-                    SizedBox(height: 16.w),
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(16.w),
+            child: Column(
+              children: [
+                // Filter form section without fixed height
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 16.w,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Vendor dropdown
+                      Row(
+                        children: [
+                          Text('Vendor'),
+                          SizedBox(width: 2.w),
+                          Text('*', style: TextStyle(color: Colors.red)),
+                        ],
+                      ),
+                      BlocBuilder<VendorHasSpkBloc, VendorHasSpkState>(
+                        builder: (context, state) {
+                          return DropdownWithClear<String>(
+                            value: _vendorId,
+                            items:
+                                state is VendorHasSpkLoadedSuccess
+                                    ? state.vendors.map((Vendor item) {
+                                      return DropdownMenuItem<String>(
+                                        value: item.vendorId,
+                                        child: Text(item.vendorName),
+                                      );
+                                    }).toList()
+                                    : [],
+                            hintText: 'Pilih Vendor',
+                            onChanged: (value) {
+                              setState(() {
+                                _vendorId = value;
+                              });
+                            },
+                          );
+                        },
+                      ),
+                      SizedBox(height: 16.w),
 
-                    Row(
-                      children: [
-                        Text('Site'),
-                        SizedBox(width: 2.w),
-                        Text('*', style: TextStyle(color: Colors.red)),
-                      ],
-                    ),
-                    BlocBuilder<SiteBloc, SiteState>(
-                      builder: (context, state) {
-                        return DropdownWithClear<String>(
-                          value: _site,
-                          items:
-                              state is SiteLoadedSuccess
-                                  ? state.sites.map((Site item) {
-                                    return DropdownMenuItem<String>(
-                                      value: item.idSite,
-                                      child: Text(item.siteName),
-                                    );
-                                  }).toList()
-                                  : [],
-                          hintText: 'Pilih Site',
-                          onChanged: (value) {
-                            setState(() {
-                              _site = value;
-                              _cluster = null;
-                              _houseId = null;
-                            });
+                      // Site dropdown
+                      Row(
+                        children: [
+                          Text('Site'),
+                          SizedBox(width: 2.w),
+                          Text('*', style: TextStyle(color: Colors.red)),
+                        ],
+                      ),
+                      BlocBuilder<SiteBloc, SiteState>(
+                        builder: (context, state) {
+                          return DropdownWithClear<String>(
+                            value: _site,
+                            items:
+                                state is SiteLoadedSuccess
+                                    ? state.sites.map((Site item) {
+                                      return DropdownMenuItem<String>(
+                                        value: item.idSite,
+                                        child: Text(item.siteName),
+                                      );
+                                    }).toList()
+                                    : [],
+                            hintText: 'Pilih Site',
+                            onChanged: (value) {
+                              setState(() {
+                                _site = value;
+                                _cluster = null;
+                                _houseId = null;
+                              });
 
-                            if (value != null) {
-                              context.read<ResidenceBloc>().add(
-                                LoadResidence("", "", value, ""),
-                              );
-                            } else {
-                              context.read<ResidenceBloc>().add(
-                                ResetResidenceEvent(),
-                              );
-                              context.read<HouseItemWithSpkBloc>().add(
-                                ResetHouseItemWithSpkEvent(),
-                              );
-                            }
-                          },
-                        );
-                      },
-                    ),
-                    SizedBox(height: 16.w),
+                              if (value != null) {
+                                context.read<ResidenceBloc>().add(
+                                  LoadResidence("", "", value, ""),
+                                );
+                              } else {
+                                context.read<ResidenceBloc>().add(
+                                  ResetResidenceEvent(),
+                                );
+                                context.read<HouseItemWithSpkBloc>().add(
+                                  ResetHouseItemWithSpkEvent(),
+                                );
+                              }
+                            },
+                          );
+                        },
+                      ),
+                      SizedBox(height: 16.w),
 
-                    Row(children: [Text('Cluster'), SizedBox(width: 2.w)]),
-                    BlocBuilder<ResidenceBloc, ResidenceState>(
-                      builder: (context, state) {
-                        return DropdownWithClear<String>(
-                          value: _cluster,
-                          items:
-                              state is ResidenceLoadSuccess
-                                  ? state.residences.map((Residence item) {
-                                    return DropdownMenuItem<String>(
-                                      value: item.idCluster,
-                                      child: Text(item.clusterName),
-                                    );
-                                  }).toList()
-                                  : [],
-                          hintText: 'Pilih Cluster',
-                          onChanged: (value) {
-                            setState(() {
-                              _cluster = value;
-                              _houseId = null;
-                            });
+                      // Cluster dropdown
+                      Row(children: [Text('Cluster'), SizedBox(width: 2.w)]),
+                      BlocBuilder<ResidenceBloc, ResidenceState>(
+                        builder: (context, state) {
+                          return DropdownWithClear<String>(
+                            value: _cluster,
+                            items:
+                                state is ResidenceLoadSuccess
+                                    ? state.residences.map((Residence item) {
+                                      return DropdownMenuItem<String>(
+                                        value: item.idCluster,
+                                        child: Text(item.clusterName),
+                                      );
+                                    }).toList()
+                                    : [],
+                            hintText: 'Pilih Cluster',
+                            onChanged: (value) {
+                              setState(() {
+                                _cluster = value;
+                                _houseId = null;
+                              });
 
-                            if (value != null) {
-                              context.read<HouseItemWithSpkBloc>().add(
-                                GetHouseItemWithSpkEvent(
-                                  idSite: _site!,
-                                  idCluster: value,
-                                  docType: "SPK",
-                                  activeFlag: "Y",
+                              if (value != null) {
+                                context.read<HouseItemWithSpkBloc>().add(
+                                  GetHouseItemWithSpkEvent(
+                                    idSite: _site!,
+                                    idCluster: value,
+                                    docType: "SPK",
+                                    activeFlag: "Y",
+                                  ),
+                                );
+                              } else {
+                                context.read<HouseItemWithSpkBloc>().add(
+                                  ResetHouseItemWithSpkEvent(),
+                                );
+                              }
+                            },
+                          );
+                        },
+                      ),
+                      SizedBox(height: 16.w),
+
+                      // House dropdown
+                      Row(children: [Text('House Item'), SizedBox(width: 2.w)]),
+                      BlocConsumer<HouseItemWithSpkBloc, HouseItemWithSpkState>(
+                        listener: (context, state) {
+                          if (state is HouseItemWithSpkLoaded) {
+                            if (state.items.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Data house item not found'),
+                                  backgroundColor: Colors.red,
+                                  duration: const Duration(seconds: 2),
                                 ),
                               );
-                            } else {
-                              context.read<HouseItemWithSpkBloc>().add(
-                                ResetHouseItemWithSpkEvent(),
-                              );
                             }
-                          },
-                          // dropdownWidth: double.infinity,
-                        );
-                      },
-                    ),
-                    SizedBox(height: 16.w),
-                    Row(children: [Text('House Item'), SizedBox(width: 2.w)]),
-                    BlocConsumer<HouseItemWithSpkBloc, HouseItemWithSpkState>(
-                      listener: (context, state) {
-                        if (state is HouseItemWithSpkLoaded) {
-                          if (state.items.isEmpty) {
+                          }
+                        },
+                        builder: (context, state) {
+                          return DropdownWithClear<String>(
+                            value: _houseId,
+                            items:
+                                state is HouseItemWithSpkLoaded
+                                    ? state.items.map((HouseItemSpk item) {
+                                      return DropdownMenuItem<String>(
+                                        value: item.idHouse,
+                                        child: Text(item.houseName),
+                                      );
+                                    }).toList()
+                                    : [],
+                            hintText: 'Pilih Rumah',
+                            onChanged: (value) {
+                              setState(() {
+                                _houseId = value;
+                              });
+                            },
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      FilledButton(
+                        style: FilledButton.styleFrom(
+                          backgroundColor: const Color(0xff1C3FAA),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () {
+                          if (_site == null && _vendorId == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Data house item not found'),
-                                backgroundColor: Colors.red,
-                                duration: const Duration(seconds: 2),
+                              const SnackBar(
+                                content: Text(
+                                  "Silakan pilih site atau vendor terlebih dahulu.",
+                                ),
                               ),
                             );
+                            return;
                           }
-                        }
-                      },
-                      builder: (context, state) {
-                        return DropdownWithClear<String>(
-                          value: _houseId,
-                          items:
-                              state is HouseItemWithSpkLoaded
-                                  ? state.items.map((HouseItemSpk item) {
-                                    return DropdownMenuItem<String>(
-                                      value: item.idHouse,
-                                      child: Text(item.houseName),
-                                    );
-                                  }).toList()
-                                  : [],
-                          hintText: 'Pilih Rumah',
-                          onChanged: (value) {
-                            setState(() {
-                              _houseId = value;
-                            });
-                          },
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    FilledButton(
-                      style: FilledButton.styleFrom(
-                        backgroundColor: const Color(0xff1C3FAA),
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      onPressed: () {
-                        if (_site == null && _vendorId == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                "Silakan pilih site atau vendor terlebih dahulu.",
-                              ),
+
+                          context.read<SpkListBloc>().add(
+                            GetSPKList(
+                              idVendor: _vendorId ?? '',
+                              idSite: _site ?? '',
+                              idCluster: _cluster ?? '',
+                              idHouse: _houseId ?? '',
                             ),
                           );
-                          return;
-                        }
-
-                        context.read<SpkListBloc>().add(
-                          GetSPKList(
-                            idVendor: _vendorId ?? '',
-                            idSite: _site ?? '',
-                            idCluster: _cluster ?? '',
-                            idHouse: _houseId ?? '',
+                        },
+                        child: Container(
+                          width: double.maxFinite,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
                           ),
-                        );
-                      },
-                      child: Container(
-                        width: double.maxFinite,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Search',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                              fontFamily: 'Poppins',
+                          child: Center(
+                            child: Text(
+                              'Search',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                                fontFamily: 'Poppins',
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: BlocConsumer<SpkListBloc, SpkListState>(
-                  listener:
-                      (context, state) => {
-                        if (state is SpkListLoadFailure)
-                          {
-                            if (state.error is UnauthorizedException)
-                              {
-                                context.read<AuthenticationBloc>().add(
-                                  SetAuthenticationStatus(
-                                    isAuthenticated: false,
-                                  ),
-                                ),
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      "Session Anda telah habis. Silakan login kembali",
-                                    ),
-                                    duration: Duration(seconds: 5),
-                                  ),
-                                ),
-                              },
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(state.message)),
+                SizedBox(height: 8.w),
+                // Results section with flexible scrolling
+                BlocConsumer<SpkListBloc, SpkListState>(
+                  listener: (context, state) {
+                    if (state is SpkListLoadFailure) {
+                      if (state.error is UnauthorizedException) {
+                        context.read<AuthenticationBloc>().add(
+                          SetAuthenticationStatus(isAuthenticated: false),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "Session Anda telah habis. Silakan login kembali",
                             ),
-                          },
-                      },
+                            duration: const Duration(seconds: 5),
+                          ),
+                        );
+                      }
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(state.message)));
+                    }
+                  },
                   builder: (context, state) {
                     if (state is SpkListLoadSuccess) {
-                      return Table(
-                        columnWidths: {
-                          0: const FixedColumnWidth(100),
-                          1: const FixedColumnWidth(100),
-                          2: const FixedColumnWidth(120),
-                          3: const FixedColumnWidth(120),
-                          4: const FixedColumnWidth(150),
-                          5: const FixedColumnWidth(100),
-                        },
-                        children: [
-                          TableRow(
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 236, 236, 236),
-                            ),
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.all(8.w),
-                                child: Text(
-                                  'Action',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-
-                              Padding(
-                                padding: EdgeInsets.all(8.w),
-                                child: Text(
-                                  'Cluster',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(8.w),
-                                child: Text(
-                                  'House Item',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(8.w),
-                                child: Text(
-                                  'Vendor',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(8.w),
-                                child: Text(
-                                  'TIPE SPK',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(8.w),
-                                child: Text(
-                                  'SPK ID',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ],
-                          ),
-                          ...List.generate(state.spkList.length, (index) {
-                            return TableRow(
-                              key: ValueKey(state.spkList[index].idSPK),
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(
-                                    color: Colors.grey,
-                                    width: 1,
-                                  ),
-                                ),
-                                color:
-                                    index % 2 == 0
-                                        ? const Color.fromARGB(
-                                          255,
-                                          255,
-                                          255,
-                                          255,
-                                        )
-                                        : const Color.fromARGB(
-                                          255,
-                                          254,
-                                          255,
-                                          255,
-                                        ),
-                              ),
-                              children: [
-                                TableCell(
-                                  verticalAlignment:
-                                      TableCellVerticalAlignment.middle,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 8.w,
-                                      vertical: 2.w,
-                                    ),
-                                    child: IconButton(
-                                      onPressed: () {
-                                        navigateToSPKProgressListScreen(
-                                          context,
-                                          state.spkList[index].qcTransId,
-                                        );
-                                      },
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Colors.blue,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                TableCell(
-                                  verticalAlignment:
-                                      TableCellVerticalAlignment.middle,
-                                  child: GestureDetector(
-                                    onTap:
-                                        () => navigateToSPKProgressListScreen(
-                                          context,
-                                          state.spkList[index].qcTransId,
-                                        ),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 8.w,
-                                        vertical: 2.w,
-                                      ),
-                                      child: Text(
-                                        state.spkList[index].clusterName,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                TableCell(
-                                  verticalAlignment:
-                                      TableCellVerticalAlignment.middle,
-                                  child: GestureDetector(
-                                    onTap:
-                                        () => navigateToSPKProgressListScreen(
-                                          context,
-                                          state.spkList[index].qcTransId,
-                                        ),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 8.w,
-                                        vertical: 2.w,
-                                      ),
-                                      child: Text(
-                                        state.spkList[index].houseName,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                TableCell(
-                                  verticalAlignment:
-                                      TableCellVerticalAlignment.middle,
-                                  child: GestureDetector(
-                                    onTap:
-                                        () => navigateToSPKProgressListScreen(
-                                          context,
-                                          state.spkList[index].qcTransId,
-                                        ),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 8.w,
-                                        vertical: 2.w,
-                                      ),
-                                      child: Text(
-                                        state.spkList[index].vendorName,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                TableCell(
-                                  verticalAlignment:
-                                      TableCellVerticalAlignment.middle,
-                                  child: GestureDetector(
-                                    onTap:
-                                        () => navigateToSPKProgressListScreen(
-                                          context,
-                                          state.spkList[index].qcTransId,
-                                        ),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 8.w,
-                                        vertical: 2.w,
-                                      ),
-                                      child: Text(
-                                        state.spkList[index].spkLabel,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                TableCell(
-                                  verticalAlignment:
-                                      TableCellVerticalAlignment.middle,
-                                  child: GestureDetector(
-                                    onTap:
-                                        () => navigateToSPKProgressListScreen(
-                                          context,
-                                          state.spkList[index].qcTransId,
-                                        ),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 8.w,
-                                        vertical: 2.w,
-                                      ),
-                                      child: Text(
-                                        state.spkList[index].idSPK,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            );
-                          }),
-                        ],
-                      );
+                      return GroupedSPKList(groupedSPK: state.spkList);
+                    } else if (state is SpkListLoading) {
+                      return Center(child: CircularProgressIndicator());
                     }
-                    return Text(
-                      'Mohon terlebih dahulu memilih site dan cluster',
+                    return const Center(
+                      child: Text(
+                        'Mohon terlebih dahulu memilih site dan cluster',
+                      ),
                     );
                   },
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
