@@ -50,7 +50,7 @@ class ApprovalPORest {
       http.options.headers['requiresToken'] = true;
       log('Request to https://api-fpi.kencana.org/api/fpi/prpo/approve (POST)');
 
-      final body = {"tr_id ": poId, "tr_type": "PO", "type_aprv": typeAprv};
+      final body = {"tr_id": poId, "tr_type": "PO", "type_aprv": typeAprv};
 
       final response = await http.post("api/fpi/prpo/approve", data: body);
 
@@ -76,7 +76,7 @@ class ApprovalPORest {
       http.options.headers['requiresToken'] = true;
       log('Request to https://api-fpi.kencana.org/api/fpi/prpo/cancel (POST)');
 
-      final body = {"tr_id ": poId, "tr_type": "PO", "type_aprv": typeAprv};
+      final body = {"tr_id": poId, "tr_type": "PO", "type_aprv": typeAprv};
 
       final response = await http.post("api/fpi/prpo/cancel", data: body);
 
