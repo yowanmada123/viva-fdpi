@@ -88,6 +88,7 @@ class _ApprovalCardState extends State<ApprovalCard> {
                     _buildInfoRow("Diajukan oleh", widget.requests.vendorName),
                     _buildInfoRow("Jumlah KasBon", formatCurrency(widget.requests.kbAmt)),
                     _buildInfoRow("Remark", widget.requests.remark),
+                    _buildInfoRow("Credit Limit", formatCurrency(widget.requests.creditLimit)),
                     _buildSection(
                       "Proses Pengajuan",
                       TimelineProgress(
