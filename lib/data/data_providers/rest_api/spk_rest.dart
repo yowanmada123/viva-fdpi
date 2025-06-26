@@ -63,7 +63,8 @@ class SPKRest {
     }
   }
 
-  Future<Either<CustomException, List<SPK>>> getSPKList({
+  // Future<Either<CustomException, List<SPK>>> getSPKList({
+  Future<Either<CustomException, List<SPKGroupedByClusterHome>>> getSPKList({
     required String idVendor,
     required String idSite,
     required String idCluster,
@@ -94,7 +95,35 @@ class SPKRest {
         final List<SPK> items =
             List<SPK>.from(data['data'].map((e) => SPK.fromMap(e))).toList();
 
-        return Right(items);
+        List<SPKGroupedByClusterHome> groupedItems = [];
+
+        Map<String, Map<String, List<SPK>>> groupedMap = {};
+
+        for (var spk in items) {
+          groupedMap.putIfAbsent(spk.idCluster, () => {});
+
+          groupedMap[spk.idCluster]!.putIfAbsent(spk.idHouse, () => []);
+
+          groupedMap[spk.idCluster]![spk.idHouse]!.add(spk);
+        }
+
+        groupedMap.forEach((clusterId, houses) {
+          houses.forEach((houseId, spks) {
+            groupedItems.add(
+              SPKGroupedByClusterHome(
+                idCluster: clusterId,
+                clusterName: spks.first.clusterName,
+                idHouse: houseId,
+                houseName: spks.first.houseName,
+                spks: spks,
+              ),
+            );
+          });
+        });
+
+        print("groupedItems: $groupedItems");
+
+        return Right(groupedItems);
       } else {
         return Left(NetUtils.parseErrorResponse(response: response.data));
       }

@@ -12,7 +12,7 @@ final class SpkListInitial extends SpkListState {}
 final class SpkListLoading extends SpkListState {}
 
 final class SpkListLoadSuccess extends SpkListState {
-  final List<SPK> spkList;
+  final List<SPKGroupedByClusterHome> spkList;
 
   const SpkListLoadSuccess({required this.spkList});
 

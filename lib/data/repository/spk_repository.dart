@@ -17,7 +17,8 @@ class SPKRepository {
 
   SPKRepository({required this.spkRest});
 
-  Future<Either<CustomException, List<SPK>>> getSPKList({
+  // Future<Either<CustomException, List<SPK>>> getSPKList({
+  Future<Either<CustomException, List<SPKGroupedByClusterHome>>> getSPKList({
     required String idVendor,
     required String idSite,
     required String idCluster,
