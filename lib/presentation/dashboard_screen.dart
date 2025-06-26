@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
-import 'package:fdpi_app/presentation/approval/approval_spk_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,8 +15,10 @@ import '../models/authorization/menu.dart';
 import '../models/errors/custom_exception.dart';
 import 'SPK/spk_list_screen.dart';
 import 'SPK/spr_list_screen.dart';
+import 'approval/approval_po_screen.dart';
 import 'approval/approval_screen.dart';
 import 'approval/approval_spb_screen.dart';
+import 'approval/approval_spk_screen.dart';
 import 'booking/booking_screen.dart';
 import 'fdpi/fdpi_residences_screen.dart';
 import 'loan/loan_screen.dart';
@@ -104,6 +105,12 @@ class MyGridLayout extends StatelessWidget {
         'text': 'Approval Pengajuan',
         'description': 'Approval SPR',
         'route': ApprovalScreen(title: submenu.menu_caption),
+      },
+      'approvalPO': {
+        'icon': Icons.edit_document,
+        'text': 'Approval Pengajuan',
+        'description': 'Approval PO',
+        'route': ApprovalPoScreen(title: submenu.menu_caption),
       },
       'kasBon': {
         'icon': Icons.request_quote,
