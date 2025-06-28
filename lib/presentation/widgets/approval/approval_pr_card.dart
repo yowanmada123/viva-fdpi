@@ -82,22 +82,88 @@ class _ApprovalPrCardState extends State<ApprovalPrCard> {
                     _buildInfoRow("Vendor", widget.requests.vendorName),
                     _buildInfoRow("Site", widget.requests.siteName),
                     _buildInfoRow("Cluster", widget.requests.clusterName),
-                    _buildInfoRow("House", formatCurrency(widget.requests.houseName)),
+                    _buildInfoRow("House", widget.requests.houseName),
+                    _buildInfoRow("Note", widget.requests.memoTxt),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.w),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Article",
+                              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 8.w),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: widget.requests.article.length,
+                              itemBuilder: (context, index) {
+                                final article = widget.requests.article[index];
+                                final String description = article.description;
+                                final String unitPrice = formatCurrency(article.unitPrice);
+                                final String qty = double.tryParse(article.qty)?.toStringAsFixed(0) ?? '0';
+                                final String price = formatCurrency(article.amount);
+
+                                return Card(
+                                  elevation: 2,
+                                  color: Theme.of(context).colorScheme.surfaceBright,
+                                  margin: EdgeInsets.symmetric(vertical: 4.w),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8.w),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          description,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(height: 4.w),
+                                        Text(
+                                          "Quantity: $qty",
+                                          style: TextStyle(fontSize: 14.sp),
+                                        ),
+                                        Text(
+                                          "Unit price: $unitPrice",
+                                          style: TextStyle(fontSize: 14.sp),
+                                        ),
+                                        Text(
+                                          "Amount: $price",
+                                          style: TextStyle(fontSize: 14.sp),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    
                     _buildSection(
                       "Proses Pengajuan",
                       TimelineProgress(
                         steps: [
-                          // TimelineStep(
-                          //   header: "Pengajuan",
-                          //   detail: widget.requests.wCreatedBy,
-                          // ),
+                          TimelineStep(
+                            header: "Pengajuan",
+                            detail: widget.requests.wCreatedBy,
+                          ),
                           TimelineStep(
                             header: "Approve 1",
-                            detail: widget.requests.aprvBy,
+                            detail: widget.requests.wAprv1By
                           ),
                           TimelineStep(
                             header: "Approve 2",
-                            detail: widget.requests.aprv2By,
+                            detail: widget.requests.wAprv2By,
                           ),
                         ],
                       ),

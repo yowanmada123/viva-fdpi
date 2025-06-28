@@ -242,6 +242,16 @@ class ApprovalPoScreenState extends State<ApprovalPoScreen> {
                 return Center(child: Text(state.messsage));
               }
               if (state is ApprovalPoListSuccessState) {
+                if(state.data.isEmpty){
+                  return Center(
+                    child: Text(
+                      "Approval PO Tidak Tersedia",
+                      style: TextStyle(
+                        fontSize: 14
+                      ),
+                    ),
+                  );
+                }
                 return NotificationListener<ScrollNotification>(
                   onNotification: (notification) => true,
                   child: PageView.builder(

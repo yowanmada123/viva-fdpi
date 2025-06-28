@@ -242,6 +242,16 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
                 return Center(child: Text(state.message));
               }
               if (state is ApprovalPrListSuccessState) {
+                if(state.data.isEmpty){
+                  return Center(
+                    child: Text(
+                      "Approval PR Tidak Tersedia",
+                      style: TextStyle(
+                        fontSize: 14
+                      ),
+                    ),
+                  );
+                }
                 return NotificationListener<ScrollNotification>(
                   onNotification: (notification) => true,
                   child: PageView.builder(
