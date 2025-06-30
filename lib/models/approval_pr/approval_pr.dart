@@ -31,6 +31,9 @@ class ApprovalPR {
   final String houseName;
   final String officeId;
   final String office;
+  final String wCreatedBy;
+  final String wAprv1By;
+  final String wAprv2By;
   final List<ApprovalArticlePR> article;
   ApprovalPR({
     required this.prId,
@@ -61,6 +64,9 @@ class ApprovalPR {
     required this.houseName,
     required this.officeId,
     required this.office,
+    required this.wCreatedBy,
+    required this.wAprv1By,
+    required this.wAprv2By,
     required this.article,
   });
 
@@ -93,6 +99,9 @@ class ApprovalPR {
     String? houseName,
     String? officeId,
     String? office,
+    String? wCreatedBy,
+    String? wAprv1By,
+    String? wAprv2By,
     List<ApprovalArticlePR>? article,
   }) {
     return ApprovalPR(
@@ -124,6 +133,9 @@ class ApprovalPR {
       houseName: houseName ?? this.houseName,
       officeId: officeId ?? this.officeId,
       office: office ?? this.office,
+      wCreatedBy: wCreatedBy ?? this.wCreatedBy,
+      wAprv1By: wAprv1By ?? this.wAprv1By,
+      wAprv2By: wAprv2By ?? this.wAprv2By,
       article: article ?? this.article,
     );
   }
@@ -158,6 +170,9 @@ class ApprovalPR {
       'house_name': houseName,
       'office_id': officeId,
       'office': office,
+      'w_created_by': wCreatedBy,
+      'w_aprv1_by': wAprv1By,
+      'w_aprv2_by': wAprv2By,
       'article': article,
     };
   }
@@ -192,6 +207,9 @@ class ApprovalPR {
       houseName: map['house_name'] ?? '',
       officeId: map['office_id'] ?? '',
       office: map['office'] ?? '',
+      wCreatedBy: map['w_created_by'] ?? '',
+      wAprv1By: map['w_aprv1_by'] ?? '',
+      wAprv2By: map['w_aprv2_by'] ?? '',
       article: List<ApprovalArticlePR>.from(
         map['article']?.map((x) => ApprovalArticlePR.fromMap(x)) ?? [],
       ),
@@ -205,7 +223,7 @@ class ApprovalPR {
 
   @override
   String toString() {
-    return 'ApprovalPR(prId: $prId, dtPr: $dtPr, deptId: $deptId, address: $address, city: $city, deptName: $deptName, qty: $qty, picId: $picId, vendorId: $vendorId, vendorName: $vendorName, wgt: $wgt, prNum: $prNum, stat: $stat, memoTxt: $memoTxt, trType: $trType, dtAprv: $dtAprv, dtAprv2: $dtAprv2, dtRjc: $dtRjc, dtRjc2: $dtRjc2, aprvBy: $aprvBy, aprv2By: $aprv2By, rjcBy: $rjcBy, rjc2By: $rjc2By, siteName: $siteName, clusterName: $clusterName, houseName: $houseName, officeId: $officeId, office: $office, article: $article)';
+    return 'ApprovalPR(prId: $prId, dtPr: $dtPr, deptId: $deptId, address: $address, city: $city, deptName: $deptName, qty: $qty, picId: $picId, vendorId: $vendorId, vendorName: $vendorName, wgt: $wgt, prNum: $prNum, stat: $stat, memoTxt: $memoTxt, trType: $trType, dtAprv: $dtAprv, dtAprv2: $dtAprv2, dtRjc: $dtRjc, dtRjc2: $dtRjc2, aprvBy: $aprvBy, aprv2By: $aprv2By, rjcBy: $rjcBy, rjc2By: $rjc2By, siteName: $siteName, clusterName: $clusterName, houseName: $houseName, officeId: $officeId, office: $office, wCreatedBy: $wCreatedBy, wAprv1By: $wAprv1By, wAprv2By: $wAprv2By, article: $article)';
   }
 
   @override
@@ -241,6 +259,9 @@ class ApprovalPR {
         other.houseName == houseName &&
         other.officeId == officeId &&
         other.office == office &&
+        other.wCreatedBy == wCreatedBy &&
+        other.wAprv1By == wAprv1By &&
+        other.wAprv2By == wAprv2By &&
         listEquals(other.article, article);
   }
 
@@ -274,6 +295,9 @@ class ApprovalPR {
         houseName.hashCode ^
         officeId.hashCode ^
         office.hashCode ^
+        wCreatedBy.hashCode ^
+        wAprv1By.hashCode ^
+        wAprv2By.hashCode ^
         article.hashCode;
   }
 }
