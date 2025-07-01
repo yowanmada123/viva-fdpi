@@ -11,6 +11,7 @@ import '../../data/repository/loan_repository.dart';
 import '../../data/repository/master_repository.dart';
 import '../../data/repository/spk_repository.dart';
 import '../../models/errors/custom_exception.dart';
+import '../../utils/currency_format.dart';
 import '../widgets/MoneyInputWidget.dart';
 
 class LoanScreen extends StatelessWidget {
@@ -623,15 +624,51 @@ class _LoanFormSecondStepState extends State<_LoanFormSecondStep> {
 
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
                   children: [
-                    Text("Nominal Kasbon"),
-                    SizedBox(height: 8.w),
-                    MoneyInputWidget(
-                      controller: _kasbonController,
-                      suffixIcon: null,
-                      maxLines: 1,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Text("Nominal Kasbon"),
+                          SizedBox(height: 8.w),
+                          MoneyInputWidget(
+                            controller: _kasbonController,
+                            suffixIcon: null,
+                            maxLines: 1,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Text("Credit Limit"),
+                          SizedBox(height: 8.w),
+                          TextFormField(
+                            decoration: InputDecoration(
+                              border: UnderlineInputBorder(),
+                              fillColor: const Color(0xffffffff),
+                              filled: true,
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 12,
+                              ),
+                            ),
+                            readOnly: true,
+                            initialValue:
+                                state.selectedSpk == null
+                                    ? ""
+                                    : formatIDRCurrency(
+                                      state.selectedSpk!.creditLimit,
+                                    ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
