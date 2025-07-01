@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../utils/currency_format.dart';
 import 'vertical_timeline.dart';
 
 class ApprovalCard extends StatefulWidget {
@@ -41,13 +42,6 @@ class _ApprovalCardState extends State<ApprovalCard> {
       widget.onReachTop();
     }
   }
-
-  String formatCurrency(dynamic amount) {
-    final number = double.tryParse(amount.toString()) ?? 0;
-    final formatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
-    return formatter.format(number);
-  }
-
 
   @override
   void dispose() {
@@ -86,9 +80,24 @@ class _ApprovalCardState extends State<ApprovalCard> {
                       ).format(DateTime.parse(widget.requests.dtKb)),
                     ),
                     _buildInfoRow("Diajukan oleh", widget.requests.vendorName),
-                    _buildInfoRow("Jumlah KasBon", formatCurrency(widget.requests.kbAmt)),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildInfoRow(
+                            "Jumlah KasBon",
+                            formatIDRCurrency(widget.requests.kbAmt),
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        Expanded(
+                          child: _buildInfoRow(
+                            "Credit Limit",
+                            formatIDRCurrency(widget.requests.creditLimit),
+                          ),
+                        ),
+                      ],
+                    ),
                     _buildInfoRow("Remark", widget.requests.remark),
-                    _buildInfoRow("Credit Limit", formatCurrency(widget.requests.creditLimit)),
                     _buildSection(
                       "Proses Pengajuan",
                       TimelineProgress(
