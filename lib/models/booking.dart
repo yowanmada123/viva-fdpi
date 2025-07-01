@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import '../utils/datetime_convertion.dart';
+
 class Booking {
   final String bookId;
   final String namaCustomer;
@@ -114,15 +116,6 @@ class Booking {
     );
   }
 
-  static DateTime? _parseDateTime(String dateTimeString) {
-    try {
-      if (dateTimeString == "1900-01-01 00:00:00.000") return null;
-      return DateTime.parse(dateTimeString);
-    } catch (e) {
-      return null;
-    }
-  }
-
   static int _parseInt(String numberStr) {
     double parsedDouble = double.tryParse(numberStr) ?? 0.0;
 
@@ -179,9 +172,9 @@ class Booking {
       status: map['status'] ?? '',
       dtCreated: map['dt_created'] ?? '',
       createdBy: map['created_by'] ?? '',
-      dtAprv1: _parseDateTime(map['dt_aprv1'] ?? ''),
+      dtAprv1: parseDateTime(map['dt_aprv1'] ?? ''),
       aprv1By: (map['aprv1_by'] ?? ''),
-      dtAprv2: _parseDateTime(map['dt_aprv2'] ?? ''),
+      dtAprv2: parseDateTime(map['dt_aprv2'] ?? ''),
       aprv2By: map['aprv2_by'] ?? '',
       trType: map['tr_type'] ?? '',
       activeFlag: map['active_flag'] ?? '',

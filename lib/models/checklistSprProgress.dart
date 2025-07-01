@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import '../utils/datetime_convertion.dart';
+
 class ChecklistSprItem {
   final String idQcItem;
   final String itemName;
@@ -70,15 +72,6 @@ class ChecklistSprItem {
     };
   }
 
-  static DateTime? _parseDateTime(String dateTimeString) {
-    try {
-      if (dateTimeString == "1900-01-01 00:00:00.000") return null;
-      return DateTime.parse(dateTimeString);
-    } catch (e) {
-      return null;
-    }
-  }
-
   static String _generateUrlImage(String path) {
     if (path.isEmpty) return '';
     return 'https://v2.kencana.org/storage/${path}';
@@ -88,9 +81,9 @@ class ChecklistSprItem {
     return ChecklistSprItem(
       idQcItem: map['id_qc_item'] ?? '',
       itemName: map['item_name'] ?? '',
-      dtAprv: _parseDateTime(map['dt_aprv'] ?? ''),
-      dtAprv2: _parseDateTime(map['dt_aprv2'] ?? ''),
-      dtAprv3: _parseDateTime(map['dt_aprv3'] ?? ''),
+      dtAprv: parseDateTime(map['dt_aprv'] ?? ''),
+      dtAprv2: parseDateTime(map['dt_aprv2'] ?? ''),
+      dtAprv3: parseDateTime(map['dt_aprv3'] ?? ''),
       statClosing: map['stat_closing'] ?? '',
       statClosing2: map['stat_closing2'] ?? '',
       statClosing3: map['stat_closing3'] ?? '',

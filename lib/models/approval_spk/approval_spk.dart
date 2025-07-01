@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import '../../utils/datetime_convertion.dart';
 import 'approval_spk_article.dart';
 
 class ApprovalSpk {
@@ -31,10 +32,11 @@ class ApprovalSpk {
   final String wReject2By;
   final String remarkQc;
   final String remarks;
-  final String dtAprv1;
+  final DateTime? dtAprv1;
   final String aprv1By;
-  final String dtAprv2;
+  final DateTime? dtAprv2;
   final String aprv2By;
+  final DateTime? dtCreated;
   final List<ApprovalSpkArticle> article;
   ApprovalSpk({
     required this.idSpk,
@@ -70,6 +72,7 @@ class ApprovalSpk {
     required this.dtAprv2,
     required this.aprv2By,
     required this.article,
+    this.dtCreated,
   });
 
   ApprovalSpk copyWith({
@@ -101,10 +104,11 @@ class ApprovalSpk {
     String? wReject2By,
     String? remarkQc,
     String? remarks,
-    String? dtAprv1,
+    DateTime? dtAprv1,
     String? aprv1By,
-    String? dtAprv2,
+    DateTime? dtAprv2,
     String? aprv2By,
+    DateTime? dtCreated,
     List<ApprovalSpkArticle>? article,
   }) {
     return ApprovalSpk(
@@ -178,6 +182,7 @@ class ApprovalSpk {
       'aprv1_by': aprv1By,
       'dt_aprv2': dtAprv2,
       'aprv2_by': aprv2By,
+      'dt_created': dtCreated,
       'article': article.map((x) => x.toMap()).toList(),
     };
   }
@@ -212,10 +217,11 @@ class ApprovalSpk {
       wReject2By: map['w_reject2_by'] ?? '',
       remarkQc: map['remark_qc'] ?? '',
       remarks: map['remarks'] ?? '',
-      dtAprv1: map['dt_aprv1'] ?? '',
+      dtAprv1: parseDateTime(map['dt_aprv1'] ?? ''),
       aprv1By: map['aprv1_by'] ?? '',
-      dtAprv2: map['dt_aprv2'] ?? '',
+      dtAprv2: parseDateTime(map['dt_aprv2'] ?? ''),
       aprv2By: map['aprv2_by'] ?? '',
+      dtCreated: parseDateTime(map['dt_created'] ?? ''),
       article: List<ApprovalSpkArticle>.from(
         map['article']?.map((x) => ApprovalSpkArticle.fromMap(x)) ?? [],
       ),

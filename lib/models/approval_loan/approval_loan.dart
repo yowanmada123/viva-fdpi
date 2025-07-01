@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import '../../utils/datetime_convertion.dart';
+
 class ApprovalLoan {
   final String officeId;
   final String office;
@@ -11,17 +13,17 @@ class ApprovalLoan {
   final String kbNum;
   final String vendorId;
   final String idEmployee;
-  final String dtKb;
+  final DateTime? dtKb;
   final String kbAmt;
   final String remark;
   final String stat;
-  final String dtCreated;
-  final String dtModified;
+  final DateTime? dtCreated;
+  final DateTime? dtModified;
   final String userId;
   final String trIdRef;
-  final String dtAprv1;
+  final DateTime? dtAprv1;
   final String userAprv1;
-  final String dtAprv2;
+  final DateTime? dtAprv2;
   final String userAprv2;
   final String acNum;
   final String employeeName;
@@ -59,7 +61,7 @@ class ApprovalLoan {
     required this.wCreatedBy,
     required this.wAprv1By,
     required this.wAprv2By,
-    required this.creditLimit
+    required this.creditLimit,
   });
 
   ApprovalLoan copyWith({
@@ -73,17 +75,17 @@ class ApprovalLoan {
     String? kbNum,
     String? vendorId,
     String? idEmployee,
-    String? dtKb,
+    DateTime? dtKb,
     String? kbAmt,
     String? remark,
     String? stat,
-    String? dtCreated,
-    String? dtModified,
+    DateTime? dtCreated,
+    DateTime? dtModified,
     String? userId,
     String? trIdRef,
-    String? dtAprv1,
+    DateTime? dtAprv1,
     String? userAprv1,
-    String? dtAprv2,
+    DateTime? dtAprv2,
     String? userAprv2,
     String? acNum,
     String? employeeName,
@@ -91,7 +93,7 @@ class ApprovalLoan {
     String? wCreatedBy,
     String? wAprv1By,
     String? wAprv2By,
-    String? creditLimit
+    String? creditLimit,
   }) {
     return ApprovalLoan(
       officeId: officeId ?? this.officeId,
@@ -122,7 +124,7 @@ class ApprovalLoan {
       wCreatedBy: wCreatedBy ?? this.wCreatedBy,
       wAprv1By: wAprv1By ?? this.wAprv1By,
       wAprv2By: wAprv2By ?? this.wAprv2By,
-      creditLimit: creditLimit ?? this.creditLimit
+      creditLimit: creditLimit ?? this.creditLimit,
     );
   }
 
@@ -172,17 +174,17 @@ class ApprovalLoan {
       kbNum: map['kb_num'] ?? '',
       vendorId: map['vendor_id'] ?? '',
       idEmployee: map['idemployee'] ?? '',
-      dtKb: map['dt_kb'] ?? '',
+      dtKb: parseDateTime(map['dt_kb'] ?? ''),
       kbAmt: map['kb_amt'] ?? '',
       remark: map['remark'] ?? '',
       stat: map['stat'] ?? '',
-      dtCreated: map['dt_created'] ?? '',
-      dtModified: map['dt_modified'] ?? '',
+      dtCreated: parseDateTime(map['dt_created'] ?? ''),
+      dtModified: parseDateTime(map['dt_modified'] ?? ''),
       userId: map['user_id'] ?? '',
       trIdRef: map['tr_id_ref'] ?? '',
-      dtAprv1: map['dt_aprv1'] ?? '',
+      dtAprv1: parseDateTime(map['dt_aprv1'] ?? ''),
       userAprv1: map['user_aprv1'] ?? '',
-      dtAprv2: map['dt_aprv2'] ?? '',
+      dtAprv2: parseDateTime(map['dt_aprv2'] ?? ''),
       userAprv2: map['user_aprv2'] ?? '',
       acNum: map['ac_num'] ?? '',
       employeeName: map['employee_name'] ?? '',
@@ -196,7 +198,8 @@ class ApprovalLoan {
 
   String toJson() => json.encode(toMap());
 
-  factory ApprovalLoan.fromJson(String source) => ApprovalLoan.fromMap(json.decode(source));
+  factory ApprovalLoan.fromJson(String source) =>
+      ApprovalLoan.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -206,69 +209,69 @@ class ApprovalLoan {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
+
     return other is ApprovalLoan &&
-      other.officeId == officeId &&
-      other.office == office &&
-      other.address == address &&
-      other.city == city &&
-      other.trId == trId &&
-      other.trType == trType &&
-      other.wTrType == wTrType &&
-      other.kbNum == kbNum &&
-      other.vendorId == vendorId &&
-      other.idEmployee == idEmployee &&
-      other.dtKb == dtKb &&
-      other.kbAmt == kbAmt &&
-      other.remark == remark &&
-      other.stat == stat &&
-      other.dtCreated == dtCreated &&
-      other.dtModified == dtModified &&
-      other.userId == userId &&
-      other.trIdRef == trIdRef &&
-      other.dtAprv1 == dtAprv1 &&
-      other.userAprv1 == userAprv1 &&
-      other.dtAprv2 == dtAprv2 &&
-      other.userAprv2 == userAprv2 &&
-      other.acNum == acNum &&
-      other.employeeName == employeeName &&
-      other.vendorName == vendorName &&
-      other.wCreatedBy == wCreatedBy &&
-      other.wAprv1By == wAprv1By &&
-      other.wAprv2By == wAprv2By &&
-      other.creditLimit == creditLimit;
+        other.officeId == officeId &&
+        other.office == office &&
+        other.address == address &&
+        other.city == city &&
+        other.trId == trId &&
+        other.trType == trType &&
+        other.wTrType == wTrType &&
+        other.kbNum == kbNum &&
+        other.vendorId == vendorId &&
+        other.idEmployee == idEmployee &&
+        other.dtKb == dtKb &&
+        other.kbAmt == kbAmt &&
+        other.remark == remark &&
+        other.stat == stat &&
+        other.dtCreated == dtCreated &&
+        other.dtModified == dtModified &&
+        other.userId == userId &&
+        other.trIdRef == trIdRef &&
+        other.dtAprv1 == dtAprv1 &&
+        other.userAprv1 == userAprv1 &&
+        other.dtAprv2 == dtAprv2 &&
+        other.userAprv2 == userAprv2 &&
+        other.acNum == acNum &&
+        other.employeeName == employeeName &&
+        other.vendorName == vendorName &&
+        other.wCreatedBy == wCreatedBy &&
+        other.wAprv1By == wAprv1By &&
+        other.wAprv2By == wAprv2By &&
+        other.creditLimit == creditLimit;
   }
 
   @override
   int get hashCode {
     return officeId.hashCode ^
-      office.hashCode ^
-      address.hashCode ^
-      city.hashCode ^
-      trId.hashCode ^
-      trType.hashCode ^
-      wTrType.hashCode ^
-      kbNum.hashCode ^
-      vendorId.hashCode ^
-      idEmployee.hashCode ^
-      dtKb.hashCode ^
-      kbAmt.hashCode ^
-      remark.hashCode ^
-      stat.hashCode ^
-      dtCreated.hashCode ^
-      dtModified.hashCode ^
-      userId.hashCode ^
-      trIdRef.hashCode ^
-      dtAprv1.hashCode ^
-      userAprv1.hashCode ^
-      dtAprv2.hashCode ^
-      userAprv2.hashCode ^
-      acNum.hashCode ^
-      employeeName.hashCode ^
-      vendorName.hashCode ^
-      wCreatedBy.hashCode ^
-      wAprv1By.hashCode ^
-      wAprv2By.hashCode ^
-      creditLimit.hashCode;
+        office.hashCode ^
+        address.hashCode ^
+        city.hashCode ^
+        trId.hashCode ^
+        trType.hashCode ^
+        wTrType.hashCode ^
+        kbNum.hashCode ^
+        vendorId.hashCode ^
+        idEmployee.hashCode ^
+        dtKb.hashCode ^
+        kbAmt.hashCode ^
+        remark.hashCode ^
+        stat.hashCode ^
+        dtCreated.hashCode ^
+        dtModified.hashCode ^
+        userId.hashCode ^
+        trIdRef.hashCode ^
+        dtAprv1.hashCode ^
+        userAprv1.hashCode ^
+        dtAprv2.hashCode ^
+        userAprv2.hashCode ^
+        acNum.hashCode ^
+        employeeName.hashCode ^
+        vendorName.hashCode ^
+        wCreatedBy.hashCode ^
+        wAprv1By.hashCode ^
+        wAprv2By.hashCode ^
+        creditLimit.hashCode;
   }
 }

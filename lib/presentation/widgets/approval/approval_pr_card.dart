@@ -45,10 +45,13 @@ class _ApprovalPrCardState extends State<ApprovalPrCard> {
 
   String formatCurrency(dynamic amount) {
     final number = double.tryParse(amount.toString()) ?? 0;
-    final formatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
+    final formatter = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+      decimalDigits: 0,
+    );
     return formatter.format(number);
   }
-
 
   @override
   void dispose() {
@@ -85,7 +88,10 @@ class _ApprovalPrCardState extends State<ApprovalPrCard> {
                     _buildInfoRow("House", widget.requests.houseName),
                     _buildInfoRow("Note", widget.requests.memoTxt),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 8.w,
+                      ),
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -96,7 +102,10 @@ class _ApprovalPrCardState extends State<ApprovalPrCard> {
                           children: [
                             Text(
                               "Article",
-                              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             SizedBox(height: 8.w),
                             ListView.builder(
@@ -106,24 +115,41 @@ class _ApprovalPrCardState extends State<ApprovalPrCard> {
                               itemBuilder: (context, index) {
                                 final article = widget.requests.article[index];
                                 final String description = article.description;
-                                final String unitPrice = formatCurrency(article.unitPrice);
-                                final String qty = double.tryParse(article.qty)?.toStringAsFixed(0) ?? '0';
-                                final String price = formatCurrency(article.amount);
+                                final String unitPrice = formatCurrency(
+                                  article.unitPrice,
+                                );
+                                final String qty =
+                                    double.tryParse(
+                                      article.qty,
+                                    )?.toStringAsFixed(0) ??
+                                    '0';
+                                final String price = formatCurrency(
+                                  article.amount,
+                                );
 
                                 return Card(
                                   elevation: 2,
-                                  color: Theme.of(context).colorScheme.surfaceBright,
+                                  color:
+                                      Theme.of(
+                                        context,
+                                      ).colorScheme.surfaceBright,
                                   margin: EdgeInsets.symmetric(vertical: 4.w),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                   child: Padding(
                                     padding: EdgeInsets.all(8.w),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           description,
                                           overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                         SizedBox(height: 4.w),
                                         Text(
@@ -148,7 +174,7 @@ class _ApprovalPrCardState extends State<ApprovalPrCard> {
                         ),
                       ),
                     ),
-                    
+
                     _buildSection(
                       "Proses Pengajuan",
                       TimelineProgress(
@@ -156,14 +182,17 @@ class _ApprovalPrCardState extends State<ApprovalPrCard> {
                           TimelineStep(
                             header: "Pengajuan",
                             detail: widget.requests.wCreatedBy,
+                            date: widget.requests.dtPr,
                           ),
                           TimelineStep(
                             header: "Approve 1",
-                            detail: widget.requests.wAprv1By
+                            detail: widget.requests.wAprv1By,
+                            date: widget.requests.dtAprv,
                           ),
                           TimelineStep(
                             header: "Approve 2",
                             detail: widget.requests.wAprv2By,
+                            date: widget.requests.dtAprv2,
                           ),
                         ],
                       ),

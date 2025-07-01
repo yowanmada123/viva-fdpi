@@ -32,7 +32,7 @@ class ApprovalSpbRest {
         "id_cluster": idCluster,
         "id_house_item": idHouse,
         "aprv": approvalType,
-        "status": approvalStatus,
+        "status": "O",
       };
 
       final response = await http.post(

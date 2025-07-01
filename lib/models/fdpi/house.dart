@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:latlong2/latlong.dart';
 
+import '../../utils/datetime_convertion.dart' show parseDateTime;
+
 class Coordinates {
   final String idCoordinates;
   final String name;
@@ -90,15 +92,6 @@ class Coordinates {
     }
   }
 
-  static DateTime? _parseDateTime(String dateTimeString) {
-    try {
-      if (dateTimeString == "1900-01-01 00:00:00.000") return null;
-      return DateTime.parse(dateTimeString);
-    } catch (e) {
-      return null;
-    }
-  }
-
   // In case in the future feature, the coordinates needs to be parse to String and multiply with 1000
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -130,10 +123,10 @@ class Coordinates {
       buildingArea: map['building_area'] ?? "",
       landArea: map['land_area'] ?? "",
       statName: map['stat_name'] ?? "",
-      dateBuild: _parseDateTime(map['date_build'] ?? ""),
-      dateFinish: _parseDateTime(map['date_finish'] ?? ""),
+      dateBuild: parseDateTime(map['date_build'] ?? ""),
+      dateFinish: parseDateTime(map['date_finish'] ?? ""),
       soldStatName: map['sold_stat_name'] ?? "",
-      dateSold: _parseDateTime(map['date_sold'] ?? ""),
+      dateSold: parseDateTime(map['date_sold'] ?? ""),
       coordinates: _parseCoordinates(map['coordinates'] ?? ""),
       color: map['color'] ?? "",
       colorName: map['color_name'] ?? "",

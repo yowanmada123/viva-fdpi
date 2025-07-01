@@ -67,13 +67,26 @@ class TimelineProgress extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       // Header
-                      Text(
-                        step.header,
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            step.header,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          if (step.date != null)
+                            Text(
+                              step.date!.toLocal().toString(),
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: Colors.grey,
+                              ),
+                            ),
+                        ],
                       ),
                       SizedBox(height: 4),
                       // Detail
@@ -107,6 +120,7 @@ class TimelineStep {
   final TimelineStatus? status;
   final Widget? additionalContent;
   final IconData? icon;
+  final DateTime? date;
 
   TimelineStep({
     required this.header,
@@ -114,5 +128,6 @@ class TimelineStep {
     this.status,
     this.additionalContent,
     this.icon,
+    this.date,
   });
 }
