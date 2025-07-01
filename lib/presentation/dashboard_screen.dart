@@ -17,7 +17,7 @@ import '../models/errors/custom_exception.dart';
 import 'SPK/spk_list_screen.dart';
 import 'SPK/spr_list_screen.dart';
 import 'approval/approval_po_screen.dart';
-import 'approval/approval_screen.dart';
+import 'approval/approval_loan_screen.dart';
 import 'approval/approval_spb_screen.dart';
 import 'approval/approval_spk_screen.dart';
 import 'booking/booking_screen.dart';
