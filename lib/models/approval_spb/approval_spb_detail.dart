@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import '../../utils/datetime_convertion.dart';
+
 class ApprovalSpbDetail {
   final String docType;
   final String docId;
@@ -11,11 +13,11 @@ class ApprovalSpbDetail {
   final String siteName;
   final String clusterName;
   final String houseName;
-  final String dtCreated;
+  final DateTime? dtCreated;
   final String createdBy;
-  final String dtAprv1;
+  final DateTime? dtAprv1;
   final String aprv1By;
-  final String dtAprv2;
+  final DateTime? dtAprv2;
   final String aprv2By;
   final String dtReject;
   final String rejectBy;
@@ -67,11 +69,11 @@ class ApprovalSpbDetail {
     String? siteName,
     String? clusterName,
     String? houseName,
-    String? dtCreated,
+    DateTime? dtCreated,
     String? createdBy,
-    String? dtAprv1,
+    DateTime? dtAprv1,
     String? aprv1By,
-    String? dtAprv2,
+    DateTime? dtAprv2,
     String? aprv2By,
     String? dtReject,
     String? rejectBy,
@@ -157,11 +159,11 @@ class ApprovalSpbDetail {
       siteName: map['site_name'] ?? '',
       clusterName: map['cluster_name'] ?? '',
       houseName: map['house_name'] ?? '',
-      dtCreated: map['dt_created'] ?? '',
+      dtCreated: parseDateTime(map['dt_created'] ?? ''),
       createdBy: map['created_by'] ?? '',
-      dtAprv1: map['dt_aprv1'] ?? '',
+      dtAprv1: parseDateTime(map['dt_aprv1'] ?? ''),
       aprv1By: map['aprv1_by'] ?? '',
-      dtAprv2: map['dt_aprv2'] ?? '',
+      dtAprv2: parseDateTime(map['dt_aprv2'] ?? ''),
       aprv2By: map['aprv2_by'] ?? '',
       dtReject: map['dt_reject'] ?? '',
       rejectBy: map['reject_by'] ?? '',

@@ -115,14 +115,17 @@ class _ApprovalSpbCardState extends State<ApprovalSpbCard> {
                           TimelineStep(
                             header: "Pengajuan",
                             detail: state.spbDetail.wCreatedBy,
+                            date: state.spbDetail.dtCreated,
                           ),
                           TimelineStep(
                             header: "Approve 1",
                             detail: state.spbDetail.wAprv1By,
+                            date: state.spbDetail.dtAprv1,
                           ),
                           TimelineStep(
                             header: "Approve 2",
                             detail: state.spbDetail.wAprv2By,
+                            date: state.spbDetail.dtAprv2,
                           ),
                         ],
                       ),

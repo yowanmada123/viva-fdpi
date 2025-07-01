@@ -45,10 +45,13 @@ class _ApprovalPoCardState extends State<ApprovalPoCard> {
 
   String formatCurrency(dynamic amount) {
     final number = double.tryParse(amount.toString()) ?? 0;
-    final formatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
+    final formatter = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+      decimalDigits: 0,
+    );
     return formatter.format(number);
   }
-
 
   @override
   void dispose() {
@@ -81,14 +84,20 @@ class _ApprovalPoCardState extends State<ApprovalPoCard> {
                     _buildSectionTitle(widget.requests.office),
                     _buildInfoRow(
                       "Tanggal Pengajuan",
-                      DateFormat(
-                        "d MMMM yyyy",
-                        'id_ID',
-                      ).format(DateTime.parse(widget.requests.dtPo)),
+                      widget.requests.dtPo!.toLocal().toString(),
                     ),
                     _buildInfoRow("Diajukan oleh", widget.requests.vendorName),
-                    _buildInfoRow("Jumlah", double.tryParse(widget.requests.qty)?.toStringAsFixed(0) ?? '0'),
-                    _buildInfoRow("Subtotal", formatCurrency(widget.requests.amtSubtotal)),
+                    _buildInfoRow(
+                      "Jumlah",
+                      double.tryParse(
+                            widget.requests.qty,
+                          )?.toStringAsFixed(0) ??
+                          '0',
+                    ),
+                    _buildInfoRow(
+                      "Subtotal",
+                      formatCurrency(widget.requests.amtSubtotal),
+                    ),
                     _buildSection(
                       "Proses Pengajuan",
                       TimelineProgress(
@@ -100,10 +109,12 @@ class _ApprovalPoCardState extends State<ApprovalPoCard> {
                           TimelineStep(
                             header: "Approve 1",
                             detail: widget.requests.aprvBy,
+                            date: widget.requests.dtAprv,
                           ),
                           TimelineStep(
                             header: "Approve 2",
                             detail: widget.requests.aprv2By,
+                            date: widget.requests.dtAprv2,
                           ),
                         ],
                       ),

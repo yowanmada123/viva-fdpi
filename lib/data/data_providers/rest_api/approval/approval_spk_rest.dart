@@ -22,7 +22,7 @@ class ApprovalSpkRest {
     try {
       http.options.headers['requiresToken'] = true;
       log(
-        'Request to https://api-fpi.kencana.org/api/fpi/aprv-spk/getListSPK (POST)',
+        'Request to https://api-fpi.kencana.org/api/fpi/aprv-spk/getListSPKMobile (POST)',
       );
 
       final body = {
@@ -30,7 +30,7 @@ class ApprovalSpkRest {
         "id_cluster": idCluster,
         "id_house_item": idHouse,
         "aprv": approvalType,
-        "status": approvalStatus,
+        "status": "O",
       };
 
       final response = await http.post(

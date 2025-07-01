@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
+import '../../utils/datetime_convertion.dart';
+
 class ApprovalPo {
   final String poId;
-  final String dtPo;
+  final DateTime? dtPo;
   final String stat;
   final String picId;
   final String vendorId;
@@ -17,10 +19,10 @@ class ApprovalPo {
   final String amtPpn;
   final String ppnPersen;
   final String ppn;
-  final String dtAprv;
-  final String dtAprv2;
-  final String dtRjc;
-  final String dtRjc2;
+  final DateTime? dtAprv;
+  final DateTime? dtAprv2;
+  final DateTime? dtRjc;
+  final DateTime? dtRjc2;
   final String aprvBy;
   final String aprv2By;
   final String rjcBy;
@@ -64,7 +66,7 @@ class ApprovalPo {
 
   ApprovalPo copyWith({
     String? poId,
-    String? dtPo,
+    DateTime? dtPo,
     String? stat,
     String? picId,
     String? vendorId,
@@ -77,10 +79,10 @@ class ApprovalPo {
     String? amtPpn,
     String? ppnPersen,
     String? ppn,
-    String? dtAprv,
-    String? dtAprv2,
-    String? dtRjc,
-    String? dtRjc2,
+    DateTime? dtAprv,
+    DateTime? dtAprv2,
+    DateTime? dtRjc,
+    DateTime? dtRjc2,
     String? aprvBy,
     String? aprv2By,
     String? rjcBy,
@@ -160,7 +162,7 @@ class ApprovalPo {
   factory ApprovalPo.fromMap(Map<String, dynamic> map) {
     return ApprovalPo(
       poId: map['po_id'] ?? '',
-      dtPo: map['dt_po'] ?? '',
+      dtPo: parseDateTime(map['dt_po'] ?? ''),
       stat: map['stat'] ?? '',
       picId: map['pic_id'] ?? '',
       vendorId: map['vendor_id'] ?? '',
@@ -173,10 +175,10 @@ class ApprovalPo {
       amtPpn: map['amt_ppn'] ?? '',
       ppnPersen: map['ppn_persen'] ?? '',
       ppn: map['ppn'] ?? '',
-      dtAprv: map['dt_aprv'] ?? '',
-      dtAprv2: map['dt_aprv2'] ?? '',
-      dtRjc: map['dt_rjc'] ?? '',
-      dtRjc2: map['dt_rjc2'] ?? '',
+      dtAprv: parseDateTime(map['dt_aprv'] ?? ''),
+      dtAprv2: parseDateTime(map['dt_aprv2'] ?? ''),
+      dtRjc: parseDateTime(map['dt_rjc'] ?? ''),
+      dtRjc2: parseDateTime(map['dt_rjc2'] ?? ''),
       aprvBy: map['aprv_by'] ?? '',
       aprv2By: map['aprv2_by'] ?? '',
       rjcBy: map['rjc_by'] ?? '',
