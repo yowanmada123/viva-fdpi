@@ -2,9 +2,10 @@
 import 'package:fdpi_app/bloc/approval_loan/approval_loan_list/approval_loan_list_bloc.dart';
 import 'package:fdpi_app/models/approval_loan/approval_loan.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../utils/currency_format.dart';
 import 'vertical_timeline.dart';
 
@@ -77,7 +78,7 @@ class _ApprovalCardState extends State<ApprovalCard> {
                       DateFormat(
                         "d MMMM yyyy",
                         'id_ID',
-                      ).format(DateTime.parse(widget.requests.dtKb)),
+                      ).format(widget.requests.dtKb!),
                     ),
                     _buildInfoRow("Diajukan oleh", widget.requests.vendorName),
                     Row(
@@ -105,10 +106,12 @@ class _ApprovalCardState extends State<ApprovalCard> {
                           TimelineStep(
                             header: "Pengajuan",
                             detail: widget.requests.wCreatedBy,
+                            date: widget.requests.dtKb,
                           ),
                           TimelineStep(
                             header: "Approve 1",
                             detail: widget.requests.wAprv1By,
+                            date: widget.requests.dtAprv1,
                           ),
                         ],
                       ),

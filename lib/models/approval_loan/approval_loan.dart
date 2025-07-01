@@ -13,7 +13,7 @@ class ApprovalLoan {
   final String kbNum;
   final String vendorId;
   final String idEmployee;
-  final String dtKb;
+  final DateTime? dtKb;
   final String kbAmt;
   final String remark;
   final String stat;
@@ -75,7 +75,7 @@ class ApprovalLoan {
     String? kbNum,
     String? vendorId,
     String? idEmployee,
-    String? dtKb,
+    DateTime? dtKb,
     String? kbAmt,
     String? remark,
     String? stat,
@@ -174,7 +174,7 @@ class ApprovalLoan {
       kbNum: map['kb_num'] ?? '',
       vendorId: map['vendor_id'] ?? '',
       idEmployee: map['idemployee'] ?? '',
-      dtKb: map['dt_kb'] ?? '',
+      dtKb: parseDateTime(map['dt_kb'] ?? ''),
       kbAmt: map['kb_amt'] ?? '',
       remark: map['remark'] ?? '',
       stat: map['stat'] ?? '',
