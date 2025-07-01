@@ -6,7 +6,7 @@ import 'package:fdpi_app/bloc/authorization/credentials/credentials_bloc.dart';
 import 'package:fdpi_app/data/repository/approval_loan_repository.dart';
 import 'package:fdpi_app/models/approval_loan/approval_loan.dart';
 import 'package:fdpi_app/models/errors/custom_exception.dart';
-import 'package:fdpi_app/presentation/widgets/approval/approval_card.dart';
+import 'package:fdpi_app/presentation/widgets/approval/approval_loan_card.dart';
 import 'package:fdpi_app/presentation/widgets/approval/aprrove_bottom_navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,7 +57,9 @@ class ApprovalScreenState extends State<ApprovalScreen> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text("Anda tidak memiliki permission untuk approve KasBon"),
+              content: Text(
+                "Anda tidak memiliki permission untuk approve KasBon",
+              ),
             ),
           );
           return;
@@ -65,7 +67,9 @@ class ApprovalScreenState extends State<ApprovalScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Anda tidak memiliki permission untuk approve KasBon"),
+            content: Text(
+              "Anda tidak memiliki permission untuk approve KasBon",
+            ),
           ),
         );
         return;
@@ -86,7 +90,11 @@ class ApprovalScreenState extends State<ApprovalScreen> {
     }
   }
 
-  void _handleReject(int index, List<ApprovalLoan> loanList, BuildContext context) {
+  void _handleReject(
+    int index,
+    List<ApprovalLoan> loanList,
+    BuildContext context,
+  ) {
     final credentialState = context.read<CredentialsBloc>().state;
 
     if (loanList[index].userAprv1.trim() == "") {
@@ -167,47 +175,47 @@ class ApprovalScreenState extends State<ApprovalScreen> {
         appBar: AppBar(title: Text(widget.title)),
         body: SafeArea(
           child: BlocConsumer<ApprovalLoanListBloc, ApprovalLoanListState>(
-              listener: (context, state) {
-                if (state is ApprovalLoanListLoadFailure) {
-                  if (state.error is UnauthorizedException) {
-                    context.read<AuthenticationBloc>().add(
-                      SetAuthenticationStatus(isAuthenticated: false),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "Session Anda telah habis. Silakan login kembali",
-                        ),
-                        duration: Duration(seconds: 5),
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        backgroundColor: Color(0xffEB5757),
+            listener: (context, state) {
+              if (state is ApprovalLoanListLoadFailure) {
+                if (state.error is UnauthorizedException) {
+                  context.read<AuthenticationBloc>().add(
+                    SetAuthenticationStatus(isAuthenticated: false),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        "Session Anda telah habis. Silakan login kembali",
                       ),
-                    );
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                    return;
-                  }
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text(state.message)));
+                      duration: Duration(seconds: 5),
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      backgroundColor: Color(0xffEB5757),
+                    ),
+                  );
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  return;
                 }
-              },
-              builder: (context, state) {
-                if (state is ApprovalLoanListInitial ||
-                    state is ApprovalLoanListLoading) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                if (state is ApprovalLoanListLoadFailure) {
-                  return Center(child: Text(state.message));
-                }
-                if (state is ApprovalLoanListLoadSuccess) {
-                  return NotificationListener<ScrollNotification>(
-                    onNotification: (notification) {
-                      return true;
-                    },
-                    child: PageView.builder(
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(state.message)));
+              }
+            },
+            builder: (context, state) {
+              if (state is ApprovalLoanListInitial ||
+                  state is ApprovalLoanListLoading) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (state is ApprovalLoanListLoadFailure) {
+                return Center(child: Text(state.message));
+              }
+              if (state is ApprovalLoanListLoadSuccess) {
+                return NotificationListener<ScrollNotification>(
+                  onNotification: (notification) {
+                    return true;
+                  },
+                  child: PageView.builder(
                     controller: _pageController,
                     scrollDirection: Axis.vertical,
                     itemCount: state.loanList.length,
@@ -230,10 +238,10 @@ class ApprovalScreenState extends State<ApprovalScreen> {
                           });
 
                           await _pageController.animateToPage(
-                              index + 1,
-                              duration: Duration(milliseconds: 300),
-                              curve: Curves.easeOut,
-                            );
+                            index + 1,
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeOut,
+                          );
 
                           setState(() {
                             _isAnimated = false;
@@ -249,10 +257,10 @@ class ApprovalScreenState extends State<ApprovalScreen> {
                           });
 
                           await _pageController.animateToPage(
-                              index - 1,
-                              duration: Duration(milliseconds: 300),
-                              curve: Curves.easeOut,
-                            );
+                            index - 1,
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeOut,
+                          );
 
                           setState(() {
                             _isAnimated = false;
@@ -260,7 +268,7 @@ class ApprovalScreenState extends State<ApprovalScreen> {
                         },
                       );
                     },
-                  )
+                  ),
                 );
               }
               return Container();
@@ -278,8 +286,10 @@ class ApprovalScreenState extends State<ApprovalScreen> {
 
             return ApprovalBottomBar(
               isLoading: false,
-              onApprove: () => _handleApproval(_currentPage, state.loanList, context),
-              onReject: () => _handleReject(_currentPage, state.loanList, context),
+              onApprove:
+                  () => _handleApproval(_currentPage, state.loanList, context),
+              onReject:
+                  () => _handleReject(_currentPage, state.loanList, context),
             );
           },
         ),
