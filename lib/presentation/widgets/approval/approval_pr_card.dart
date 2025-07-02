@@ -82,6 +82,13 @@ class _ApprovalPrCardState extends State<ApprovalPrCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildSectionTitle(widget.requests.office),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(16.w, 8.w, 16.w, 8.w),
+                      child: Text(
+                        widget.requests.typePr,
+                        style: TextStyle(fontSize: 14.sp),
+                      ),
+                    ),
                     _buildInfoRow("Vendor", widget.requests.vendorName),
                     _buildInfoRow("Site", widget.requests.siteName),
                     _buildInfoRow("Cluster", widget.requests.clusterName),
@@ -211,7 +218,7 @@ class _ApprovalPrCardState extends State<ApprovalPrCard> {
 
   Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.fromLTRB(16.w, 16.w, 16.w, 0),
       child: Text(
         title,
         style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
@@ -231,7 +238,6 @@ class _ApprovalPrCardState extends State<ApprovalPrCard> {
           ),
           SizedBox(height: 4.w),
           Text(value),
-          SizedBox(height: 16.w),
         ],
       ),
     );
