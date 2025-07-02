@@ -19,6 +19,7 @@ class VendorSpk {
   final String amtExclude;
   final String spkType;
   final String creditLimit;
+  final String wSpkType;
   VendorSpk({
     required this.idSpk,
     required this.vendorId,
@@ -38,6 +39,7 @@ class VendorSpk {
     required this.amtExclude,
     required this.spkType,
     required this.creditLimit,
+    required this.wSpkType,
   });
 
   VendorSpk copyWith({
@@ -59,6 +61,7 @@ class VendorSpk {
     String? amtExclude,
     String? spkType,
     String? creditLimit,
+    String? wSpkType,
   }) {
     return VendorSpk(
       idSpk: idSpk ?? this.idSpk,
@@ -79,6 +82,7 @@ class VendorSpk {
       amtExclude: amtExclude ?? this.amtExclude,
       spkType: spkType ?? this.spkType,
       creditLimit: creditLimit ?? this.creditLimit,
+      wSpkType: wSpkType ?? this.wSpkType,
     );
   }
 
@@ -102,6 +106,7 @@ class VendorSpk {
       'amt_exclude': amtExclude,
       'spk_type': spkType,
       'credit_limit': creditLimit,
+      'w_spk_type': wSpkType,
     };
   }
 
@@ -125,6 +130,7 @@ class VendorSpk {
       amtExclude: map['amt_exclude'] ?? '',
       spkType: map['spk_type'] ?? '',
       creditLimit: map['credit_limit'] ?? '',
+      wSpkType: map['w_spk_type'] ?? '',
     );
   }
 
@@ -135,7 +141,7 @@ class VendorSpk {
 
   @override
   String toString() {
-    return 'VendorSpk(idSpk: $idSpk, vendorId: $vendorId, vendorName: $vendorName, idSite: $idSite, siteName: $siteName, idCluster: $idCluster, clusterName: $clusterName, idHouseUnit: $idHouseUnit, houseName: $houseName, activeFlag: $activeFlag, status: $status, idCetak: $idCetak, idSpb: $idSpb, amt: $amt, amtInclude: $amtInclude, amtExclude: $amtExclude, spkType: $spkType, creditLimit: $creditLimit)';
+    return 'VendorSpk(idSpk: $idSpk, vendorId: $vendorId, vendorName: $vendorName, idSite: $idSite, siteName: $siteName, idCluster: $idCluster, clusterName: $clusterName, idHouseUnit: $idHouseUnit, houseName: $houseName, activeFlag: $activeFlag, status: $status, idCetak: $idCetak, idSpb: $idSpb, amt: $amt, amtInclude: $amtInclude, amtExclude: $amtExclude, spkType: $spkType, creditLimit: $creditLimit, wSpkType: $wSpkType)';
   }
 
   @override
@@ -160,7 +166,8 @@ class VendorSpk {
         other.amtInclude == amtInclude &&
         other.amtExclude == amtExclude &&
         other.spkType == spkType &&
-        other.creditLimit == creditLimit;
+        other.creditLimit == creditLimit &&
+        other.wSpkType == wSpkType;
   }
 
   @override
@@ -182,6 +189,7 @@ class VendorSpk {
         amtInclude.hashCode ^
         amtExclude.hashCode ^
         spkType.hashCode ^
-        creditLimit.hashCode;
+        creditLimit.hashCode ^
+        wSpkType.hashCode;
   }
 }

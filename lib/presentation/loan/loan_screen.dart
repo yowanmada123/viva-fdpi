@@ -272,12 +272,35 @@ class _LoanFormScreenState extends State<LoanFormScreen> {
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
-                                            subtitle: Text(
-                                              "${state.vendorSpks[index].siteName} - ${state.vendorSpks[index].clusterName} - ${state.vendorSpks[index].houseName}",
-                                              style: TextStyle(
-                                                fontSize: 12.sp,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
+                                            subtitle: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "Site: ${state.vendorSpks[index].siteName}",
+                                                  style: TextStyle(
+                                                    fontSize: 12.sp,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  "Cluster: ${state.vendorSpks[index].clusterName}",
+                                                  style: TextStyle(
+                                                    fontSize: 12.sp,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  "House: ${state.vendorSpks[index].houseName}",
+                                                  style: TextStyle(
+                                                    fontSize: 12.sp,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                             value:
                                                 loanFormState.selectedSpk ==
@@ -696,6 +719,33 @@ class _LoanFormSecondStepState extends State<_LoanFormSecondStep> {
                           state.selectedSpk == null
                               ? ""
                               : formatIDRCurrency(state.selectedSpk!.amt),
+                    ),
+                  ],
+                ),
+              ),
+
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Tipe SPK"),
+                    SizedBox(height: 8.w),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(),
+                        fillColor: const Color(0xffffffff),
+                        filled: true,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 0,
+                        ),
+                      ),
+                      readOnly: true,
+                      initialValue:
+                          state.selectedSpk == null
+                              ? ""
+                              : state.selectedSpk!.wSpkType,
                     ),
                   ],
                 ),
