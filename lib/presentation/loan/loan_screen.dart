@@ -544,21 +544,21 @@ class _LoanFormSecondStepState extends State<_LoanFormSecondStep> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Tipe Kasbon"),
-                    SizedBox(height: 8.w),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        border: UnderlineInputBorder(),
-                        fillColor: const Color(0xffffffff),
-                        filled: true,
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 0,
-                        ),
-                      ),
-                      readOnly: true,
-                      initialValue: "MONEY/CASH",
-                    ),
+                    // Text("Tipe Kasbon"),
+                    // SizedBox(height: 8.w),
+                    // TextFormField(
+                    //   decoration: InputDecoration(
+                    //     border: UnderlineInputBorder(),
+                    //     fillColor: const Color(0xffffffff),
+                    //     filled: true,
+                    //     contentPadding: EdgeInsets.symmetric(
+                    //       horizontal: 12,
+                    //       vertical: 0,
+                    //     ),
+                    //   ),
+                    //   readOnly: true,
+                    //   initialValue: "MONEY/CASH",
+                    // ),
                     // BlocBuilder<LoanTypeBloc, LoanTypeState>(
                     //   builder: (context, loanState) {
                     //     if (loanState is LoanTypeLoadSuccess) {
@@ -669,6 +669,33 @@ class _LoanFormSecondStepState extends State<_LoanFormSecondStep> {
                           ),
                         ],
                       ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("IDR Kasbon"),
+                    SizedBox(height: 8.w),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(),
+                        fillColor: const Color(0xffffffff),
+                        filled: true,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 0,
+                        ),
+                      ),
+                      readOnly: true,
+                      initialValue:
+                          state.selectedSpk == null
+                              ? ""
+                              : formatIDRCurrency(state.selectedSpk!.amt),
                     ),
                   ],
                 ),
