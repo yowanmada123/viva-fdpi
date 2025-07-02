@@ -245,85 +245,87 @@ class _LoanFormScreenState extends State<LoanFormScreen> {
                               BlocBuilder<VendorSpkBloc, VendorSpkState>(
                                 builder: (context, state) {
                                   if (state is VendorSpkLoadSuccess) {
+                                    if(state.vendorSpks.isEmpty){
+                                      return Center(child: Text("SPK tidak tersedia."));
+                                    }
                                     return Container(
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                       ),
                                       height:
                                           MediaQuery.of(context).size.height *
-                                              0.6 -
-                                          42.w,
+                                              0.6,
                                       width: double.infinity,
                                       child: ListView.builder(
                                         itemCount: state.vendorSpks.length,
                                         itemBuilder: (context, index) {
-                                          return CheckboxListTile(
-                                            controlAffinity:
-                                                ListTileControlAffinity.leading,
-                                            tileColor:
-                                                (index % 2 == 0
-                                                    ? Colors.white
-                                                    : Colors.grey.shade200),
-                                            title: Text(
-                                              state.vendorSpks[index].idCetak,
-                                              style: TextStyle(
-                                                fontSize: 16.sp,
-                                                fontWeight: FontWeight.w600,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                            subtitle: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Site: ${state.vendorSpks[index].siteName}",
-                                                  style: TextStyle(
-                                                    fontSize: 12.sp,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                          final spk = state.vendorSpks[index];
+                                          final isSelected = loanFormState.selectedSpk == spk;
+
+                                          return GestureDetector(
+                                            onTap: () {
+                                              if (loanFormState.selectedVendor == null) {
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(
+                                                    content: Text("Pilih Vendor terlebih dahulu"),
+                                                    duration: Duration(seconds: 2),
+                                                    behavior: SnackBarBehavior.floating,
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(4),
+                                                    ),
+                                                    backgroundColor: Color(0xffff0000),
                                                   ),
-                                                ),
-                                                Text(
-                                                  "Cluster: ${state.vendorSpks[index].clusterName}",
-                                                  style: TextStyle(
-                                                    fontSize: 12.sp,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "House: ${state.vendorSpks[index].houseName}",
-                                                  style: TextStyle(
-                                                    fontSize: 12.sp,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            value:
-                                                loanFormState.selectedSpk ==
-                                                state.vendorSpks[index],
-                                            onChanged: (bool? value) {
-                                              if (value == null || !value) {
-                                                context
-                                                    .read<LoanFormBloc>()
-                                                    .add(
-                                                      SpkVendorChanged(null),
-                                                    );
+                                                );
                                                 return;
                                               }
-                                              context.read<LoanFormBloc>().add(
-                                                SpkVendorChanged(
-                                                  state.vendorSpks[index],
-                                                ),
+
+                                              context.read<LoanFormBloc>().add(SpkVendorChanged(spk));
+                                              pageController.nextPage(
+                                                duration: Duration(seconds: 1),
+                                                curve: Curves.linear,
                                               );
                                             },
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                                              decoration: BoxDecoration(
+                                                color: index % 2 == 0 ? Colors.white : Colors.grey.shade200,
+                                                border: Border.all(
+                                                  color: isSelected ? Theme.of(context).primaryColor : Colors.transparent,
+                                                  width: 1,
+                                                ),
+                                                borderRadius: BorderRadius.circular(2),
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "${spk.siteName} - ${spk.clusterName} - ${spk.houseName}",
+                                                    maxLines: 2,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      fontSize: 14.sp,
+                                                      fontWeight: FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 4),
+                                                  Text(
+                                                    "${spk.wSpkType} - ${formatIDRCurrency(spk.amt)}",
+                                                    style: TextStyle(
+                                                      fontSize: 14.sp,
+                                                      color: Colors.grey[700],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                           );
                                         },
                                       ),
                                     );
+                                  } else if (state is VendorSpkLoading){
+                                    return const Center(child: CircularProgressIndicator());
+                                  } else if (state is VendorSpkLoadFailure) {
+                                    return Center(child: Text(state.message));
                                   }
                                   return Container(
                                     width: double.infinity,
@@ -342,45 +344,6 @@ class _LoanFormScreenState extends State<LoanFormScreen> {
                                 },
                               ),
                               SizedBox(height: 24.w),
-                              SizedBox(
-                                width: double.infinity,
-                                child: FilledButton(
-                                  style: FilledButton.styleFrom(
-                                    backgroundColor: Color(0xff1C3FAA),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(4),
-                                    ), // Adjust radius here
-                                  ),
-                                  onPressed: () {
-                                    if (loanFormState.selectedSpk == null ||
-                                        loanFormState.selectedVendor == null) {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            "Pilih Vendor dan SPK terlebih dahulu",
-                                          ),
-                                          duration: Duration(seconds: 2),
-                                          behavior: SnackBarBehavior.floating,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              4,
-                                            ),
-                                          ),
-                                          backgroundColor: Color(0xffff0000),
-                                        ),
-                                      );
-                                      return;
-                                    }
-                                    pageController.nextPage(
-                                      duration: Duration(seconds: 1),
-                                      curve: Curves.linear,
-                                    );
-                                  },
-                                  child: Text("Next"),
-                                ),
-                              ),
                             ],
                           ),
                         );
