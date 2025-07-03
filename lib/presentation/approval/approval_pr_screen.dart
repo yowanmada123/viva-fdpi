@@ -38,13 +38,16 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
     }
   }
 
-  void _handleApproval(int index, List<ApprovalPR> poList, BuildContext context) {
+  void _handleApproval(
+    int index,
+    List<ApprovalPR> poList,
+    BuildContext context,
+  ) {
     final credentialState = context.read<CredentialsBloc>().state;
 
     if (poList[index].aprvBy == "" && poList[index].rjcBy == "") {
       if (credentialState is CredentialsLoadSuccess) {
-        final deptList = credentialState.credentials["APPROVALPR_DEPT"]?.split(',') ?? [];
-        if (deptList.contains(poList[index].deptId)) {
+        if (credentialState.credentials["APPROVALPR1"] == "Y") {
           context.read<ApprovePrBloc>().add(
             ApprovePrLoadEvent(
               prId: poList[index].prId,
@@ -111,8 +114,7 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
 
     if (poList[index].aprvBy == "" && poList[index].rjcBy == "") {
       if (credentialState is CredentialsLoadSuccess) {
-        final deptList = credentialState.credentials["APPROVALPR_DEPT"]?.split(',') ?? [];
-        if (deptList.contains(poList[index].deptId)) {
+        if (credentialState.credentials["APPROVALPR1"] == "Y") {
           context.read<ApprovePrBloc>().add(
             ApprovePrLoadEvent(
               prId: poList[index].prId,
@@ -244,13 +246,11 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
                 return Center(child: Text(state.message));
               }
               if (state is ApprovalPrListSuccessState) {
-                if(state.data.isEmpty){
+                if (state.data.isEmpty) {
                   return Center(
                     child: Text(
                       "Approval PR Tidak Tersedia",
-                      style: TextStyle(
-                        fontSize: 14
-                      ),
+                      style: TextStyle(fontSize: 14),
                     ),
                   );
                 }
@@ -320,33 +320,27 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
                 final currentPr = poList[_currentPage];
 
                 bool canApprove = false;
-                bool canReject = false;
 
                 if (credentialState is CredentialsLoadSuccess) {
                   final creds = credentialState.credentials;
 
-                  final deptList = creds["APPROVALPR_DEPT"]?.split(',') ?? [];
-
                   if (currentPr.aprvBy == "" && currentPr.rjcBy == "") {
-                    canApprove = deptList.contains(currentPr.deptId);
-                    canReject = deptList.contains(currentPr.deptId);
-                  } else if (currentPr.aprv2By == "" && currentPr.rjcBy == "") {
+                    canApprove = creds["APPROVALPR1"] == "Y";
+                  } else if (currentPr.aprv2By == "" &&
+                      currentPr.rjc2By == "") {
                     canApprove = creds["APPROVALPR2"] == "Y";
-                    canReject = creds["APPROVALPR2"] == "Y";
                   }
                 }
 
-                if (!canApprove && !canReject) return SizedBox.shrink();
+                if (!canApprove) return SizedBox.shrink();
                 return ApprovalBottomBar(
                   isLoading: false,
                   onApprove:
-                      () =>
-                          _handleApproval(_currentPage, state.data, context),
+                      () => _handleApproval(_currentPage, state.data, context),
                   onReject: () {
                     _handleReject(_currentPage, state.data, context);
                   },
                   canApprove: canApprove,
-                  canReject: canReject,
                 );
               },
             ),

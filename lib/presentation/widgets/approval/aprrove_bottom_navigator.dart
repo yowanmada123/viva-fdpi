@@ -6,7 +6,6 @@ class ApprovalBottomBar extends StatelessWidget {
   final VoidCallback onApprove;
   final bool isLoading;
   final bool canApprove;
-  final bool canReject;
 
   const ApprovalBottomBar({
     super.key,
@@ -14,7 +13,6 @@ class ApprovalBottomBar extends StatelessWidget {
     required this.onApprove,
     this.isLoading = false,
     this.canApprove = false,
-    this.canReject = false,
   });
 
   @override
@@ -25,7 +23,7 @@ class ApprovalBottomBar extends StatelessWidget {
       selectedFontSize: 0,
       unselectedFontSize: 0,
       items: [
-        if (canReject)
+        if (canApprove)
           BottomNavigationBarItem(
             icon: Container(
               width: double.infinity,

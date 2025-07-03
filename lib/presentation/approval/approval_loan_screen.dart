@@ -284,12 +284,31 @@ class ApprovalScreenState extends State<ApprovalScreen> {
               return SizedBox.shrink();
             }
 
+            final credentialState = context.read<CredentialsBloc>().state;
+            final spkList = state.loanList;
+
+            if (_currentPage >= spkList.length) return SizedBox.shrink();
+            final currentPr = spkList[_currentPage];
+
+            bool canApprove = false;
+
+            if (credentialState is CredentialsLoadSuccess) {
+              if (credentialState.credentials["APPROVALSPK1"] == "Y") {
+                canApprove = currentPr.dtAprv1 == null ? false : true;
+              }
+              if (credentialState.credentials["APPROVALSPK2"] == "Y") {
+                canApprove = currentPr.dtAprv2 == null ? false : true;
+              }
+            }
+
+            if (!canApprove) return SizedBox.shrink();
             return ApprovalBottomBar(
               isLoading: false,
               onApprove:
                   () => _handleApproval(_currentPage, state.loanList, context),
               onReject:
                   () => _handleReject(_currentPage, state.loanList, context),
+              canApprove: canApprove,
             );
           },
         ),

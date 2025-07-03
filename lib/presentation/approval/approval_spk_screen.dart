@@ -294,6 +294,26 @@ class ApprovalSpkScreenState extends State<ApprovalSpkScreen> {
                   return SizedBox.shrink();
                 }
 
+                final credentialState = context.read<CredentialsBloc>().state;
+                final spkList = state.spkList;
+
+                if (_currentPage >= spkList.length) return SizedBox.shrink();
+                final currentPr = spkList[_currentPage];
+
+                bool canApprove = false;
+
+                if (credentialState is CredentialsLoadSuccess) {
+                  if (credentialState.credentials["APPROVALSPK1"] == "Y") {
+                    canApprove =
+                        currentPr.aprv1By == "" && currentPr.rejectBy == "";
+                  }
+                  if (credentialState.credentials["APPROVALSPK2"] == "Y") {
+                    canApprove =
+                        currentPr.aprv2By == "" && currentPr.reject2By == "";
+                  }
+                }
+
+                if (!canApprove) return SizedBox.shrink();
                 return ApprovalBottomBar(
                   isLoading: false,
                   onApprove:
@@ -302,6 +322,7 @@ class ApprovalSpkScreenState extends State<ApprovalSpkScreen> {
                   onReject: () {
                     _handleReject(_currentPage, state.spkList, context);
                   },
+                  canApprove: canApprove,
                 );
               },
             ),
