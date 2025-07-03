@@ -32,6 +32,7 @@ class ApprovalLoan {
   final String wAprv1By;
   final String wAprv2By;
   final String creditLimit;
+  final String amt;
   ApprovalLoan({
     required this.officeId,
     required this.office,
@@ -62,6 +63,7 @@ class ApprovalLoan {
     required this.wAprv1By,
     required this.wAprv2By,
     required this.creditLimit,
+    required this.amt,
   });
 
   ApprovalLoan copyWith({
@@ -94,6 +96,7 @@ class ApprovalLoan {
     String? wAprv1By,
     String? wAprv2By,
     String? creditLimit,
+    String? amt,
   }) {
     return ApprovalLoan(
       officeId: officeId ?? this.officeId,
@@ -125,6 +128,7 @@ class ApprovalLoan {
       wAprv1By: wAprv1By ?? this.wAprv1By,
       wAprv2By: wAprv2By ?? this.wAprv2By,
       creditLimit: creditLimit ?? this.creditLimit,
+      amt: amt ?? this.amt,
     );
   }
 
@@ -158,6 +162,7 @@ class ApprovalLoan {
       'w_created_by': wCreatedBy,
       'w_aprv1_by': wAprv1By,
       'w_aprv2_by': wAprv2By,
+      'amt': amt,
       'credit_limit': creditLimit,
     };
   }
@@ -193,6 +198,7 @@ class ApprovalLoan {
       wAprv1By: map['w_aprv1_by'] ?? '',
       wAprv2By: map['w_aprv2_by'] ?? '',
       creditLimit: map['credit_limit'] ?? '',
+      amt: map['amt'] ?? '',
     );
   }
 
@@ -203,7 +209,7 @@ class ApprovalLoan {
 
   @override
   String toString() {
-    return 'ApprovalLoan(officeId: $officeId, office: $office, address: $address, city: $city, trId: $trId, trType: $trType, wTrType: $wTrType, kbNum: $kbNum, vendorId: $vendorId, idEmployee: $idEmployee, dtKb: $dtKb, kbAmt: $kbAmt, remark: $remark, stat: $stat, dtCreated: $dtCreated, dtModified: $dtModified, userId: $userId, trIdRef: $trIdRef, dtAprv1: $dtAprv1, userAprv1: $userAprv1, dtAprv2: $dtAprv2, userAprv2: $userAprv2, acNum: $acNum, employeeName: $employeeName, vendorName: $vendorName, wCreatedBy: $wCreatedBy, wAprv1By: $wAprv1By, wAprv2By: $wAprv2By, creditLimit: $creditLimit)';
+    return 'ApprovalLoan(officeId: $officeId, office: $office, address: $address, city: $city, trId: $trId, trType: $trType, wTrType: $wTrType, kbNum: $kbNum, vendorId: $vendorId, idEmployee: $idEmployee, dtKb: $dtKb, kbAmt: $kbAmt, remark: $remark, stat: $stat, dtCreated: $dtCreated, dtModified: $dtModified, userId: $userId, trIdRef: $trIdRef, dtAprv1: $dtAprv1, userAprv1: $userAprv1, dtAprv2: $dtAprv2, userAprv2: $userAprv2, acNum: $acNum, employeeName: $employeeName, vendorName: $vendorName, wCreatedBy: $wCreatedBy, wAprv1By: $wAprv1By, wAprv2By: $wAprv2By, creditLimit: $creditLimit, amt: $amt)';
   }
 
   @override
@@ -239,7 +245,8 @@ class ApprovalLoan {
         other.wCreatedBy == wCreatedBy &&
         other.wAprv1By == wAprv1By &&
         other.wAprv2By == wAprv2By &&
-        other.creditLimit == creditLimit;
+        other.creditLimit == creditLimit &&
+        other.amt == amt;
   }
 
   @override
@@ -272,6 +279,7 @@ class ApprovalLoan {
         wCreatedBy.hashCode ^
         wAprv1By.hashCode ^
         wAprv2By.hashCode ^
-        creditLimit.hashCode;
+        creditLimit.hashCode ^
+        amt.hashCode;
   }
 }
