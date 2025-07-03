@@ -43,7 +43,8 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
 
     if (poList[index].aprvBy == "" && poList[index].rjcBy == "") {
       if (credentialState is CredentialsLoadSuccess) {
-        // if (credentialState.credentials["APPROVALPO_DEPT"] == "Y") {
+        final deptList = credentialState.credentials["APPROVALPR_DEPT"]?.split(',') ?? [];
+        if (deptList.contains(poList[index].deptId)) {
           context.read<ApprovePrBloc>().add(
             ApprovePrLoadEvent(
               prId: poList[index].prId,
@@ -51,25 +52,25 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
               status: "approve",
             ),
           );
-        // } else {
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //     SnackBar(
-        //       content: Text("Anda tidak memiliki permission untuk approve SPB"),
-        //     ),
-        //   );
-        //   return;
-        // }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Anda tidak memiliki permission untuk approve PR"),
+            ),
+          );
+          return;
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Anda tidak memiliki permission untuk approve SPB"),
+            content: Text("Anda tidak memiliki permission untuk approve PR"),
           ),
         );
         return;
       }
     } else if (poList[index].aprv2By == "" && poList[index].rjc2By == "") {
       if (credentialState is CredentialsLoadSuccess) {
-        // if (credentialState.credentials["APPROVALPO_DEPT"] == "Y") {
+        if (credentialState.credentials["APPROVALPR2"] == "Y") {
           context.read<ApprovePrBloc>().add(
             ApprovePrLoadEvent(
               prId: poList[index].prId,
@@ -77,18 +78,18 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
               status: "approve",
             ),
           );
-        // } else {
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //     SnackBar(
-        //       content: Text("Anda tidak memiliki permission untuk approve PO"),
-        //     ),
-        //   );
-        //   return;
-        // }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Anda tidak memiliki permission untuk approve PR"),
+            ),
+          );
+          return;
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Anda tidak memiliki permission untuk approve PO"),
+            content: Text("Anda tidak memiliki permission untuk approve PR"),
           ),
         );
         return;
@@ -110,7 +111,8 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
 
     if (poList[index].aprvBy == "" && poList[index].rjcBy == "") {
       if (credentialState is CredentialsLoadSuccess) {
-        // if (credentialState.credentials["APPROVALPO_DEPT"] == "Y") {
+        final deptList = credentialState.credentials["APPROVALPR_DEPT"]?.split(',') ?? [];
+        if (deptList.contains(poList[index].deptId)) {
           context.read<ApprovePrBloc>().add(
             ApprovePrLoadEvent(
               prId: poList[index].prId,
@@ -118,25 +120,25 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
               status: "reject",
             ),
           );
-        // } else {
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //     SnackBar(
-        //       content: Text("Anda tidak memiliki permission untuk approve PO"),
-        //     ),
-        //   );
-        //   return;
-        // }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Anda tidak memiliki permission untuk approve PR"),
+            ),
+          );
+          return;
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Anda tidak memiliki permission untuk approve PO"),
+            content: Text("Anda tidak memiliki permission untuk approve PR"),
           ),
         );
         return;
       }
     } else if (poList[index].aprv2By == "" && poList[index].rjcBy == "") {
       if (credentialState is CredentialsLoadSuccess) {
-        // if (credentialState.credentials["APPROVALPO_DEPT"] == "Y") {
+        if (credentialState.credentials["APPROVALPR2"] == "Y") {
           context.read<ApprovePrBloc>().add(
             ApprovePrLoadEvent(
               prId: poList[index].prId,
@@ -144,18 +146,18 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
               status: "reject",
             ),
           );
-        // } else {
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //     SnackBar(
-        //       content: Text("Anda tidak memiliki permission untuk approve PO"),
-        //     ),
-        //   );
-        //   return;
-        // }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Anda tidak memiliki permission untuk approve PR"),
+            ),
+          );
+          return;
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Anda tidak memiliki permission untuk approve PO"),
+            content: Text("Anda tidak memiliki permission untuk approve PR"),
           ),
         );
         return;
@@ -311,6 +313,30 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
                   return SizedBox.shrink();
                 }
 
+                final credentialState = context.read<CredentialsBloc>().state;
+                final poList = state.data;
+
+                if (_currentPage >= poList.length) return SizedBox.shrink();
+                final currentPr = poList[_currentPage];
+
+                bool canApprove = false;
+                bool canReject = false;
+
+                if (credentialState is CredentialsLoadSuccess) {
+                  final creds = credentialState.credentials;
+
+                  final deptList = creds["APPROVALPR_DEPT"]?.split(',') ?? [];
+
+                  if (currentPr.aprvBy == "" && currentPr.rjcBy == "") {
+                    canApprove = deptList.contains(currentPr.deptId);
+                    canReject = deptList.contains(currentPr.deptId);
+                  } else if (currentPr.aprv2By == "" && currentPr.rjcBy == "") {
+                    canApprove = creds["APPROVALPR2"] == "Y";
+                    canReject = creds["APPROVALPR2"] == "Y";
+                  }
+                }
+
+                if (!canApprove && !canReject) return SizedBox.shrink();
                 return ApprovalBottomBar(
                   isLoading: false,
                   onApprove:
@@ -319,6 +345,8 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
                   onReject: () {
                     _handleReject(_currentPage, state.data, context);
                   },
+                  canApprove: canApprove,
+                  canReject: canReject,
                 );
               },
             ),
