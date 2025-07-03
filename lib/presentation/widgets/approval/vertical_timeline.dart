@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 enum TimelineStatus { waiting, approved, rejected }
 
@@ -80,7 +81,10 @@ class TimelineProgress extends StatelessWidget {
                           ),
                           if (step.date != null)
                             Text(
-                              step.date!.toLocal().toString(),
+                              DateFormat(
+                                'd MMM yyyy HH:mm',
+                                'id_ID',
+                              ).format(step.date!),
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 color: Colors.grey,
