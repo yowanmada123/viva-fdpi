@@ -81,11 +81,15 @@ class _ApprovalCardState extends State<ApprovalCard> {
                       ).format(widget.requests.dtKb!),
                     ),
                     _buildInfoRow("Diajukan oleh", widget.requests.vendorName),
+                    _buildInfoRow(
+                      "Nilai Kontrak",
+                      formatIDRCurrency(widget.requests.amt),
+                    ),
                     Row(
                       children: [
                         Expanded(
                           child: _buildInfoRow(
-                            "Jumlah KasBon",
+                            "Nominal KasBon",
                             formatIDRCurrency(widget.requests.kbAmt),
                           ),
                         ),
