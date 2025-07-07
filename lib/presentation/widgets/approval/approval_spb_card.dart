@@ -122,11 +122,6 @@ class _ApprovalSpbCardState extends State<ApprovalSpbCard> {
                             detail: state.spbDetail.wAprv1By,
                             date: state.spbDetail.dtAprv1,
                           ),
-                          TimelineStep(
-                            header: "Approve 2",
-                            detail: state.spbDetail.wAprv2By,
-                            date: state.spbDetail.dtAprv2,
-                          ),
                         ],
                       ),
                       SizedBox(height: 320.w),

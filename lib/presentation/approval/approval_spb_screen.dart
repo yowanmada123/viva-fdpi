@@ -69,32 +69,32 @@ class ApprovalSpbScreenState extends State<ApprovalSpbScreen> {
         );
         return;
       }
-    } else if (spbList[index].aprv2By == "" && spbList[index].reject2By == "") {
-      if (credentialState is CredentialsLoadSuccess) {
-        if (credentialState.credentials["APPROVALSPB2"] == "Y") {
-          context.read<ApproveSpbBloc>().add(
-            ApproveSpbLoad(
-              idSpb: spbList[index].idSpb,
-              typeAprv: "approve2",
-              status: "approve",
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Anda tidak memiliki permission untuk approve SPB"),
-            ),
-          );
-          return;
-        }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Anda tidak memiliki permission untuk approve SPB"),
-          ),
-        );
-        return;
-      }
+    // } else if (spbList[index].aprv2By == "" && spbList[index].reject2By == "") {
+    //   if (credentialState is CredentialsLoadSuccess) {
+    //     if (credentialState.credentials["APPROVALSPB2"] == "Y") {
+    //       context.read<ApproveSpbBloc>().add(
+    //         ApproveSpbLoad(
+    //           idSpb: spbList[index].idSpb,
+    //           typeAprv: "approve2",
+    //           status: "approve",
+    //         ),
+    //       );
+    //     } else {
+    //       ScaffoldMessenger.of(context).showSnackBar(
+    //         SnackBar(
+    //           content: Text("Anda tidak memiliki permission untuk approve SPB"),
+    //         ),
+    //       );
+    //       return;
+    //     }
+    //   } else {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(
+    //         content: Text("Anda tidak memiliki permission untuk approve SPB"),
+    //       ),
+    //     );
+    //     return;
+    //   }
     }
 
     context.read<ApprovalSpbDetailBloc>().add(
@@ -140,32 +140,32 @@ class ApprovalSpbScreenState extends State<ApprovalSpbScreen> {
         );
         return;
       }
-    } else if (spbList[index].aprv2By == "" && spbList[index].reject2By == "") {
-      if (credentialState is CredentialsLoadSuccess) {
-        if (credentialState.credentials["APPROVALSPB2"] == "Y") {
-          context.read<ApproveSpbBloc>().add(
-            ApproveSpbLoad(
-              idSpb: spbList[index].idSpb,
-              typeAprv: "approve2",
-              status: "reject",
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Anda tidak memiliki permission untuk approve SPB"),
-            ),
-          );
-          return;
-        }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Anda tidak memiliki permission untuk approve SPB"),
-          ),
-        );
-        return;
-      }
+    // } else if (spbList[index].aprv2By == "" && spbList[index].reject2By == "") {
+    //   if (credentialState is CredentialsLoadSuccess) {
+    //     if (credentialState.credentials["APPROVALSPB2"] == "Y") {
+    //       context.read<ApproveSpbBloc>().add(
+    //         ApproveSpbLoad(
+    //           idSpb: spbList[index].idSpb,
+    //           typeAprv: "approve2",
+    //           status: "reject",
+    //         ),
+    //       );
+    //     } else {
+    //       ScaffoldMessenger.of(context).showSnackBar(
+    //         SnackBar(
+    //           content: Text("Anda tidak memiliki permission untuk approve SPB"),
+    //         ),
+    //       );
+    //       return;
+    //     }
+    //   } else {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(
+    //         content: Text("Anda tidak memiliki permission untuk approve SPB"),
+    //       ),
+    //     );
+    //     return;
+    //   }
     }
 
     context.read<ApprovalSpbDetailBloc>().add(
@@ -349,10 +349,10 @@ class ApprovalSpbScreenState extends State<ApprovalSpbScreen> {
                     canApprove =
                         currentPr.aprv1By == "" && currentPr.rejectBy == "";
                   }
-                  if (credentialState.credentials["APPROVALSPB2"] == "Y") {
-                    canApprove =
-                        currentPr.aprv2By == "" && currentPr.reject2By == "";
-                  }
+                  // if (credentialState.credentials["APPROVALSPB2"] == "Y") {
+                  //   canApprove =
+                  //       currentPr.aprv2By == "" && currentPr.reject2By == "";
+                  // }
                 }
 
                 if (!canApprove) return SizedBox.shrink();
