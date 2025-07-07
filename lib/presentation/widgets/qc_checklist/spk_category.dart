@@ -426,7 +426,7 @@ class _CheckboxConfirmationDialogState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Konfirmasi',
+                      'Approve',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -481,7 +481,7 @@ class _CheckboxConfirmationDialogState
                           SizedBox(width: 16.w),
                           Expanded(
                             child: FilledButton(
-                              child: const Text('Konfirmasi'),
+                              child: const Text('Approve'),
                               onPressed: () {
                                 widget.onConfirmed(
                                   _remarkController.text,
@@ -501,7 +501,7 @@ class _CheckboxConfirmationDialogState
                               style: FilledButton.styleFrom(
                                 backgroundColor: const Color(0xFFAFAFAF),
                               ),
-                              child: const Text('Unapprove'),
+                              child: const Text('Reject'),
                               onPressed: () {
                                 widget.onUnapproveChecklist?.call();
                                 Navigator.pop(context);
