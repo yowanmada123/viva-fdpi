@@ -285,19 +285,21 @@ class ApprovalScreenState extends State<ApprovalScreen> {
             }
 
             final credentialState = context.read<CredentialsBloc>().state;
-            final spkList = state.loanList;
+            final loanList = state.loanList;
 
-            if (_currentPage >= spkList.length) return SizedBox.shrink();
-            final currentPr = spkList[_currentPage];
+            if (_currentPage >= loanList.length) return SizedBox.shrink();
+            final currentPr = loanList[_currentPage];
 
             bool canApprove = false;
 
             if (credentialState is CredentialsLoadSuccess) {
-              if (credentialState.credentials["APPROVALBON1"] == "Y") {
-                canApprove = currentPr.dtAprv1 == null ? false : true;
+              final creds = credentialState.credentials;
+              print(currentPr);
+              if (currentPr.userAprv1.trim() == "") {
+                canApprove = creds["APPROVALBON1"] == "Y";
               }
-              if (credentialState.credentials["APPROVALBON2"] == "Y") {
-                canApprove = currentPr.dtAprv2 == null ? false : true;
+              if (currentPr.userAprv2.trim() == "") {
+                canApprove = creds["APPROVALBON2"] == "Y";
               }
             }
 
