@@ -322,13 +322,12 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
                 bool canApprove = false;
 
                 if (credentialState is CredentialsLoadSuccess) {
-                  final creds = credentialState.credentials;
 
                   if (currentPr.aprvBy == "" && currentPr.rjcBy == "") {
-                    canApprove = creds["APPROVALPR1"] == "Y";
+                    canApprove = true;
                   } else if (currentPr.aprv2By == "" &&
                       currentPr.rjc2By == "") {
-                    canApprove = creds["APPROVALPR2"] == "Y";
+                    canApprove = true;
                   }
                 }
 
