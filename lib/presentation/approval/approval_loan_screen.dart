@@ -293,10 +293,10 @@ class ApprovalScreenState extends State<ApprovalScreen> {
             bool canApprove = false;
 
             if (credentialState is CredentialsLoadSuccess) {
-              if (credentialState.credentials["APPROVALSPK1"] == "Y") {
+              if (credentialState.credentials["APPROVALBON1"] == "Y") {
                 canApprove = currentPr.dtAprv1 == null ? false : true;
               }
-              if (credentialState.credentials["APPROVALSPK2"] == "Y") {
+              if (credentialState.credentials["APPROVALBON2"] == "Y") {
                 canApprove = currentPr.dtAprv2 == null ? false : true;
               }
             }
