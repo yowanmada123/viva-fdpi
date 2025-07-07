@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dio/dio.dart';
 import 'package:fdpi_app/bloc/QC/approve_detail/approve_detail_bloc.dart';
 import 'package:fdpi_app/bloc/QC/checklist/checklist_bloc.dart';
 import 'package:fdpi_app/bloc/QC/spk_checklist/spk_checklist_bloc.dart';
@@ -57,6 +56,13 @@ class SpkChecklistForm extends StatefulWidget {
 }
 
 class SpkChecklistFormState extends State<SpkChecklistForm> {
+  final colorExpandedBox = [
+    Colors.red,
+    Colors.orange,
+    Colors.teal,
+    Colors.green,
+  ];
+
   void checkboxEvent(
     int param,
     String id,
@@ -197,23 +203,21 @@ class SpkChecklistFormState extends State<SpkChecklistForm> {
                         },
                         expandedHeaderPadding: EdgeInsets.all(0),
                         children:
-                            // _dummyData.map<ExpansionPanel>((item) {
                             state.checklistItem.asMap().entries.map<
                               ExpansionPanel
                             >((item) {
                               return ExpansionPanel(
-                                backgroundColor: const Color(0xff1f1f1f),
+                                backgroundColor: colorExpandedBox[item.key % 4],
                                 isExpanded: _expandedStatus[item.key],
                                 canTapOnHeader: true,
                                 headerBuilder:
                                     (context, isExpanded) => Container(
                                       padding: EdgeInsets.all(16.w),
-                                      decoration: const BoxDecoration(
-                                        color: Color(0xff1f1f1f),
+                                      decoration: BoxDecoration(
+                                        color: colorExpandedBox[item.key % 4],
                                       ),
                                       child: Text(
                                         item.value.comDesc,
-                                        // item['type'],
                                         style: TextStyle(
                                           fontSize: max(16.sp, 16.0),
                                           fontWeight: FontWeight.w600,
