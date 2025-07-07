@@ -211,6 +211,16 @@ class ApprovalScreenState extends State<ApprovalScreen> {
                 return Center(child: Text(state.message));
               }
               if (state is ApprovalLoanListLoadSuccess) {
+                if(state.loanList.isEmpty){
+                  return Center(
+                    child: Text(
+                      "Approval KasBon Tidak Tersedia",
+                      style: TextStyle(
+                        fontSize: 14
+                      ),
+                    ),
+                  );
+                }
                 return NotificationListener<ScrollNotification>(
                   onNotification: (notification) {
                     return true;

@@ -298,18 +298,16 @@ class ApprovalSpkScreenState extends State<ApprovalSpkScreen> {
                 final spkList = state.spkList;
 
                 if (_currentPage >= spkList.length) return SizedBox.shrink();
-                final currentPr = spkList[_currentPage];
+                // final currentPr = spkList[_currentPage];
 
                 bool canApprove = false;
 
                 if (credentialState is CredentialsLoadSuccess) {
                   if (credentialState.credentials["APPROVALSPK1"] == "Y") {
-                    canApprove =
-                        currentPr.aprv1By == "" && currentPr.rejectBy == "";
+                    canApprove = true;
                   }
                   if (credentialState.credentials["APPROVALSPK2"] == "Y") {
-                    canApprove =
-                        currentPr.aprv2By == "" && currentPr.reject2By == "";
+                    canApprove = true;
                   }
                 }
 
