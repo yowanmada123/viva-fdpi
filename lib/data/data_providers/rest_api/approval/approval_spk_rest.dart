@@ -34,7 +34,7 @@ class ApprovalSpkRest {
       };
 
       final response = await http.post(
-        "api/fpi/aprv-spk/getListSPK",
+        "api/fpi/aprv-spk/getListSPKMobile",
         data: body,
       );
 
