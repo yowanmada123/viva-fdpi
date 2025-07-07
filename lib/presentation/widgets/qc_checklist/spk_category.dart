@@ -380,8 +380,8 @@ class _CheckboxConfirmationDialog extends StatefulWidget {
     required this.onConfirmed,
     required this.approveDetailBloc,
     required this.value,
-    this.onUnapproveChecklist,
-    this.onUpdateChecklist,
+    required this.onUnapproveChecklist,
+    required this.onUpdateChecklist,
   });
 
   @override

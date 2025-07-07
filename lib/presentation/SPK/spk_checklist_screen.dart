@@ -257,6 +257,76 @@ class SpkChecklistFormState extends State<SpkChecklistForm> {
                                                   onUnapproveChecklist: (
                                                     idWork,
                                                   ) {
+                                                    if (idWork == 1 &&
+                                                        (qcItem.value.dtAprv2 !=
+                                                                null ||
+                                                            qcItem
+                                                                    .value
+                                                                    .dtAprv3 !=
+                                                                null)) {
+                                                      ScaffoldMessenger.of(
+                                                        context,
+                                                      ).showSnackBar(
+                                                        SnackBar(
+                                                          content: Text(
+                                                            "Anda tidak bisa unapprove checklist ini",
+                                                          ),
+                                                          duration: Duration(
+                                                            seconds: 5,
+                                                          ),
+                                                          behavior:
+                                                              SnackBarBehavior
+                                                                  .floating,
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  4.w,
+                                                                ),
+                                                          ),
+                                                          backgroundColor:
+                                                              Color.fromARGB(
+                                                                255,
+                                                                80,
+                                                                80,
+                                                                80,
+                                                              ),
+                                                        ),
+                                                      );
+                                                      return;
+                                                    }
+                                                    if (idWork == 2 &&
+                                                        qcItem.value.dtAprv3 !=
+                                                            null) {
+                                                      ScaffoldMessenger.of(
+                                                        context,
+                                                      ).showSnackBar(
+                                                        SnackBar(
+                                                          content: Text(
+                                                            "Anda tidak bisa unapprove checklist ini",
+                                                          ),
+                                                          duration: Duration(
+                                                            seconds: 5,
+                                                          ),
+                                                          behavior:
+                                                              SnackBarBehavior
+                                                                  .floating,
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  4.w,
+                                                                ),
+                                                          ),
+                                                          backgroundColor:
+                                                              Color.fromARGB(
+                                                                255,
+                                                                80,
+                                                                80,
+                                                                80,
+                                                              ),
+                                                        ),
+                                                      );
+                                                      return;
+                                                    }
                                                     unapproveChecklist(
                                                       idWork,
                                                       qcItem.value.idQcItem,
