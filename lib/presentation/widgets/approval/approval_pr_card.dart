@@ -90,9 +90,9 @@ class _ApprovalPrCardState extends State<ApprovalPrCard> {
                       ),
                     ),
                     _buildInfoRow("Vendor", widget.requests.vendorName),
-                    _buildInfoRow("Site", widget.requests.siteName),
-                    _buildInfoRow("Cluster", widget.requests.clusterName),
-                    _buildInfoRow("House", widget.requests.houseName),
+                    // _buildInfoRow("Site", widget.requests.siteName),
+                    // _buildInfoRow("Cluster", widget.requests.clusterName),
+                    // _buildInfoRow("House", widget.requests.houseName),
                     _buildInfoRow("Note", widget.requests.memoTxt),
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -159,6 +159,18 @@ class _ApprovalPrCardState extends State<ApprovalPrCard> {
                                           ),
                                         ),
                                         SizedBox(height: 4.w),
+                                        Text(
+                                          "Site: ${article.siteName}",
+                                          style: TextStyle(fontSize: 14.sp),
+                                        ),
+                                        Text(
+                                          "Cluster: ${article.clusterName}",
+                                          style: TextStyle(fontSize: 14.sp),
+                                        ),
+                                        Text(
+                                          "House: ${article.houseName}",
+                                          style: TextStyle(fontSize: 14.sp),
+                                        ),
                                         Text(
                                           "Quantity: $qty",
                                           style: TextStyle(fontSize: 14.sp),
