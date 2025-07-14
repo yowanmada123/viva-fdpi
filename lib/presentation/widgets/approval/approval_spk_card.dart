@@ -98,6 +98,11 @@ class _ApprovalSpkCardState extends State<ApprovalSpkCard> {
                 style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 16.w),
+              Text(
+                "SPK Type: ${widget.requests.wSpkType}",
+                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16.w),
               // Text(
               //   "Remark QC",
               //   style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
