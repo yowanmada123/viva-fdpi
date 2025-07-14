@@ -36,6 +36,7 @@ class ApprovalSpk {
   final String aprv1By;
   final DateTime? dtAprv2;
   final String aprv2By;
+  final String wSpkType;
   final DateTime? dtCreated;
   final List<ApprovalSpkArticle> article;
   ApprovalSpk({
@@ -71,6 +72,7 @@ class ApprovalSpk {
     required this.aprv1By,
     required this.dtAprv2,
     required this.aprv2By,
+    required this.wSpkType,
     required this.article,
     this.dtCreated,
   });
@@ -109,6 +111,7 @@ class ApprovalSpk {
     DateTime? dtAprv2,
     String? aprv2By,
     DateTime? dtCreated,
+    String? wSpkType,
     List<ApprovalSpkArticle>? article,
   }) {
     return ApprovalSpk(
@@ -144,6 +147,7 @@ class ApprovalSpk {
       aprv1By: aprv1By ?? this.aprv1By,
       dtAprv2: dtAprv2 ?? this.dtAprv2,
       aprv2By: aprv2By ?? this.aprv2By,
+      wSpkType: wSpkType ?? this.wSpkType,
       article: article ?? this.article,
     );
   }
@@ -182,6 +186,7 @@ class ApprovalSpk {
       'aprv1_by': aprv1By,
       'dt_aprv2': dtAprv2,
       'aprv2_by': aprv2By,
+      'w_spk_type': wSpkType,
       'dt_created': dtCreated,
       'article': article.map((x) => x.toMap()).toList(),
     };
@@ -221,6 +226,7 @@ class ApprovalSpk {
       aprv1By: map['aprv1_by'] ?? '',
       dtAprv2: parseDateTime(map['dt_aprv2'] ?? ''),
       aprv2By: map['aprv2_by'] ?? '',
+      wSpkType: map['w_spk_type'] ?? '',
       dtCreated: parseDateTime(map['dt_created'] ?? ''),
       article: List<ApprovalSpkArticle>.from(
         map['article']?.map((x) => ApprovalSpkArticle.fromMap(x)) ?? [],
@@ -235,7 +241,7 @@ class ApprovalSpk {
 
   @override
   String toString() {
-    return 'ApprovalSpk(idSpk: $idSpk, spkType: $spkType, dtReject: $dtReject, rejectBy: $rejectBy, dtReject2: $dtReject2, reject2By: $reject2By, siteName: $siteName, remark: $remark, clusterName: $clusterName, remarkCluster: $remarkCluster, houseName: $houseName, commonName: $commonName, sbkName: $sbkName, category: $category, namaContractor: $namaContractor, namaEmployee: $namaEmployee, jabatanEmployee: $jabatanEmployee, alamatEmployee: $alamatEmployee, idQcForm: $idQcForm, qcTransId: $qcTransId, harga: $harga, wCreatedBy: $wCreatedBy, wAprv1By: $wAprv1By, wAprv2By: $wAprv2By, wReject1By: $wReject1By, wReject2By: $wReject2By, remarkQc: $remarkQc, remarks: $remarks), dtAprv1: $dtAprv1, aprv1By: $aprv1By, dtAprv2: $dtAprv2, aprv2By: $aprv2By, article: $article)';
+    return 'ApprovalSpk(idSpk: $idSpk, spkType: $spkType, dtReject: $dtReject, rejectBy: $rejectBy, dtReject2: $dtReject2, reject2By: $reject2By, siteName: $siteName, remark: $remark, clusterName: $clusterName, remarkCluster: $remarkCluster, houseName: $houseName, commonName: $commonName, sbkName: $sbkName, category: $category, namaContractor: $namaContractor, namaEmployee: $namaEmployee, jabatanEmployee: $jabatanEmployee, alamatEmployee: $alamatEmployee, idQcForm: $idQcForm, qcTransId: $qcTransId, harga: $harga, wCreatedBy: $wCreatedBy, wAprv1By: $wAprv1By, wAprv2By: $wAprv2By, wReject1By: $wReject1By, wReject2By: $wReject2By, remarkQc: $remarkQc, remarks: $remarks), dtAprv1: $dtAprv1, aprv1By: $aprv1By, dtAprv2: $dtAprv2, aprv2By: $aprv2By, wSpkType: $wSpkType, article: $article)';
   }
 
   @override
@@ -275,6 +281,7 @@ class ApprovalSpk {
         other.aprv1By == aprv1By &&
         other.dtAprv2 == dtAprv2 &&
         other.aprv2By == aprv2By &&
+        other.wSpkType == wSpkType &&
         other.article == article;
   }
 
@@ -312,6 +319,7 @@ class ApprovalSpk {
         aprv1By.hashCode ^
         dtAprv2.hashCode ^
         aprv2By.hashCode ^
+        wSpkType.hashCode ^
         article.hashCode;
   }
 }
