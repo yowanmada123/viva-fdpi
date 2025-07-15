@@ -75,29 +75,34 @@ class _ApprovalSpkCardState extends State<ApprovalSpkCard> {
             children: [
               Text(
                 "Pengajuan SPK untuk ${widget.requests.sbkName}",
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 16.w),
               Text(
                 "ID SPK: ${widget.requests.idSpk}",
                 style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 16.w),
+              SizedBox(height: 8.w),
               Text(
                 "Site: ${widget.requests.siteName}",
                 style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 16.w),
+              SizedBox(height: 8.w),
               Text(
                 "Cluster: ${widget.requests.clusterName}",
                 style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 16.w),
+              SizedBox(height: 8.w),
               Text(
                 "House: ${widget.requests.houseName}",
                 style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 16.w),
+              SizedBox(height: 8.w),
+              Text(
+                "Vendor: ${widget.requests.namaContractor}",
+                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8.w),
               Text(
                 "SPK Type: ${widget.requests.wSpkType}",
                 style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
@@ -112,7 +117,7 @@ class _ApprovalSpkCardState extends State<ApprovalSpkCard> {
               //   widget.requests.remarkQc,
               //   textStyle: TextStyle(fontSize: 14.sp),
               // ),
-              // SizedBox(height: 16.w),
+              // SizedBox(height: 8.w),
               // Text(
               //   "Remark Approval",
               //   style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
@@ -122,12 +127,12 @@ class _ApprovalSpkCardState extends State<ApprovalSpkCard> {
               //   widget.requests.remarks,
               //   textStyle: TextStyle(fontSize: 14.sp),
               // ),
-              // SizedBox(height: 16.w),
+              // SizedBox(height: 8.w),
               Text(
                 "Article",
                 style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 8.w),
+              SizedBox(height: 16.w),
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -175,7 +180,7 @@ class _ApprovalSpkCardState extends State<ApprovalSpkCard> {
                   );
                 },
               ),
-              SizedBox(height: 16.w),
+              SizedBox(height: 8.w),
               Text(
                 "Timeline",
                 style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
