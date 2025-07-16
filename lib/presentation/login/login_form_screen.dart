@@ -37,6 +37,7 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController shifController = TextEditingController();
+  bool rememberMe = true;
 
   bool _obscurePassword = true;
   @override
@@ -52,6 +53,13 @@ class _LoginFormState extends State<LoginForm> {
       final decoded = json.decode(data);
       usernameController.text = decoded['username'];
       passwordController.text = decoded['password'];
+      setState(() {
+        rememberMe = true;
+      });
+    } else {
+      setState(() {
+        rememberMe = false;
+      });
     }
   }
 
@@ -127,7 +135,19 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                   obscureText: _obscurePassword,
                 ),
-                SizedBox(height: 30.w),
+                Row(
+                  children: [
+                    Checkbox(
+                      value: rememberMe,
+                      onChanged: (value) {
+                        setState(() {
+                          rememberMe = value!;
+                        });
+                      },
+                    ),
+                    const Text("Remember Me"),
+                  ],
+                ),
                 BlocConsumer<LoginFormBloc, LoginFormState>(
                   listener: (context, state) {
                     if (state is LoginFormError) {
@@ -143,11 +163,16 @@ class _LoginFormState extends State<LoginForm> {
                         ),
                       );
                     } else if (state is LoginFormSuccess) {
-                      SharedPreferencesManager(key: SharedPreferencesKey.loginRememberKey)
-                        .write(json.encode({
-                          'username': usernameController.text,
-                          'password': passwordController.text,
-                        }));
+                      if (rememberMe) {
+                        SharedPreferencesManager(key: SharedPreferencesKey.loginRememberKey)
+                          .write(json.encode({
+                            'username': usernameController.text,
+                            'password': passwordController.text,
+                          }));
+                      } else {
+                        SharedPreferencesManager(key: SharedPreferencesKey.loginRememberKey)
+                          .clear();
+                      }
                       BlocProvider.of<AuthenticationBloc>(context).add(
                         SetAuthenticationStatus(
                           isAuthenticated: true,
