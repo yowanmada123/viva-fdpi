@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -5,6 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../bloc/auth/authentication/authentication_bloc.dart';
 import '../../bloc/auth/login-form/login_form_bloc.dart';
+import '../../data/data_providers/shared-preferences/shared_preferences_key.dart';
+import '../../data/data_providers/shared-preferences/shared_preferences_manager.dart';
 import '../../data/repository/auth_repository.dart';
 
 class LoginFormScreen extends StatelessWidget {
@@ -35,6 +39,21 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController shifController = TextEditingController();
 
   bool _obscurePassword = true;
+  @override
+  void initState() {
+    super.initState();
+    _loadRememberedLogin();
+  }
+
+  void _loadRememberedLogin() async {
+    final pref = SharedPreferencesManager(key: SharedPreferencesKey.loginRememberKey);
+    final data = await pref.read();
+    if (data != null) {
+      final decoded = json.decode(data);
+      usernameController.text = decoded['username'];
+      passwordController.text = decoded['password'];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +143,11 @@ class _LoginFormState extends State<LoginForm> {
                         ),
                       );
                     } else if (state is LoginFormSuccess) {
+                      SharedPreferencesManager(key: SharedPreferencesKey.loginRememberKey)
+                        .write(json.encode({
+                          'username': usernameController.text,
+                          'password': passwordController.text,
+                        }));
                       BlocProvider.of<AuthenticationBloc>(context).add(
                         SetAuthenticationStatus(
                           isAuthenticated: true,
