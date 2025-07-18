@@ -278,7 +278,7 @@ class _HeaderSection extends StatelessWidget {
               _AuthorizedCheckbox(
                 value: checkboxQCValue,
                 label: 'QC',
-                authorizationKey: 'CEK_LIST_1',
+                authorizationKey: 'CEK_LIST_3',
                 onChanged: onCheckboxQCChanged,
                 onBeforeDialog: () => onApproveDetail?.call(3),
                 onUnapproveChecklist: () => onUnapproveChecklist?.call(3),
