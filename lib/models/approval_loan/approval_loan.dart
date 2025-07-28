@@ -25,12 +25,15 @@ class ApprovalLoan {
   final String userAprv1;
   final DateTime? dtAprv2;
   final String userAprv2;
+  final DateTime? dtAprv3;
+  final String userAprv3;
   final String acNum;
   final String employeeName;
   final String vendorName;
   final String wCreatedBy;
   final String wAprv1By;
   final String wAprv2By;
+  final String wAprv3By;
   final String creditLimit;
   final String amt;
   ApprovalLoan({
@@ -56,12 +59,15 @@ class ApprovalLoan {
     required this.userAprv1,
     required this.dtAprv2,
     required this.userAprv2,
+    required this.dtAprv3,
+    required this.userAprv3,
     required this.acNum,
     required this.employeeName,
     required this.vendorName,
     required this.wCreatedBy,
     required this.wAprv1By,
     required this.wAprv2By,
+    required this.wAprv3By,
     required this.creditLimit,
     required this.amt,
   });
@@ -89,12 +95,15 @@ class ApprovalLoan {
     String? userAprv1,
     DateTime? dtAprv2,
     String? userAprv2,
+    DateTime? dtAprv3,
+    String? userAprv3,
     String? acNum,
     String? employeeName,
     String? vendorName,
     String? wCreatedBy,
     String? wAprv1By,
     String? wAprv2By,
+    String? wAprv3By,
     String? creditLimit,
     String? amt,
   }) {
@@ -121,12 +130,15 @@ class ApprovalLoan {
       userAprv1: userAprv1 ?? this.userAprv1,
       dtAprv2: dtAprv2 ?? this.dtAprv2,
       userAprv2: userAprv2 ?? this.userAprv2,
+      dtAprv3: dtAprv3 ?? this.dtAprv3,
+      userAprv3: userAprv3 ?? this.userAprv3,
       acNum: acNum ?? this.acNum,
       employeeName: employeeName ?? this.employeeName,
       vendorName: vendorName ?? this.vendorName,
       wCreatedBy: wCreatedBy ?? this.wCreatedBy,
       wAprv1By: wAprv1By ?? this.wAprv1By,
       wAprv2By: wAprv2By ?? this.wAprv2By,
+      wAprv3By: wAprv3By ?? this.wAprv3By,
       creditLimit: creditLimit ?? this.creditLimit,
       amt: amt ?? this.amt,
     );
@@ -156,12 +168,15 @@ class ApprovalLoan {
       'user_aprv1': userAprv1,
       'dt_aprv2': dtAprv2,
       'user_aprv2': userAprv2,
+      'dt_aprv3': dtAprv3,
+      'user_aprv3': userAprv3,
       'ac_num': acNum,
       'employee_name': employeeName,
       'vendor_name': vendorName,
       'w_created_by': wCreatedBy,
       'w_aprv1_by': wAprv1By,
       'w_aprv2_by': wAprv2By,
+      'w_aprv3_by': wAprv3By,
       'amt': amt,
       'credit_limit': creditLimit,
     };
@@ -191,12 +206,15 @@ class ApprovalLoan {
       userAprv1: map['user_aprv1'] ?? '',
       dtAprv2: parseDateTime(map['dt_aprv2'] ?? ''),
       userAprv2: map['user_aprv2'] ?? '',
+      dtAprv3: parseDateTime(map['dt_aprv3'] ?? ''),
+      userAprv3: map['user_aprv3'] ?? '',
       acNum: map['ac_num'] ?? '',
       employeeName: map['employee_name'] ?? '',
       vendorName: map['vendor_name'] ?? '',
       wCreatedBy: map['w_created_by'] ?? '',
       wAprv1By: map['w_aprv1_by'] ?? '',
       wAprv2By: map['w_aprv2_by'] ?? '',
+      wAprv3By: map['w_aprv3_by'] ?? '',
       creditLimit: map['credit_limit'] ?? '',
       amt: map['amt'] ?? '',
     );
@@ -209,7 +227,7 @@ class ApprovalLoan {
 
   @override
   String toString() {
-    return 'ApprovalLoan(officeId: $officeId, office: $office, address: $address, city: $city, trId: $trId, trType: $trType, wTrType: $wTrType, kbNum: $kbNum, vendorId: $vendorId, idEmployee: $idEmployee, dtKb: $dtKb, kbAmt: $kbAmt, remark: $remark, stat: $stat, dtCreated: $dtCreated, dtModified: $dtModified, userId: $userId, trIdRef: $trIdRef, dtAprv1: $dtAprv1, userAprv1: $userAprv1, dtAprv2: $dtAprv2, userAprv2: $userAprv2, acNum: $acNum, employeeName: $employeeName, vendorName: $vendorName, wCreatedBy: $wCreatedBy, wAprv1By: $wAprv1By, wAprv2By: $wAprv2By, creditLimit: $creditLimit, amt: $amt)';
+    return 'ApprovalLoan(officeId: $officeId, office: $office, address: $address, city: $city, trId: $trId, trType: $trType, wTrType: $wTrType, kbNum: $kbNum, vendorId: $vendorId, idEmployee: $idEmployee, dtKb: $dtKb, kbAmt: $kbAmt, remark: $remark, stat: $stat, dtCreated: $dtCreated, dtModified: $dtModified, userId: $userId, trIdRef: $trIdRef, dtAprv1: $dtAprv1, userAprv1: $userAprv1, dtAprv2: $dtAprv2, userAprv2: $userAprv2, dtAprv3: $dtAprv3, userAprv3: $userAprv3, acNum: $acNum, employeeName: $employeeName, vendorName: $vendorName, wCreatedBy: $wCreatedBy, wAprv1By: $wAprv1By, wAprv2By: $wAprv2By, wAprv3By: $wAprv3By, creditLimit: $creditLimit, amt: $amt)';
   }
 
   @override
@@ -239,12 +257,15 @@ class ApprovalLoan {
         other.userAprv1 == userAprv1 &&
         other.dtAprv2 == dtAprv2 &&
         other.userAprv2 == userAprv2 &&
+        other.dtAprv3 == dtAprv3 &&
+        other.userAprv3 == userAprv3 &&
         other.acNum == acNum &&
         other.employeeName == employeeName &&
         other.vendorName == vendorName &&
         other.wCreatedBy == wCreatedBy &&
         other.wAprv1By == wAprv1By &&
         other.wAprv2By == wAprv2By &&
+        other.wAprv3By == wAprv3By &&
         other.creditLimit == creditLimit &&
         other.amt == amt;
   }
@@ -273,12 +294,15 @@ class ApprovalLoan {
         userAprv1.hashCode ^
         dtAprv2.hashCode ^
         userAprv2.hashCode ^
+        dtAprv3.hashCode ^
+        userAprv3.hashCode ^
         acNum.hashCode ^
         employeeName.hashCode ^
         vendorName.hashCode ^
         wCreatedBy.hashCode ^
         wAprv1By.hashCode ^
         wAprv2By.hashCode ^
+        wAprv3By.hashCode ^
         creditLimit.hashCode ^
         amt.hashCode;
   }
