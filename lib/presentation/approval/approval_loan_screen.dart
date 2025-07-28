@@ -64,16 +64,58 @@ class ApprovalScreenState extends State<ApprovalScreen> {
           );
           return;
         }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              "Anda tidak memiliki permission untuk approve KasBon",
-            ),
-          ),
-        );
-        return;
       }
+    } else if (loanList[index].userAprv2.trim() == "") {
+      if (credentialState is CredentialsLoadSuccess) {
+        if (credentialState.credentials["APPROVALBON2"] == "Y") {
+          context.read<ApproveLoanBloc>().add(
+            ApproveLoanLoad(
+              trId: loanList[index].trId,
+              typeAprv: "approve2",
+              status: "approve",
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                "Anda tidak memiliki permission untuk approve KasBon",
+              ),
+            ),
+          );
+          return;
+        }
+      }
+    } else if (loanList[index].userAprv3.trim() == "") {
+      if (credentialState is CredentialsLoadSuccess) {
+        if (credentialState.credentials["APPROVALBON3"] == "Y") {
+          context.read<ApproveLoanBloc>().add(
+            ApproveLoanLoad(
+              trId: loanList[index].trId,
+              typeAprv: "approve3",
+              status: "approve",
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                "Anda tidak memiliki permission untuk approve KasBon",
+              ),
+            ),
+          );
+          return;
+        }
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Anda tidak memiliki permission untuk approve KasBon",
+          ),
+        ),
+      );
+      return;
     }
     setState(() {
       loanList.removeAt(index);
@@ -110,19 +152,57 @@ class ApprovalScreenState extends State<ApprovalScreen> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text("Anda tidak memiliki permission untuk approve SPB"),
+              content: Text("Anda tidak memiliki permission untuk approve KasBon"),
             ),
           );
           return;
         }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Anda tidak memiliki permission untuk approve SPB"),
-          ),
-        );
-        return;
       }
+    } else if (loanList[index].userAprv2.trim() == "") {
+      if (credentialState is CredentialsLoadSuccess) {
+        if (credentialState.credentials["APPROVALBON2"] == "Y") {
+          context.read<ApproveLoanBloc>().add(
+            ApproveLoanLoad(
+              trId: loanList[index].trId,
+              typeAprv: "approve2",
+              status: "reject",
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Anda tidak memiliki permission untuk approve KasBon"),
+            ),
+          );
+          return;
+        }
+      }
+    } else if (loanList[index].userAprv3.trim() == "") {
+      if (credentialState is CredentialsLoadSuccess) {
+        if (credentialState.credentials["APPROVALBON3"] == "Y") {
+          context.read<ApproveLoanBloc>().add(
+            ApproveLoanLoad(
+              trId: loanList[index].trId,
+              typeAprv: "approve3",
+              status: "reject",
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Anda tidak memiliki permission untuk approve KasBon"),
+            ),
+          );
+          return;
+        }
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Anda tidak memiliki permission untuk approve KasBon"),
+        ),
+      );
+      return;
     }
     if (index >= loanList.length) return;
 
@@ -307,6 +387,9 @@ class ApprovalScreenState extends State<ApprovalScreen> {
                 canApprove = true;
               }
               if (currentPr.userAprv2.trim() == "") {
+                canApprove = true;
+              }
+              if (currentPr.userAprv3.trim() == "") {
                 canApprove = true;
               }
             }

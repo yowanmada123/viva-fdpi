@@ -117,6 +117,16 @@ class _ApprovalCardState extends State<ApprovalCard> {
                             detail: widget.requests.wAprv1By,
                             date: widget.requests.dtAprv1,
                           ),
+                          TimelineStep(
+                            header: "Approve 2",
+                            detail: widget.requests.wAprv2By,
+                            date: widget.requests.dtAprv2,
+                          ),
+                          TimelineStep(
+                            header: "Approve 3",
+                            detail: widget.requests.wAprv3By,
+                            date: widget.requests.dtAprv3,
+                          ),
                         ],
                       ),
                     ),
