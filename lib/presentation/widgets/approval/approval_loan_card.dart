@@ -81,6 +81,10 @@ class _ApprovalCardState extends State<ApprovalCard> {
                       ).format(widget.requests.dtKb!),
                     ),
                     _buildInfoRow("Diajukan oleh", widget.requests.vendorName),
+                    _buildInfoRow("Tipe SPK", widget.requests.wSpkType),
+                    _buildInfoRow("Site", widget.requests.siteName),
+                    _buildInfoRow("Cluster", widget.requests.clusterName),
+                    _buildInfoRow("House", widget.requests.houseName),
                     _buildInfoRow(
                       "Nilai Kontrak",
                       formatIDRCurrency(widget.requests.amt),
@@ -154,7 +158,7 @@ class _ApprovalCardState extends State<ApprovalCard> {
 
   Widget _buildInfoRow(String label, String value) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
