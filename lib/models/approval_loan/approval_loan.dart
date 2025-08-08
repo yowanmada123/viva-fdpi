@@ -36,6 +36,11 @@ class ApprovalLoan {
   final String wAprv3By;
   final String creditLimit;
   final String amt;
+  final String spkType;
+  final String wSpkType;
+  final String siteName;
+  final String clusterName;
+  final String houseName;
   ApprovalLoan({
     required this.officeId,
     required this.office,
@@ -70,6 +75,11 @@ class ApprovalLoan {
     required this.wAprv3By,
     required this.creditLimit,
     required this.amt,
+    required this.spkType,
+    required this.wSpkType,
+    required this.siteName,
+    required this.clusterName,
+    required this.houseName,
   });
 
   ApprovalLoan copyWith({
@@ -106,6 +116,11 @@ class ApprovalLoan {
     String? wAprv3By,
     String? creditLimit,
     String? amt,
+    String? spkType,
+    String? wSpkType,
+    String? siteName,
+    String? clusterName,
+    String? houseName,
   }) {
     return ApprovalLoan(
       officeId: officeId ?? this.officeId,
@@ -141,6 +156,11 @@ class ApprovalLoan {
       wAprv3By: wAprv3By ?? this.wAprv3By,
       creditLimit: creditLimit ?? this.creditLimit,
       amt: amt ?? this.amt,
+      spkType: spkType ?? this.spkType,
+      wSpkType: wSpkType ?? this.wSpkType,
+      siteName: siteName ?? this.siteName,
+      clusterName: clusterName ?? this.clusterName,
+      houseName: houseName ?? this.houseName,
     );
   }
 
@@ -179,6 +199,11 @@ class ApprovalLoan {
       'w_aprv3_by': wAprv3By,
       'amt': amt,
       'credit_limit': creditLimit,
+      'spk_type': spkType,
+      'w_spk_type': wSpkType,
+      'site_name': siteName,
+      'cluster_name': clusterName,
+      'house_name': houseName,
     };
   }
 
@@ -217,6 +242,11 @@ class ApprovalLoan {
       wAprv3By: map['w_aprv3_by'] ?? '',
       creditLimit: map['credit_limit'] ?? '',
       amt: map['amt'] ?? '',
+      spkType: map['spk_type'] ?? '',
+      wSpkType: map['w_spk_type'] ?? '',
+      siteName: map['site_name'] ?? '',
+      clusterName: map['cluster_name'] ?? '',
+      houseName: map['house_name'] ?? '',
     );
   }
 
@@ -227,7 +257,7 @@ class ApprovalLoan {
 
   @override
   String toString() {
-    return 'ApprovalLoan(officeId: $officeId, office: $office, address: $address, city: $city, trId: $trId, trType: $trType, wTrType: $wTrType, kbNum: $kbNum, vendorId: $vendorId, idEmployee: $idEmployee, dtKb: $dtKb, kbAmt: $kbAmt, remark: $remark, stat: $stat, dtCreated: $dtCreated, dtModified: $dtModified, userId: $userId, trIdRef: $trIdRef, dtAprv1: $dtAprv1, userAprv1: $userAprv1, dtAprv2: $dtAprv2, userAprv2: $userAprv2, dtAprv3: $dtAprv3, userAprv3: $userAprv3, acNum: $acNum, employeeName: $employeeName, vendorName: $vendorName, wCreatedBy: $wCreatedBy, wAprv1By: $wAprv1By, wAprv2By: $wAprv2By, wAprv3By: $wAprv3By, creditLimit: $creditLimit, amt: $amt)';
+    return 'ApprovalLoan(officeId: $officeId, office: $office, address: $address, city: $city, trId: $trId, trType: $trType, wTrType: $wTrType, kbNum: $kbNum, vendorId: $vendorId, idEmployee: $idEmployee, dtKb: $dtKb, kbAmt: $kbAmt, remark: $remark, stat: $stat, dtCreated: $dtCreated, dtModified: $dtModified, userId: $userId, trIdRef: $trIdRef, dtAprv1: $dtAprv1, userAprv1: $userAprv1, dtAprv2: $dtAprv2, userAprv2: $userAprv2, dtAprv3: $dtAprv3, userAprv3: $userAprv3, acNum: $acNum, employeeName: $employeeName, vendorName: $vendorName, wCreatedBy: $wCreatedBy, wAprv1By: $wAprv1By, wAprv2By: $wAprv2By, wAprv3By: $wAprv3By, creditLimit: $creditLimit, amt: $amt, spkType: $spkType, wSpkType: $wSpkType, siteName: $siteName, clusterName: $clusterName, houseName: $houseName)';
   }
 
   @override
@@ -267,7 +297,12 @@ class ApprovalLoan {
         other.wAprv2By == wAprv2By &&
         other.wAprv3By == wAprv3By &&
         other.creditLimit == creditLimit &&
-        other.amt == amt;
+        other.amt == amt &&
+        other.spkType == spkType &&
+        other.wSpkType == wSpkType &&
+        other.siteName == siteName &&
+        other.clusterName == clusterName &&
+        other.houseName == houseName;
   }
 
   @override
@@ -304,6 +339,11 @@ class ApprovalLoan {
         wAprv2By.hashCode ^
         wAprv3By.hashCode ^
         creditLimit.hashCode ^
-        amt.hashCode;
+        amt.hashCode ^
+        spkType.hashCode ^
+        wSpkType.hashCode ^
+        siteName.hashCode ^
+        clusterName.hashCode ^
+        houseName.hashCode;
   }
 }
