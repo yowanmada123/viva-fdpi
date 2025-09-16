@@ -89,6 +89,12 @@ class _ApprovalPrCardState extends State<ApprovalPrCard> {
                         style: TextStyle(fontSize: 14.sp),
                       ),
                     ),
+                    _buildInfoRow(
+                      "Departement",
+                      widget.requests.deptName.isNotEmpty
+                          ? widget.requests.deptName
+                          : '-',
+                    ),
                     _buildInfoRow("Vendor", widget.requests.vendorName),
                     // _buildInfoRow("Site", widget.requests.siteName),
                     // _buildInfoRow("Cluster", widget.requests.clusterName),
@@ -240,7 +246,7 @@ class _ApprovalPrCardState extends State<ApprovalPrCard> {
 
   Widget _buildInfoRow(String label, String value) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
