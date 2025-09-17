@@ -27,113 +27,152 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Profile")),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text(
+          'Fasindo App',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.black),
+      ),
       bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 1),
       body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
           if (state is Authenticated) {
             final user = state.user;
             return Container(
-              padding: EdgeInsets.all(16.w),
+              padding: EdgeInsets.fromLTRB(0, 32.w, 0, 0.w),
+              color: Colors.white,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage:
-                        Image.asset("assets/images/avatar.png").image,
+                  Container(
+                    width: 64.w,
+                    height: 64.w,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xffE8F0FD),
+                    ),
+                    child: Icon(Icons.person, color: Colors.white, size: 56.w),
                   ),
                   const SizedBox(height: 16),
-                  Text(user.username, style: TextStyle(fontSize: 24)),
+                  Text(user.name1, style: TextStyle(fontSize: 24)),
                   const SizedBox(height: 8),
                   Text(
-                    '@${user.username}',
+                    '@${user.name1}',
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                   const SizedBox(height: 32),
-                  BlocConsumer<LogoutBloc, LogoutState>(
-                    listener: (context, state) {
-                      if (state is LogoutFailure) {
-                        if (state.exception is UnauthorizedException) {
-                          BlocProvider.of<AuthenticationBloc>(context).add(
-                            SetAuthenticationStatus(
-                              isAuthenticated: false,
-                              user: null,
-                            ),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                "Session Anda telah habis. Silakan login kembali",
-                              ),
-                              duration: Duration(seconds: 5),
-                              behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              backgroundColor: Color(0xffEB5757),
-                            ),
-                          );
-                          Navigator.of(
-                            context,
-                          ).popUntil((route) => route.isFirst);
-                          return;
-                        }
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Logout Not Success")),
-                        );
-                      } else if (state is LogoutSuccess) {
-                        BlocProvider.of<AuthenticationBloc>(
-                          context,
-                        ).add(SetAuthenticationStatus(isAuthenticated: false));
-                        Navigator.of(
-                          context,
-                        ).popUntil((route) => route.isFirst);
-                        return;
-                      }
-                    },
-                    builder:
-                        (context, state) => GestureDetector(
-                          onTap: () {
-                            showDialog<bool>(
-                              context: context,
-                              builder: (BuildContext childContext) {
-                                return BasePopUpDialog(
-                                  noText: "Tidak",
-                                  yesText: "Ya",
-                                  onNoPressed: () {},
-                                  onYesPressed: () {
-                                    if (state is! LogoutLoading) {
-                                      context.read<LogoutBloc>().add(
-                                        LogoutPressed(),
-                                      );
-                                    }
-                                  },
-                                  question:
-                                      "Apakah Anda yakin ingin keluar dari aplikasi?",
-                                );
-                              },
+                  Expanded(
+                    child: Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(
+                        vertical: 16.w,
+                        horizontal: 24.w,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Color(0xffE8F0FD),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: BlocConsumer<LogoutBloc, LogoutState>(
+                        listener: (context, state) {
+                          if (state is LogoutFailure) {
+                            if (state.exception is UnauthorizedException) {
+                              BlocProvider.of<AuthenticationBloc>(context).add(
+                                SetAuthenticationStatus(
+                                  isAuthenticated: false,
+                                  user: null,
+                                ),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "Session Anda telah habis. Silakan login kembali",
+                                  ),
+                                  duration: Duration(seconds: 5),
+                                  behavior: SnackBarBehavior.floating,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  backgroundColor: Color(0xffEB5757),
+                                ),
+                              );
+                              Navigator.of(
+                                context,
+                              ).popUntil((route) => route.isFirst);
+                              return;
+                            }
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Logout Not Success")),
                             );
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 16.w,
-                              horizontal: 8.w,
-                            ), // padding: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.grey),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(Icons.logout),
-                                SizedBox(width: 16.w),
-                                Expanded(child: Text("Logout")),
-                              ],
-                            ),
-                          ),
-                        ),
+                          } else if (state is LogoutSuccess) {
+                            BlocProvider.of<AuthenticationBloc>(context).add(
+                              SetAuthenticationStatus(isAuthenticated: false),
+                            );
+                            Navigator.of(
+                              context,
+                            ).popUntil((route) => route.isFirst);
+                            return;
+                          }
+                        },
+                        builder: (context, state) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment:
+                                MainAxisAlignment.start, // button tetap di atas
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  showDialog<bool>(
+                                    context: context,
+                                    builder: (BuildContext childContext) {
+                                      return BasePopUpDialog(
+                                        noText: "Tidak",
+                                        yesText: "Ya",
+                                        onNoPressed: () {},
+                                        onYesPressed: () {
+                                          if (state is! LogoutLoading) {
+                                            context.read<LogoutBloc>().add(
+                                              LogoutPressed(),
+                                            );
+                                          }
+                                        },
+                                        question:
+                                            "Apakah Anda yakin ingin keluar dari aplikasi?",
+                                      );
+                                    },
+                                  );
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 12.w,
+                                    horizontal: 8.w,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(color: Colors.grey),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.logout),
+                                      SizedBox(width: 16.w),
+                                      Expanded(child: Text("Logout")),
+                                      Icon(
+                                        Icons.keyboard_arrow_right,
+                                        size: 16.w,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ],
               ),
