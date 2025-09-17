@@ -86,7 +86,18 @@ class _ApprovalPoCardState extends State<ApprovalPoCard> {
                       "Tanggal Pengajuan",
                       widget.requests.dtPo!.toLocal().toString(),
                     ),
-                    _buildInfoRow("Diajukan oleh", widget.requests.vendorName),
+                    _buildInfoRow(
+                      "Diajukan oleh",
+                      widget.requests.vendorName.isNotEmpty
+                          ? widget.requests.vendorName
+                          : '-',
+                    ),
+                    _buildInfoRow(
+                      "Departement",
+                      widget.requests.deptName.isNotEmpty
+                          ? widget.requests.deptName
+                          : '-',
+                    ),
                     _buildInfoRow(
                       "Jumlah",
                       double.tryParse(
@@ -97,6 +108,12 @@ class _ApprovalPoCardState extends State<ApprovalPoCard> {
                     _buildInfoRow(
                       "Subtotal",
                       formatCurrency(widget.requests.amtSubtotal),
+                    ),
+                    _buildInfoRow(
+                      "Remark",
+                      widget.requests.memoTxt.isNotEmpty
+                          ? widget.requests.memoTxt
+                          : '-',
                     ),
                     _buildSection(
                       "Proses Pengajuan",
@@ -143,7 +160,7 @@ class _ApprovalPoCardState extends State<ApprovalPoCard> {
 
   Widget _buildInfoRow(String label, String value) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -153,7 +170,7 @@ class _ApprovalPoCardState extends State<ApprovalPoCard> {
           ),
           SizedBox(height: 4.w),
           Text(value),
-          SizedBox(height: 16.w),
+          SizedBox(height: 4.w),
         ],
       ),
     );
