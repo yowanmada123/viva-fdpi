@@ -16,7 +16,7 @@ class CustomBottomNavigationBar extends StatefulWidget {
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   final List<Map<String, dynamic>> _navigationItems = [
     {"label": "Home", "icon": Icons.home, "route": DriverDashboardScreen()},
-    {"label": "Profile", "icon": Icons.person, "route": ProfileScreen()},
+    {"label": "Setting", "icon": Icons.settings, "route": ProfileScreen()},
   ];
 
   void _onItemTapped(int index) {

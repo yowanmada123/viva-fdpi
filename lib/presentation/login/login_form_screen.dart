@@ -47,7 +47,9 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void _loadRememberedLogin() async {
-    final pref = SharedPreferencesManager(key: SharedPreferencesKey.loginRememberKey);
+    final pref = SharedPreferencesManager(
+      key: SharedPreferencesKey.loginRememberKey,
+    );
     final data = await pref.read();
     if (data != null) {
       final decoded = json.decode(data);
@@ -164,14 +166,18 @@ class _LoginFormState extends State<LoginForm> {
                       );
                     } else if (state is LoginFormSuccess) {
                       if (rememberMe) {
-                        SharedPreferencesManager(key: SharedPreferencesKey.loginRememberKey)
-                          .write(json.encode({
+                        SharedPreferencesManager(
+                          key: SharedPreferencesKey.loginRememberKey,
+                        ).write(
+                          json.encode({
                             'username': usernameController.text,
                             'password': passwordController.text,
-                          }));
+                          }),
+                        );
                       } else {
-                        SharedPreferencesManager(key: SharedPreferencesKey.loginRememberKey)
-                          .clear();
+                        SharedPreferencesManager(
+                          key: SharedPreferencesKey.loginRememberKey,
+                        ).clear();
                       }
                       BlocProvider.of<AuthenticationBloc>(context).add(
                         SetAuthenticationStatus(
@@ -240,6 +246,22 @@ class _LoginFormState extends State<LoginForm> {
                       ),
                     );
                   },
+                ),
+                Expanded(child: SizedBox(height: 0)),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Fasindo App (all rights reserved)",
+                      style: TextStyle(fontSize: 12, color: Colors.black54),
+                    ),
+
+                    Text(
+                      "Version 1.2.4",
+                      style: TextStyle(fontSize: 12, color: Colors.black54),
+                    ),
+                  ],
                 ),
               ],
             ),
