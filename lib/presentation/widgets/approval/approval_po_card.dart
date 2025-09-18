@@ -105,9 +105,112 @@ class _ApprovalPoCardState extends State<ApprovalPoCard> {
                           )?.toStringAsFixed(0) ??
                           '0',
                     ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildInfoRow(
+                            "Subtotal",
+                            formatCurrency(widget.requests.amtSubtotal),
+                          ),
+                        ),
+                        Expanded(
+                          child: _buildInfoRow(
+                            "PPN",
+                            formatCurrency(widget.requests.amtPpn),
+                          ),
+                        ),
+                      ],
+                    ),
                     _buildInfoRow(
-                      "Subtotal",
-                      formatCurrency(widget.requests.amtSubtotal),
+                      "Total",
+                      formatCurrency(widget.requests.amtNet),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 8.w,
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.w),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Article",
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 8.w),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: widget.requests.article.length,
+                              itemBuilder: (context, index) {
+                                final article = widget.requests.article[index];
+                                final String description = article.description;
+                                final String unitPrice = formatCurrency(
+                                  article.unitPrice,
+                                );
+                                final String qty =
+                                    double.tryParse(
+                                      article.qty,
+                                    )?.toStringAsFixed(0) ??
+                                    '0';
+                                final String price = formatCurrency(
+                                  article.amtNet,
+                                );
+
+                                return Card(
+                                  elevation: 2,
+                                  color:
+                                      Theme.of(
+                                        context,
+                                      ).colorScheme.surfaceBright,
+                                  margin: EdgeInsets.symmetric(vertical: 4.w),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8.w),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          description,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        SizedBox(height: 4.w),
+                                        Text(
+                                          "Quantity: $qty",
+                                          style: TextStyle(fontSize: 14.sp),
+                                        ),
+                                        Text(
+                                          "Unit price: $unitPrice",
+                                          style: TextStyle(fontSize: 14.sp),
+                                        ),
+                                        Text(
+                                          "Amount: $price",
+                                          style: TextStyle(fontSize: 14.sp),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                     _buildInfoRow(
                       "Remark",
@@ -170,7 +273,6 @@ class _ApprovalPoCardState extends State<ApprovalPoCard> {
           ),
           SizedBox(height: 4.w),
           Text(value),
-          SizedBox(height: 4.w),
         ],
       ),
     );
