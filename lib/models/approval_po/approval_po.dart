@@ -273,94 +273,94 @@ class ApprovalPo {
 }
 
 class ApprovalArticlePO {
-  final String noPo;
-  final String officeName;
-  final String poItemNumber;
+  final String no;
+  final String office;
+  final String poItem;
   final String poId;
-  final String itemDescription;
-  final String quantity;
+  final String description;
+  final String qty;
   final String articleId;
-  final String status;
-  final String netAmount;
-  final String unitMeasurement;
+  final String stat;
+  final String amtNet;
+  final String unitMeas;
   final String unitPrice;
-  final String remarkMessage;
+  final String remark;
   ApprovalArticlePO({
-    required this.noPo,
-    required this.officeName,
-    required this.poItemNumber,
+    required this.no,
+    required this.office,
+    required this.poItem,
     required this.poId,
-    required this.itemDescription,
-    required this.quantity,
+    required this.description,
+    required this.qty,
     required this.articleId,
-    required this.status,
-    required this.netAmount,
-    required this.unitMeasurement,
+    required this.stat,
+    required this.amtNet,
+    required this.unitMeas,
     required this.unitPrice,
-    required this.remarkMessage,
+    required this.remark,
   });
 
   ApprovalArticlePO copyWith({
-    String? noPo,
-    String? officeName,
-    String? poItemNumber,
+    String? no,
+    String? office,
+    String? poItem,
     String? poId,
-    String? itemDescription,
-    String? quantity,
+    String? description,
+    String? qty,
     String? articleId,
-    String? status,
-    String? netAmount,
-    String? unitMeasurement,
+    String? stat,
+    String? amtNet,
+    String? unitMeas,
     String? unitPrice,
-    String? remarkMessage,
+    String? remark,
   }) {
     return ApprovalArticlePO(
-      noPo: noPo ?? this.noPo,
-      officeName: officeName ?? this.officeName,
-      poItemNumber: poItemNumber ?? this.poItemNumber,
+      no: no ?? this.no,
+      office: office ?? this.office,
+      poItem: poItem ?? this.poItem,
       poId: poId ?? this.poId,
-      itemDescription: itemDescription ?? this.itemDescription,
-      quantity: quantity ?? this.quantity,
+      description: description ?? this.description,
+      qty: qty ?? this.qty,
       articleId: articleId ?? this.articleId,
-      status: status ?? this.status,
-      netAmount: netAmount ?? this.netAmount,
-      unitMeasurement: unitMeasurement ?? this.unitMeasurement,
+      stat: stat ?? this.stat,
+      amtNet: amtNet ?? this.amtNet,
+      unitMeas: unitMeas ?? this.unitMeas,
       unitPrice: unitPrice ?? this.unitPrice,
-      remarkMessage: remarkMessage ?? this.remarkMessage,
+      remark: remark ?? this.remark,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'no_po': noPo,
-      'office_name': officeName,
-      'po_item_number': poItemNumber,
+      'no': no,
+      'office': office,
+      'po_item': poItem,
       'po_id': poId,
-      'item_description': itemDescription,
-      'quantity': quantity,
+      'description': description,
+      'qty': qty,
       'article_id': articleId,
-      'status': status,
-      'net_amount': netAmount,
-      'unit_measurement': unitMeasurement,
+      'stat': stat,
+      'amt_net': amtNet,
+      'unit_meas': unitMeas,
       'unit_price': unitPrice,
-      'remark_message': remarkMessage,
+      'remark': remark,
     };
   }
 
   factory ApprovalArticlePO.fromMap(Map<String, dynamic> map) {
     return ApprovalArticlePO(
-      noPo: map['no_po'] ?? '',
-      officeName: map['office_name'] ?? '',
-      poItemNumber: map['po_item_number'] ?? '',
+      no: map['no'] ?? '',
+      office: map['office'] ?? '',
+      poItem: map['po_item'] ?? '',
       poId: map['po_id'] ?? '',
-      itemDescription: map['item_description'] ?? '',
-      quantity: map['quantity'] ?? '',
+      description: map['description'] ?? '',
+      qty: map['qty'] ?? '',
       articleId: map['article_id'] ?? '',
-      status: map['status'] ?? '',
-      netAmount: map['net_amount'] ?? '',
-      unitMeasurement: map['unit_measurement'] ?? '',
+      stat: map['stat'] ?? '',
+      amtNet: map['amt_net'] ?? '',
+      unitMeas: map['unit_meas'] ?? '',
       unitPrice: map['unit_price'] ?? '',
-      remarkMessage: map['remark_message'] ?? '',
+      remark: map['remark'] ?? '',
     );
   }
 
@@ -371,7 +371,7 @@ class ApprovalArticlePO {
 
   @override
   String toString() {
-    return 'ApprovalArticlePO(noPo: $noPo, officeName: $officeName, poItemNumber: $poItemNumber, poId: $poId, itemDescription: $itemDescription, quantity: $quantity, articleId: $articleId, status: $status, netAmount: $netAmount, unitMeasurement: $unitMeasurement, unitPrice: $unitPrice, remarkMessage: $remarkMessage)';
+    return 'ApprovalArticlePO(no: $no, office: $office, poItem: $poItem, poId: $poId, description: $description, qty: $qty, articleId: $articleId, stat: $stat, amtNet: $amtNet, unitMeas: $unitMeas, unitPrice: $unitPrice, remark: $remark)';
   }
 
   @override
@@ -379,33 +379,33 @@ class ApprovalArticlePO {
     if (identical(this, other)) return true;
 
     return other is ApprovalArticlePO &&
-        other.noPo == noPo &&
-        other.officeName == officeName &&
-        other.poItemNumber == poItemNumber &&
+        other.no == no &&
+        other.office == office &&
+        other.poItem == poItem &&
         other.poId == poId &&
-        other.itemDescription == itemDescription &&
-        other.quantity == quantity &&
+        other.description == description &&
+        other.qty == qty &&
         other.articleId == articleId &&
-        other.status == status &&
-        other.netAmount == netAmount &&
-        other.unitMeasurement == unitMeasurement &&
+        other.stat == stat &&
+        other.amtNet == amtNet &&
+        other.unitMeas == unitMeas &&
         other.unitPrice == unitPrice &&
-        other.remarkMessage == remarkMessage;
+        other.remark == remark;
   }
 
   @override
   int get hashCode {
-    return noPo.hashCode ^
-        officeName.hashCode ^
-        poItemNumber.hashCode ^
+    return no.hashCode ^
+        office.hashCode ^
+        poItem.hashCode ^
         poId.hashCode ^
-        itemDescription.hashCode ^
-        quantity.hashCode ^
+        description.hashCode ^
+        qty.hashCode ^
         articleId.hashCode ^
-        status.hashCode ^
-        netAmount.hashCode ^
-        unitMeasurement.hashCode ^
+        stat.hashCode ^
+        amtNet.hashCode ^
+        unitMeas.hashCode ^
         unitPrice.hashCode ^
-        remarkMessage.hashCode;
+        remark.hashCode;
   }
 }
