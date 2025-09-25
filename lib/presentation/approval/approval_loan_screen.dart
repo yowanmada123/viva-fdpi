@@ -32,7 +32,6 @@ class ApprovalScreenState extends State<ApprovalScreen> {
   }
 
   void _initializeControllers() {
-    // Initialize 3 controllers for sliding window
     for (int i = 0; i < 3; i++) {
       _scrollControllers.add(ScrollController());
     }
@@ -44,92 +43,56 @@ class ApprovalScreenState extends State<ApprovalScreen> {
     BuildContext context,
   ) {
     final credentialState = context.read<CredentialsBloc>().state;
-    if (loanList[index].userAprv1.trim() == "") {
-      if (credentialState is CredentialsLoadSuccess) {
-        if (credentialState.credentials["APPROVALBON1"] == "Y") {
-          context.read<ApproveLoanBloc>().add(
-            ApproveLoanLoad(
-              trId: loanList[index].trId,
-              typeAprv: "approve1",
-              status: "approve",
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                "Anda tidak memiliki permission untuk approve KasBon",
-              ),
-            ),
-          );
-          return;
-        }
-      }
-    } else if (loanList[index].userAprv2.trim() == "") {
-      if (credentialState is CredentialsLoadSuccess) {
-        if (credentialState.credentials["APPROVALBON2"] == "Y") {
-          context.read<ApproveLoanBloc>().add(
-            ApproveLoanLoad(
-              trId: loanList[index].trId,
-              typeAprv: "approve2",
-              status: "approve",
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                "Anda tidak memiliki permission untuk approve KasBon",
-              ),
-            ),
-          );
-          return;
-        }
-      }
-    } else if (loanList[index].userAprv3.trim() == "") {
-      if (credentialState is CredentialsLoadSuccess) {
-        if (credentialState.credentials["APPROVALBON3"] == "Y") {
-          context.read<ApproveLoanBloc>().add(
-            ApproveLoanLoad(
-              trId: loanList[index].trId,
-              typeAprv: "approve3",
-              status: "approve",
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                "Anda tidak memiliki permission untuk approve KasBon",
-              ),
-            ),
-          );
-          return;
-        }
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "Anda tidak memiliki permission untuk approve KasBon",
-          ),
+    final loan = loanList[index];
+
+    if (loan.userAprv1.trim().isEmpty) {
+      context.read<ApproveLoanBloc>().add(
+        ApproveLoanLoad(
+          trId: loan.trId,
+          typeAprv: "approve1",
+          status: "approve",
         ),
       );
+      // if (credentialState is CredentialsLoadSuccess &&
+      //     credentialState.credentials["APPROVALBON1"] == "Y") {
+      // } else {
+      //   _showNoPermissionSnackBar(context);
+      //   return;
+      // }
+    } else if (loan.userAprv2.trim().isEmpty) {
+      if (credentialState is CredentialsLoadSuccess &&
+          credentialState.credentials["APPROVALBON2"] == "Y") {
+        context.read<ApproveLoanBloc>().add(
+          ApproveLoanLoad(
+            trId: loan.trId,
+            typeAprv: "approve2",
+            status: "approve",
+          ),
+        );
+      } else {
+        _showNoPermissionSnackBar(context);
+        return;
+      }
+    } else if (loan.userAprv3.trim().isEmpty) {
+      if (credentialState is CredentialsLoadSuccess &&
+          credentialState.credentials["APPROVALBON3"] == "Y") {
+        context.read<ApproveLoanBloc>().add(
+          ApproveLoanLoad(
+            trId: loan.trId,
+            typeAprv: "approve3",
+            status: "approve",
+          ),
+        );
+      } else {
+        _showNoPermissionSnackBar(context);
+        return;
+      }
+    } else {
+      _showNoPermissionSnackBar(context);
       return;
     }
-    setState(() {
-      loanList.removeAt(index);
-      if (_currentPage >= loanList.length) {
-        _currentPage = loanList.length - 1;
-      }
-    });
-    if (_currentPage == loanList.length - 1) {
-      _pageController.animateToPage(
-        _currentPage,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
-    }
+    print("Harus remove index: $index");
+    context.read<ApprovalLoanListBloc>().add(RemoveLoanListIndex(index: index));
   }
 
   void _handleReject(
@@ -138,84 +101,66 @@ class ApprovalScreenState extends State<ApprovalScreen> {
     BuildContext context,
   ) {
     final credentialState = context.read<CredentialsBloc>().state;
+    final loan = loanList[index];
 
-    if (loanList[index].userAprv1.trim() == "") {
-      if (credentialState is CredentialsLoadSuccess) {
-        if (credentialState.credentials["APPROVALBON1"] == "Y") {
-          context.read<ApproveLoanBloc>().add(
-            ApproveLoanLoad(
-              trId: loanList[index].trId,
-              typeAprv: "approve1",
-              status: "reject",
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Anda tidak memiliki permission untuk approve KasBon"),
-            ),
-          );
-          return;
-        }
+    if (loan.userAprv1.trim().isEmpty) {
+      if (credentialState is CredentialsLoadSuccess &&
+          credentialState.credentials["APPROVALBON1"] == "Y") {
+        context.read<ApproveLoanBloc>().add(
+          ApproveLoanLoad(
+            trId: loan.trId,
+            typeAprv: "approve1",
+            status: "reject",
+          ),
+        );
+      } else {
+        _showNoPermissionSnackBar(context);
+        return;
       }
-    } else if (loanList[index].userAprv2.trim() == "") {
-      if (credentialState is CredentialsLoadSuccess) {
-        if (credentialState.credentials["APPROVALBON2"] == "Y") {
-          context.read<ApproveLoanBloc>().add(
-            ApproveLoanLoad(
-              trId: loanList[index].trId,
-              typeAprv: "approve2",
-              status: "reject",
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Anda tidak memiliki permission untuk approve KasBon"),
-            ),
-          );
-          return;
-        }
+    } else if (loan.userAprv2.trim().isEmpty) {
+      if (credentialState is CredentialsLoadSuccess &&
+          credentialState.credentials["APPROVALBON2"] == "Y") {
+        context.read<ApproveLoanBloc>().add(
+          ApproveLoanLoad(
+            trId: loan.trId,
+            typeAprv: "approve2",
+            status: "reject",
+          ),
+        );
+      } else {
+        _showNoPermissionSnackBar(context);
+        return;
       }
-    } else if (loanList[index].userAprv3.trim() == "") {
-      if (credentialState is CredentialsLoadSuccess) {
-        if (credentialState.credentials["APPROVALBON3"] == "Y") {
-          context.read<ApproveLoanBloc>().add(
-            ApproveLoanLoad(
-              trId: loanList[index].trId,
-              typeAprv: "approve3",
-              status: "reject",
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Anda tidak memiliki permission untuk approve KasBon"),
-            ),
-          );
-          return;
-        }
+    } else if (loan.userAprv3.trim().isEmpty) {
+      if (credentialState is CredentialsLoadSuccess &&
+          credentialState.credentials["APPROVALBON3"] == "Y") {
+        context.read<ApproveLoanBloc>().add(
+          ApproveLoanLoad(
+            trId: loan.trId,
+            typeAprv: "approve3",
+            status: "reject",
+          ),
+        );
+      } else {
+        _showNoPermissionSnackBar(context);
+        return;
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Anda tidak memiliki permission untuk approve KasBon"),
-        ),
-      );
+      _showNoPermissionSnackBar(context);
       return;
     }
-    if (index >= loanList.length) return;
+    context.read<ApprovalLoanListBloc>().add(RemoveLoanListIndex(index: index));
+  }
 
-    setState(() {
-      loanList.removeAt(index);
-      if (_currentPage >= loanList.length) {
-        _currentPage = loanList.length - 1;
-      }
-    });
+  void _showNoPermissionSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Anda tidak memiliki permission untuk approve KasBon"),
+      ),
+    );
   }
 
   ScrollController _getController(int index) {
-    // Recycle controllers using modulo
     return _scrollControllers[index % 3];
   }
 
@@ -263,102 +208,91 @@ class ApprovalScreenState extends State<ApprovalScreen> {
                   );
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(
+                      content: const Text(
                         "Session Anda telah habis. Silakan login kembali",
                       ),
-                      duration: Duration(seconds: 5),
+                      duration: const Duration(seconds: 5),
                       behavior: SnackBarBehavior.floating,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      backgroundColor: Color(0xffEB5757),
+                      backgroundColor: const Color(0xffEB5757),
                     ),
                   );
                   Navigator.of(context).popUntil((route) => route.isFirst);
-                  return;
+                } else {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(state.message)));
                 }
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.message)));
               }
             },
             builder: (context, state) {
               if (state is ApprovalLoanListInitial ||
                   state is ApprovalLoanListLoading) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               }
               if (state is ApprovalLoanListLoadFailure) {
                 return Center(child: Text(state.message));
               }
               if (state is ApprovalLoanListLoadSuccess) {
-                if(state.loanList.isEmpty){
-                  return Center(
+                if (_currentPage >= state.loanList.length &&
+                    state.loanList.isNotEmpty) {
+                  _currentPage = state.loanList.length - 1;
+                  _pageController.animateToPage(
+                    _currentPage,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOut,
+                  );
+                }
+
+                if (state.loanList.isEmpty) {
+                  return const Center(
                     child: Text(
                       "Approval KasBon Tidak Tersedia",
-                      style: TextStyle(
-                        fontSize: 14
-                      ),
+                      style: TextStyle(fontSize: 14),
                     ),
                   );
                 }
-                return NotificationListener<ScrollNotification>(
-                  onNotification: (notification) {
-                    return true;
+
+                return PageView.builder(
+                  controller: _pageController,
+                  scrollDirection: Axis.vertical,
+                  itemCount: state.loanList.length,
+                  onPageChanged: (index) {
+                    setState(() => _currentPage = index);
                   },
-                  child: PageView.builder(
-                    controller: _pageController,
-                    scrollDirection: Axis.vertical,
-                    itemCount: state.loanList.length,
-                    onPageChanged: (index) {
-                      setState(() => _currentPage = index);
-                    },
-                    itemBuilder: (context, index) {
-                      if (index >= state.loanList.length) {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                      return ApprovalCard(
-                        requests: state.loanList[index],
-                        scrollController: _getController(index),
-                        onReachBottom: () async {
-                          int index = _currentPage;
+                  itemBuilder: (context, index) {
+                    final loan = state.loanList[index];
+                    return ApprovalCard(
+                      requests: loan,
+                      scrollController: _getController(index),
+                      onReachBottom: () async {
+                        if (_isAnimated) return;
+                        setState(() => _isAnimated = true);
 
-                          if (_isAnimated) return;
-                          setState(() {
-                            _isAnimated = true;
-                          });
+                        await _pageController.animateToPage(
+                          _currentPage + 1,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeOut,
+                        );
 
-                          await _pageController.animateToPage(
-                            index + 1,
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.easeOut,
-                          );
+                        setState(() => _isAnimated = false);
+                      },
+                      onReachTop: () async {
+                        if (_isAnimated) return;
+                        setState(() => _isAnimated = true);
 
-                          setState(() {
-                            _isAnimated = false;
-                          });
-                        },
-                        onReachTop: () async {
-                          int index = _currentPage;
+                        await _pageController.animateToPage(
+                          _currentPage - 1,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeOut,
+                        );
 
-                          if (_isAnimated) return;
-
-                          setState(() {
-                            _isAnimated = true;
-                          });
-
-                          await _pageController.animateToPage(
-                            index - 1,
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.easeOut,
-                          );
-
-                          setState(() {
-                            _isAnimated = false;
-                          });
-                        },
-                      );
-                    },
-                  ),
+                        setState(() => _isAnimated = false);
+                      },
+                    );
+                  },
                 );
               }
               return Container();
@@ -371,36 +305,28 @@ class ApprovalScreenState extends State<ApprovalScreen> {
         >(
           builder: (context, state) {
             if (state is! ApprovalLoanListLoadSuccess) {
-              return SizedBox.shrink();
+              return const SizedBox.shrink();
             }
 
             final credentialState = context.read<CredentialsBloc>().state;
             final loanList = state.loanList;
 
-            if (_currentPage >= loanList.length) return SizedBox.shrink();
+            if (_currentPage >= loanList.length) return const SizedBox.shrink();
             final currentPr = loanList[_currentPage];
 
             bool canApprove = false;
-
             if (credentialState is CredentialsLoadSuccess) {
-              if (currentPr.userAprv1.trim() == "") {
-                canApprove = true;
-              }
-              if (currentPr.userAprv2.trim() == "") {
-                canApprove = true;
-              }
-              if (currentPr.userAprv3.trim() == "") {
-                canApprove = true;
-              }
+              if (currentPr.userAprv1.trim().isEmpty) canApprove = true;
+              if (currentPr.userAprv2.trim().isEmpty) canApprove = true;
+              if (currentPr.userAprv3.trim().isEmpty) canApprove = true;
             }
 
-            if (!canApprove) return SizedBox.shrink();
+            if (!canApprove) return const SizedBox.shrink();
+
             return ApprovalBottomBar(
               isLoading: false,
-              onApprove:
-                  () => _handleApproval(_currentPage, state.loanList, context),
-              onReject:
-                  () => _handleReject(_currentPage, state.loanList, context),
+              onApprove: () => _handleApproval(_currentPage, loanList, context),
+              onReject: () => _handleReject(_currentPage, loanList, context),
               canApprove: canApprove,
             );
           },

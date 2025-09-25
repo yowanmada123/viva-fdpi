@@ -21,7 +21,8 @@ class ApproveLoanBloc extends Bloc<ApproveLoanEvent, ApproveLoanState> {
 
     if (event.status == "reject") {
       final result = await approvalLoanRepository.rejectLoan(
-        trId: event.trId, typeAprv: event.typeAprv,
+        trId: event.trId,
+        typeAprv: event.typeAprv,
       );
       result.fold(
         (error) =>
@@ -32,13 +33,18 @@ class ApproveLoanBloc extends Bloc<ApproveLoanEvent, ApproveLoanState> {
 
     if (event.status == "approve") {
       final result = await approvalLoanRepository.approvalLoan(
-        trId: event.trId, 
+        trId: event.trId,
         typeAprv: event.typeAprv,
       );
       result.fold(
         (error) =>
             emit(ApproveLoanFailure(message: error.message!, error: error)),
-        (data) => emit(ApproveLoanSuccess(message: data)),
+        (data) {
+          emit(ApproveLoanSuccess(message: data));
+          print(
+            "Successs ========================================================",
+          );
+        },
       );
     }
   }

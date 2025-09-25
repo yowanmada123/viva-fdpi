@@ -58,11 +58,7 @@ class ApprovalSpkScreenState extends State<ApprovalSpkScreen> {
             ),
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Anda tidak memiliki permission untuk approve SPK"),
-            ),
-          );
+          _showNoPermissionSnackBar(context);
           return;
         }
       }
@@ -79,11 +75,7 @@ class ApprovalSpkScreenState extends State<ApprovalSpkScreen> {
             ),
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Anda tidak memiliki permission untuk approve SPK"),
-            ),
-          );
+          _showNoPermissionSnackBar(context);
           return;
         }
       }
@@ -91,12 +83,7 @@ class ApprovalSpkScreenState extends State<ApprovalSpkScreen> {
 
     if (index >= spkList.length) return;
 
-    setState(() {
-      spkList.removeAt(index);
-      if (_currentPage >= spkList.length) {
-        _currentPage = spkList.length - 1;
-      }
-    });
+    context.read<ApprovalSpkListBloc>().add(RemoveListIndex(index: index));
   }
 
   void _handleReject(
@@ -117,31 +104,16 @@ class ApprovalSpkScreenState extends State<ApprovalSpkScreen> {
             ),
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Anda tidak memiliki permission untuk approve SPK"),
-            ),
-          );
+          _showNoPermissionSnackBar(context);
           return;
         }
       }
     } else {
       if (credentialState is CredentialsLoadSuccess) {
         if (credentialState.credentials["APPROVALSPK2"] == "Y") {
-          context.read<ApproveSpkBloc>().add(
-            ApproveSpkLoad(
-              idSpk: spkList[index].idSpk,
-              spkType: spkList[index].spkType,
-              typeAprv: "approve2",
-              status: "reject",
-            ),
-          );
+          _showNoPermissionSnackBar(context);
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Anda tidak memiliki permission untuk approve SPK"),
-            ),
-          );
+          _showNoPermissionSnackBar(context);
           return;
         }
       }
@@ -149,12 +121,17 @@ class ApprovalSpkScreenState extends State<ApprovalSpkScreen> {
 
     if (index >= spkList.length) return;
 
-    setState(() {
-      spkList.removeAt(index);
-      if (_currentPage >= spkList.length) {
-        _currentPage = spkList.length - 1;
-      }
-    });
+    context.read<ApprovalSpkListBloc>().add(RemoveListIndex(index: index));
+  }
+
+  void _showNoPermissionSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          "Anda tidak memiliki permission untuk melakukan approve SPB",
+        ),
+      ),
+    );
   }
 
   ScrollController _getController(int index) {
@@ -235,6 +212,20 @@ class ApprovalSpkScreenState extends State<ApprovalSpkScreen> {
                 return Center(child: Text(state.message));
               }
               if (state is ApprovalSpkListLoadSuccess) {
+                if (_currentPage >= state.spkList.length &&
+                    state.spkList.isNotEmpty) {
+                  _currentPage = state.spkList.length - 1;
+                  _pageController.animateToPage(
+                    _currentPage,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOut,
+                  );
+                }
+
+                if (state.spkList.isEmpty) {
+                  return Center(child: Text("Tidak ada data"));
+                }
+
                 return NotificationListener<ScrollNotification>(
                   onNotification: (notification) => true,
                   child: PageView.builder(

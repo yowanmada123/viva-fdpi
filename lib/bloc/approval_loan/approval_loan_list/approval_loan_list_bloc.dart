@@ -12,6 +12,7 @@ class ApprovalLoanListBloc
   ApprovalLoanListBloc({required this.approvalLoanRepository})
     : super(ApprovalLoanListInitial()) {
     on<GetLoanListEvent>(_onGetLoanList);
+    on<RemoveLoanListIndex>(_onRemoveLoanListIndex);
   }
 
   void _onGetLoanList(
@@ -30,5 +31,20 @@ class ApprovalLoanListBloc
       ),
       (data) => emit(ApprovalLoanListLoadSuccess(loanList: data)),
     );
+  }
+
+  void _onRemoveLoanListIndex(
+    RemoveLoanListIndex event,
+    Emitter<ApprovalLoanListState> emit,
+  ) {
+    print("index ${event.index}");
+    final currentState = state;
+    if (currentState is ApprovalLoanListLoadSuccess) {
+      emit(ApprovalLoanListLoading());
+      final updatedList = List<ApprovalLoan>.from(currentState.loanList)
+        ..removeAt(event.index);
+
+      emit(ApprovalLoanListLoadSuccess(loanList: updatedList));
+    }
   }
 }
