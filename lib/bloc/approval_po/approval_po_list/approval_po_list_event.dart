@@ -8,3 +8,9 @@ sealed class ApprovalPoListEvent extends Equatable {
 }
 
 class GetApprovalPOListEvent extends ApprovalPoListEvent {}
+
+class RemoveListIndex extends ApprovalPoListEvent {
+  final int index;
+
+  const RemoveListIndex({required this.index});
+}

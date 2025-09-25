@@ -8,3 +8,9 @@ sealed class ApprovalSpbListEvent extends Equatable {
 }
 
 class GetSpbListEvent extends ApprovalSpbListEvent {}
+
+class RemoveListIndex extends ApprovalSpbListEvent {
+  final int index;
+
+  const RemoveListIndex({required this.index});
+}

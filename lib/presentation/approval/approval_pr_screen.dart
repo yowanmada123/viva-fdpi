@@ -56,19 +56,11 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
             ),
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Anda tidak memiliki permission untuk approve PR"),
-            ),
-          );
+          _showNoPermissionSnackBar(context);
           return;
         }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Anda tidak memiliki permission untuk approve PR"),
-          ),
-        );
+        _showNoPermissionSnackBar(context);
         return;
       }
     } else if (poList[index].aprv2By == "" && poList[index].rjc2By == "") {
@@ -82,31 +74,18 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
             ),
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Anda tidak memiliki permission untuk approve PR"),
-            ),
-          );
+          _showNoPermissionSnackBar(context);
           return;
         }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Anda tidak memiliki permission untuk approve PR"),
-          ),
-        );
+        _showNoPermissionSnackBar(context);
         return;
       }
     }
 
     if (index >= poList.length) return;
 
-    setState(() {
-      poList.removeAt(index);
-      if (_currentPage >= poList.length) {
-        _currentPage = poList.length - 1;
-      }
-    });
+    context.read<ApprovalPrListBloc>().add(RemoveListIndex(index: index));
   }
 
   void _handleReject(int index, List<ApprovalPR> poList, BuildContext context) {
@@ -123,19 +102,11 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
             ),
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Anda tidak memiliki permission untuk approve PR"),
-            ),
-          );
+          _showNoPermissionSnackBar(context);
           return;
         }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Anda tidak memiliki permission untuk approve PR"),
-          ),
-        );
+        _showNoPermissionSnackBar(context);
         return;
       }
     } else if (poList[index].aprv2By == "" && poList[index].rjcBy == "") {
@@ -149,31 +120,26 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
             ),
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Anda tidak memiliki permission untuk approve PR"),
-            ),
-          );
+          _showNoPermissionSnackBar(context);
           return;
         }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Anda tidak memiliki permission untuk approve PR"),
-          ),
-        );
+        _showNoPermissionSnackBar(context);
         return;
       }
     }
 
     if (index >= poList.length) return;
 
-    setState(() {
-      poList.removeAt(index);
-      if (_currentPage >= poList.length) {
-        _currentPage = poList.length - 1;
-      }
-    });
+    context.read<ApprovalPrListBloc>().add(RemoveListIndex(index: index));
+  }
+
+  void _showNoPermissionSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Anda tidak memiliki permission untuk approve PR"),
+      ),
+    );
   }
 
   ScrollController _getController(int index) {
@@ -246,6 +212,16 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
                 return Center(child: Text(state.message));
               }
               if (state is ApprovalPrListSuccessState) {
+                if (_currentPage >= state.data.length &&
+                    state.data.isNotEmpty) {
+                  _currentPage = state.data.length - 1;
+                  _pageController.animateToPage(
+                    _currentPage,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOut,
+                  );
+                }
+
                 if (state.data.isEmpty) {
                   return Center(
                     child: Text(
@@ -322,7 +298,6 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
                 bool canApprove = false;
 
                 if (credentialState is CredentialsLoadSuccess) {
-
                   if (currentPr.aprvBy == "" && currentPr.rjcBy == "") {
                     canApprove = true;
                   } else if (currentPr.aprv2By == "" &&

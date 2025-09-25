@@ -23,4 +23,8 @@ final class ApprovalLoanListLoadFailure extends ApprovalLoanListState {
 final class ApprovalLoanListLoadSuccess extends ApprovalLoanListState {
   final List<ApprovalLoan> loanList;
   const ApprovalLoanListLoadSuccess({required this.loanList});
+
+  ApprovalLoanListLoadSuccess copyWith({List<ApprovalLoan>? loanList}) {
+    return ApprovalLoanListLoadSuccess(loanList: loanList ?? this.loanList);
+  }
 }

@@ -13,6 +13,7 @@ class ApprovalSpkListBloc
   ApprovalSpkListBloc({required this.approvalSpkRepository})
     : super(ApprovalSpkListInitial()) {
     on<GetSpkListEvent>(_onGetSpkList);
+    on<RemoveListIndex>(_onRemoveListIndex);
   }
 
   void _onGetSpkList(
@@ -33,5 +34,20 @@ class ApprovalSpkListBloc
       ),
       (data) => emit(ApprovalSpkListLoadSuccess(spkList: data)),
     );
+  }
+
+  void _onRemoveListIndex(
+    RemoveListIndex event,
+    Emitter<ApprovalSpkListState> emit,
+  ) {
+    print("index ${event.index}");
+    final currentState = state;
+    if (currentState is ApprovalSpkListLoadSuccess) {
+      emit(ApprovalSpkListLoading());
+      final updatedList = List<ApprovalSpk>.from(currentState.spkList)
+        ..removeAt(event.index);
+
+      emit(ApprovalSpkListLoadSuccess(spkList: updatedList));
+    }
   }
 }

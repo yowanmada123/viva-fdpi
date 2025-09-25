@@ -18,3 +18,9 @@ class GetLoanListEvent extends ApprovalLoanListEvent {
     required this.approvalStatus,
   });
 }
+
+class RemoveLoanListIndex extends ApprovalLoanListEvent {
+  final int index;
+
+  const RemoveLoanListIndex({required this.index});
+}

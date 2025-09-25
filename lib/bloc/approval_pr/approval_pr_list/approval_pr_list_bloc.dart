@@ -14,6 +14,7 @@ class ApprovalPrListBloc
   ApprovalPrListBloc({required this.approvalPRRepository})
     : super(ApprovalPrListInitial()) {
     on<GetApprovalPRListEvent>(_onGetListApprovalPR);
+    on<RemoveListIndex>(_onRemoveListIndex);
   }
 
   void _onGetListApprovalPR(
@@ -28,5 +29,20 @@ class ApprovalPrListBloc
       ),
       (data) => emit(ApprovalPrListSuccessState(data: data)),
     );
+  }
+
+  void _onRemoveListIndex(
+    RemoveListIndex event,
+    Emitter<ApprovalPrListState> emit,
+  ) {
+    print("index ${event.index}");
+    final currentState = state;
+    if (currentState is ApprovalPrListSuccessState) {
+      emit(ApprovalPrListLoadingState());
+      final updatedList = List<ApprovalPR>.from(currentState.data)
+        ..removeAt(event.index);
+
+      emit(ApprovalPrListSuccessState(data: updatedList));
+    }
   }
 }

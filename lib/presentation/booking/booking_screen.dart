@@ -337,10 +337,7 @@ class BookingCard extends StatelessWidget {
           Text(booking.clusterName),
           const SizedBox(height: 4),
           Container(
-            decoration: BoxDecoration(
-              color: const Color(0xffEAF1FF),
-              borderRadius: BorderRadius.circular(8),
-            ),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
             padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.w),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -13,6 +13,7 @@ class ApprovalPoListBloc
   ApprovalPoListBloc({required this.approvalPORepository})
     : super(ApprovalPoListInitial()) {
     on<GetApprovalPOListEvent>(_onGetPOList);
+    on<RemoveListIndex>(_onRemoveListIndex);
   }
 
   Future<void> _onGetPOList(
@@ -27,5 +28,20 @@ class ApprovalPoListBloc
       ),
       (data) => emit(ApprovalPoListSuccessState(data)),
     );
+  }
+
+  void _onRemoveListIndex(
+    RemoveListIndex event,
+    Emitter<ApprovalPoListState> emit,
+  ) {
+    print("index ${event.index}");
+    final currentState = state;
+    if (currentState is ApprovalPoListSuccessState) {
+      emit(ApprovalPoListLoadingState());
+      final updatedList = List<ApprovalPo>.from(currentState.data)
+        ..removeAt(event.index);
+
+      emit(ApprovalPoListSuccessState(updatedList));
+    }
   }
 }

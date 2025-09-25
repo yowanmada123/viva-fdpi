@@ -22,3 +22,9 @@ class GetSpkListEvent extends ApprovalSpkListEvent {
     required this.approvalStatus,
   });
 }
+
+class RemoveListIndex extends ApprovalSpkListEvent {
+  final int index;
+
+  const RemoveListIndex({required this.index});
+}
