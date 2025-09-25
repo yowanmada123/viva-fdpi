@@ -823,7 +823,7 @@ class _LoanFormSecondStepState extends State<_LoanFormSecondStep> {
                         child: Text("Back"),
                       ),
                     ),
-                    SizedBox(width: 24.w),
+                    SizedBox(width: 8.w),
                     Expanded(
                       child: FilledButton(
                         style: FilledButton.styleFrom(

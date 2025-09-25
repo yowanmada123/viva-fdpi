@@ -27,16 +27,19 @@ class ApprovalBottomBar extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
-              child: OutlinedButton(
+              padding: EdgeInsets.fromLTRB(16.w, 8.w, 4.w, 8.w),
+              child: FilledButton(
                 onPressed: isLoading ? null : onReject,
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: Colors.red),
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
                 ),
                 child: Text(
                   'Reject',
                   style: TextStyle(
-                    color: Colors.red,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -48,10 +51,15 @@ class ApprovalBottomBar extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
+              padding: EdgeInsets.fromLTRB(4.w, 8.w, 16.w, 8.w),
               child: FilledButton(
                 onPressed: isLoading ? null : onApprove,
-                style: FilledButton.styleFrom(backgroundColor: Colors.green),
+                style: FilledButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ), // Adjust radius here
+                ),
                 child:
                     isLoading
                         ? SizedBox(
