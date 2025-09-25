@@ -213,6 +213,7 @@ class _SprProgressListScreenContentState
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12.sp,
+                                      color: Color.fromARGB(255, 99, 99, 99),
                                     ),
                                   ),
                                   SizedBox(height: 4.w),
@@ -224,7 +225,12 @@ class _SprProgressListScreenContentState
                                             qcItem.value.imgLink2.isEmpty &&
                                             qcItem.value.imgLink3.isEmpty)
                                           Container(
-                                            child: Text("No Attachment"),
+                                            child: Text(
+                                              "No Attachment",
+                                              style: TextStyle(
+                                                color: Colors.grey,
+                                              ),
+                                            ),
                                           ),
                                         if (qcItem.value.imgLink.isNotEmpty)
                                           Padding(

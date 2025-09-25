@@ -422,6 +422,10 @@ class _ContentSection extends StatelessWidget {
     return AnimatedSize(
       duration: const Duration(milliseconds: 300),
       child: Container(
+        padding:
+            isExpanded
+                ? const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0)
+                : const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: const BorderRadius.only(
