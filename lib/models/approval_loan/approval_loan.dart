@@ -27,6 +27,8 @@ class ApprovalLoan {
   final String userAprv2;
   final DateTime? dtAprv3;
   final String userAprv3;
+  final DateTime? dtAprv4;
+  final String userAprv4;
   final String acNum;
   final String employeeName;
   final String vendorName;
@@ -34,6 +36,7 @@ class ApprovalLoan {
   final String wAprv1By;
   final String wAprv2By;
   final String wAprv3By;
+  final String wAprv4By;
   final String creditLimit;
   final String amt;
   final String spkType;
@@ -80,6 +83,9 @@ class ApprovalLoan {
     required this.siteName,
     required this.clusterName,
     required this.houseName,
+    required this.dtAprv4,
+    required this.userAprv4,
+    required this.wAprv4By,
   });
 
   ApprovalLoan copyWith({
@@ -121,6 +127,9 @@ class ApprovalLoan {
     String? siteName,
     String? clusterName,
     String? houseName,
+    DateTime? dtAprv4,
+    String? userAprv4,
+    String? wAprv4By,
   }) {
     return ApprovalLoan(
       officeId: officeId ?? this.officeId,
@@ -161,6 +170,9 @@ class ApprovalLoan {
       siteName: siteName ?? this.siteName,
       clusterName: clusterName ?? this.clusterName,
       houseName: houseName ?? this.houseName,
+      dtAprv4: dtAprv4 ?? this.dtAprv4,
+      userAprv4: userAprv4 ?? this.userAprv4,
+      wAprv4By: wAprv4By ?? this.wAprv4By,
     );
   }
 
@@ -204,6 +216,9 @@ class ApprovalLoan {
       'site_name': siteName,
       'cluster_name': clusterName,
       'house_name': houseName,
+      'dt_aprv4': dtAprv4,
+      'user_aprv4': userAprv4,
+      'w_aprv4_by': wAprv4By,
     };
   }
 
@@ -247,6 +262,9 @@ class ApprovalLoan {
       siteName: map['site_name'] ?? '',
       clusterName: map['cluster_name'] ?? '',
       houseName: map['house_name'] ?? '',
+      dtAprv4: parseDateTime(map['dt_aprv4'] ?? ''),
+      userAprv4: map['user_aprv4'] ?? '',
+      wAprv4By: map['w_aprv4_by'] ?? '',
     );
   }
 
@@ -257,7 +275,7 @@ class ApprovalLoan {
 
   @override
   String toString() {
-    return 'ApprovalLoan(officeId: $officeId, office: $office, address: $address, city: $city, trId: $trId, trType: $trType, wTrType: $wTrType, kbNum: $kbNum, vendorId: $vendorId, idEmployee: $idEmployee, dtKb: $dtKb, kbAmt: $kbAmt, remark: $remark, stat: $stat, dtCreated: $dtCreated, dtModified: $dtModified, userId: $userId, trIdRef: $trIdRef, dtAprv1: $dtAprv1, userAprv1: $userAprv1, dtAprv2: $dtAprv2, userAprv2: $userAprv2, dtAprv3: $dtAprv3, userAprv3: $userAprv3, acNum: $acNum, employeeName: $employeeName, vendorName: $vendorName, wCreatedBy: $wCreatedBy, wAprv1By: $wAprv1By, wAprv2By: $wAprv2By, wAprv3By: $wAprv3By, creditLimit: $creditLimit, amt: $amt, spkType: $spkType, wSpkType: $wSpkType, siteName: $siteName, clusterName: $clusterName, houseName: $houseName)';
+    return 'ApprovalLoan(officeId: $officeId, office: $office, address: $address, city: $city, trId: $trId, trType: $trType, wTrType: $wTrType, kbNum: $kbNum, vendorId: $vendorId, idEmployee: $idEmployee, dtKb: $dtKb, kbAmt: $kbAmt, remark: $remark, stat: $stat, dtCreated: $dtCreated, dtModified: $dtModified, userId: $userId, trIdRef: $trIdRef, dtAprv1: $dtAprv1, userAprv1: $userAprv1, dtAprv2: $dtAprv2, userAprv2: $userAprv2, dtAprv3: $dtAprv3, userAprv3: $userAprv3, acNum: $acNum, employeeName: $employeeName, vendorName: $vendorName, wCreatedBy: $wCreatedBy, wAprv1By: $wAprv1By, wAprv2By: $wAprv2By, wAprv3By: $wAprv3By, creditLimit: $creditLimit, amt: $amt, spkType: $spkType, wSpkType: $wSpkType, siteName: $siteName, clusterName: $clusterName, houseName: $houseName, dtAprv4: $dtAprv4, userAprv4: $userAprv4, wAprv4By: $wAprv4By)';
   }
 
   @override
@@ -302,7 +320,10 @@ class ApprovalLoan {
         other.wSpkType == wSpkType &&
         other.siteName == siteName &&
         other.clusterName == clusterName &&
-        other.houseName == houseName;
+        other.houseName == houseName &&
+        other.dtAprv4 == dtAprv4 &&
+        other.userAprv4 == userAprv4 &&
+        other.wAprv4By == wAprv4By;
   }
 
   @override
@@ -344,6 +365,9 @@ class ApprovalLoan {
         wSpkType.hashCode ^
         siteName.hashCode ^
         clusterName.hashCode ^
-        houseName.hashCode;
+        houseName.hashCode ^
+        dtAprv4.hashCode ^
+        userAprv4.hashCode ^
+        wAprv4By.hashCode;
   }
 }

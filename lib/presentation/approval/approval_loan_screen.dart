@@ -87,6 +87,20 @@ class ApprovalScreenState extends State<ApprovalScreen> {
         _showNoPermissionSnackBar(context);
         return;
       }
+    } else if (loan.userAprv4.trim().isEmpty) {
+      if (credentialState is CredentialsLoadSuccess &&
+          credentialState.credentials["APPROVALBON4"] == "Y") {
+        context.read<ApproveLoanBloc>().add(
+          ApproveLoanLoad(
+            trId: loan.trId,
+            typeAprv: "approve4",
+            status: "approve",
+          ),
+        );
+      } else {
+        _showNoPermissionSnackBar(context);
+        return;
+      }
     } else {
       _showNoPermissionSnackBar(context);
       return;
@@ -138,6 +152,20 @@ class ApprovalScreenState extends State<ApprovalScreen> {
           ApproveLoanLoad(
             trId: loan.trId,
             typeAprv: "approve3",
+            status: "reject",
+          ),
+        );
+      } else {
+        _showNoPermissionSnackBar(context);
+        return;
+      }
+    } else if (loan.userAprv4.trim().isEmpty) {
+      if (credentialState is CredentialsLoadSuccess &&
+          credentialState.credentials["APPROVALBON4"] == "Y") {
+        context.read<ApproveLoanBloc>().add(
+          ApproveLoanLoad(
+            trId: loan.trId,
+            typeAprv: "approve4",
             status: "reject",
           ),
         );
@@ -319,6 +347,7 @@ class ApprovalScreenState extends State<ApprovalScreen> {
               if (currentPr.userAprv1.trim().isEmpty) canApprove = true;
               if (currentPr.userAprv2.trim().isEmpty) canApprove = true;
               if (currentPr.userAprv3.trim().isEmpty) canApprove = true;
+              if (currentPr.userAprv4.trim().isEmpty) canApprove = true;
             }
 
             if (!canApprove) return const SizedBox.shrink();

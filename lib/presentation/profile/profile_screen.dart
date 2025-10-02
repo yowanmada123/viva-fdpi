@@ -99,14 +99,21 @@ class ProfileView extends StatelessWidget {
                                   backgroundColor: Color(0xffEB5757),
                                 ),
                               );
+                              BlocProvider.of<AuthenticationBloc>(context).add(
+                                SetAuthenticationStatus(isAuthenticated: false),
+                              );
                               Navigator.of(
                                 context,
                               ).popUntil((route) => route.isFirst);
                               return;
                             }
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("Logout Not Success")),
+                            BlocProvider.of<AuthenticationBloc>(context).add(
+                              SetAuthenticationStatus(isAuthenticated: false),
                             );
+                            Navigator.of(
+                              context,
+                            ).popUntil((route) => route.isFirst);
+                            return;
                           } else if (state is LogoutSuccess) {
                             BlocProvider.of<AuthenticationBloc>(context).add(
                               SetAuthenticationStatus(isAuthenticated: false),
