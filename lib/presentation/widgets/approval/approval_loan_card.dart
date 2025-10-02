@@ -75,10 +75,12 @@ class _ApprovalCardState extends State<ApprovalCard> {
                     _buildSectionTitle(widget.requests.office),
                     _buildInfoRow(
                       "Tanggal Pengajuan",
-                      DateFormat(
-                        "d MMMM yyyy",
-                        'id_ID',
-                      ).format(widget.requests.dtKb!),
+                      widget.requests.dtKb != null
+                          ? DateFormat(
+                              "d MMMM yyyy",
+                              'id_ID',
+                            ).format(widget.requests.dtKb!)
+                          : "-",
                     ),
                     _buildInfoRow("Diajukan oleh", widget.requests.vendorName),
                     _buildInfoRow("Tipe SPK", widget.requests.wSpkType),

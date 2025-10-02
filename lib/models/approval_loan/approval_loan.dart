@@ -55,7 +55,7 @@ class ApprovalLoan {
     required this.kbNum,
     required this.vendorId,
     required this.idEmployee,
-    required this.dtKb,
+    this.dtKb,
     required this.kbAmt,
     required this.remark,
     required this.stat,
