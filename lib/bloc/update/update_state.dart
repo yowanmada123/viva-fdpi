@@ -36,3 +36,21 @@ class UpdateError extends UpdateState {
   @override
   List<Object?> get props => [message];
 }
+
+class UpdateDownloading extends UpdateState {
+  final double progress;
+
+  const UpdateDownloading(this.progress);
+
+  @override
+  List<Object?> get props => [progress];
+}
+
+class UpdateDownloaded extends UpdateState {
+  final String filePath;
+
+  const UpdateDownloaded(this.filePath);
+
+  @override
+  List<Object?> get props => [filePath];
+}
