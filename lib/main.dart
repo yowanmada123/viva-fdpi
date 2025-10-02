@@ -225,6 +225,12 @@ class MyApp extends StatelessWidget {
   }
 
   void _showUpdateDialog(BuildContext context, UpdateAvailable state) {
+    bool isDebugMode = true;
+
+    if (isDebugMode) {
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: false,

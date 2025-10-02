@@ -156,11 +156,7 @@ class _ApprovalPoCardState extends State<ApprovalPoCard> {
                                 final String unitPrice = formatCurrency(
                                   article.unitPrice,
                                 );
-                                final String qty =
-                                    double.tryParse(
-                                      article.qty,
-                                    )?.toStringAsFixed(0) ??
-                                    '0';
+                                final String qty = article.qty;
                                 final String price = formatCurrency(
                                   article.amtNet,
                                 );
@@ -228,12 +224,12 @@ class _ApprovalPoCardState extends State<ApprovalPoCard> {
                           // ),
                           TimelineStep(
                             header: "Approve 1",
-                            detail: widget.requests.aprvBy,
+                            detail: widget.requests.wAprv1By,
                             date: widget.requests.dtAprv,
                           ),
                           TimelineStep(
                             header: "Approve 2",
-                            detail: widget.requests.aprv2By,
+                            detail: widget.requests.wAprv2By,
                             date: widget.requests.dtAprv2,
                           ),
                         ],
