@@ -73,13 +73,14 @@ class _ApprovalCardState extends State<ApprovalCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildSectionTitle(widget.requests.office),
+                    _buildInfoRow("No Kasbon", widget.requests.trId),
                     _buildInfoRow(
                       "Tanggal Pengajuan",
                       widget.requests.dtKb != null
                           ? DateFormat(
-                              "d MMMM yyyy",
-                              'id_ID',
-                            ).format(widget.requests.dtKb!)
+                            "d MMMM yyyy",
+                            'id_ID',
+                          ).format(widget.requests.dtKb!)
                           : "-",
                     ),
                     _buildInfoRow("Diajukan oleh", widget.requests.vendorName),
