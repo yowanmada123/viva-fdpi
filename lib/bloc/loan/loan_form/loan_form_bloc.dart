@@ -98,6 +98,57 @@ class LoanFormBloc extends Bloc<LoanFormEvent, LoanFormState> {
     LoanFormSubmit event,
     Emitter<LoanFormState> emit,
   ) async {
+    // Validasi field yang wajib diisi
+    if (state.selectedVendor == null) {
+      emit(
+        state.copyWith(
+          status: FormStatus.failure,
+          exception: Exception('Vendor harus dipilih'),
+        ),
+      );
+      return;
+    }
+
+    if (state.dateLoan == null) {
+      emit(
+        state.copyWith(
+          status: FormStatus.failure,
+          exception: Exception('Tanggal pinjaman harus diisi'),
+        ),
+      );
+      return;
+    }
+
+    if (event.amount.isEmpty) {
+      emit(
+        state.copyWith(
+          status: FormStatus.failure,
+          exception: Exception('Jumlah pinjaman harus diisi'),
+        ),
+      );
+      return;
+    }
+
+    if (state.remark == null || state.remark!.isEmpty) {
+      emit(
+        state.copyWith(
+          status: FormStatus.failure,
+          exception: Exception('Remark harus diisi'),
+        ),
+      );
+      return;
+    }
+
+    if (state.selectedSpk == null) {
+      emit(
+        state.copyWith(
+          status: FormStatus.failure,
+          exception: Exception('SPK harus dipilih'),
+        ),
+      );
+      return;
+    }
+
     emit(state.copyWith(status: FormStatus.loading));
 
     final result = await loanRepository.storeLoan(
