@@ -73,12 +73,15 @@ class _ApprovalCardState extends State<ApprovalCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildSectionTitle(widget.requests.office),
+                    _buildInfoRow("No Kasbon", widget.requests.trId),
                     _buildInfoRow(
                       "Tanggal Pengajuan",
-                      DateFormat(
-                        "d MMMM yyyy",
-                        'id_ID',
-                      ).format(widget.requests.dtKb!),
+                      widget.requests.dtKb != null
+                          ? DateFormat(
+                            "d MMMM yyyy",
+                            'id_ID',
+                          ).format(widget.requests.dtKb!)
+                          : "-",
                     ),
                     _buildInfoRow("Diajukan oleh", widget.requests.vendorName),
                     _buildInfoRow("Tipe SPK", widget.requests.wSpkType),
@@ -130,6 +133,11 @@ class _ApprovalCardState extends State<ApprovalCard> {
                             header: "Approve 3",
                             detail: widget.requests.wAprv3By,
                             date: widget.requests.dtAprv3,
+                          ),
+                          TimelineStep(
+                            header: "Approve 4",
+                            detail: widget.requests.wAprv4By,
+                            date: widget.requests.dtAprv4,
                           ),
                         ],
                       ),

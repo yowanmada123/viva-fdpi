@@ -131,11 +131,8 @@ class _ApprovalPrCardState extends State<ApprovalPrCard> {
                                 final String unitPrice = formatCurrency(
                                   article.unitPrice,
                                 );
-                                final String qty =
-                                    double.tryParse(
-                                      article.qty,
-                                    )?.toStringAsFixed(0) ??
-                                    '0';
+                                final String qty = article.qty;
+
                                 final String price = formatCurrency(
                                   article.amount,
                                 );

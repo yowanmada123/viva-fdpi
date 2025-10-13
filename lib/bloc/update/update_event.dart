@@ -8,3 +8,12 @@ abstract class UpdateEvent extends Equatable {
 }
 
 class CheckForUpdate extends UpdateEvent {}
+
+class DownloadUpdate extends UpdateEvent {
+  final String apkUrl;
+
+  const DownloadUpdate(this.apkUrl);
+
+  @override
+  List<Object> get props => [apkUrl];
+}
