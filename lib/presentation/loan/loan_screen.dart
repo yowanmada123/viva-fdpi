@@ -144,9 +144,7 @@ class _LoanFormScreenState extends State<LoanFormScreen> {
                 }
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(
-                      "Telah terjadi kesalahan. Silakan coba lagi!",
-                    ),
+                    content: Text(state.exception.toString()),
                     duration: Duration(seconds: 3),
                     behavior: SnackBarBehavior.floating,
                     shape: RoundedRectangleBorder(
@@ -681,7 +679,12 @@ class _LoanFormSecondStepState extends State<_LoanFormSecondStep> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          Text("Nominal Kasbon"),
+                          Row(
+                            children: [
+                              Text("Nominal Kasbon"),
+                              Text(" *", style: TextStyle(color: Colors.red)),
+                            ],
+                          ),
                           SizedBox(height: 8.w),
                           MoneyInputWidget(
                             controller: _kasbonController,
@@ -756,7 +759,12 @@ class _LoanFormSecondStepState extends State<_LoanFormSecondStep> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Tanggal Transaksi Kasbon"),
+                    Row(
+                      children: [
+                        Text("Tanggal Transaksi Kasbon"),
+                        Text(" *", style: TextStyle(color: Colors.red)),
+                      ],
+                    ),
                     SizedBox(height: 8.w),
                     TextField(
                       decoration: InputDecoration(
@@ -783,7 +791,12 @@ class _LoanFormSecondStepState extends State<_LoanFormSecondStep> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Remark"),
+                    Row(
+                      children: [
+                        Text("Remark"),
+                        Text(" *", style: TextStyle(color: Colors.red)),
+                      ],
+                    ),
                     SizedBox(height: 8.w),
                     TextFormField(
                       decoration: InputDecoration(
