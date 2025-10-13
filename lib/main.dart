@@ -225,11 +225,11 @@ class MyApp extends StatelessWidget {
   }
 
   void _showUpdateDialog(BuildContext context, UpdateAvailable state) {
-    bool isDebugMode = true;
+    // bool isDebugMode = true;
 
-    if (isDebugMode) {
-      return;
-    }
+    // if (isDebugMode) {
+    //   return;
+    // }
 
     showDialog(
       context: context,
