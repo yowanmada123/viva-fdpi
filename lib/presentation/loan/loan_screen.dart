@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fdpi_app/bloc/QC/vendor_has_spk/vendor_has_spk_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +22,7 @@ class LoanScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log('Access to lib/presentation/loan/loan_screen.dart');
     return MultiBlocProvider(
       providers: [
         BlocProvider(

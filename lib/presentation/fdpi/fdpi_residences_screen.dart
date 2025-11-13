@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,6 +18,7 @@ class FDPIResidencesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log('Access to lib/presentation/fdpi/fdpi_residences_screen.dart');
     final fdpiRepository = context.read<FdpiRepository>();
 
     return BlocProvider(

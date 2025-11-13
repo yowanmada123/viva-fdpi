@@ -10,7 +10,7 @@ class CredentialsBloc extends Bloc<CredentialsEvent, CredentialsState> {
   final AuthorizationRepository authorizationRepository;
 
   CredentialsBloc({required this.authorizationRepository})
-    : super(CredentialsInitial()) {
+    : super(CredentialsInitial()) { 
     on<CredentialsLoad>(_onLoadCredentials);
   }
 
@@ -18,6 +18,7 @@ class CredentialsBloc extends Bloc<CredentialsEvent, CredentialsState> {
     CredentialsLoad event,
     Emitter<CredentialsState> emit,
   ) async {
+
     final result = await authorizationRepository.getConv(
       event.entityId,
       event.applId,

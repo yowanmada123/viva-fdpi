@@ -1,4 +1,6 @@
 // approval_screen.dart
+import 'dart:developer';
+
 import 'package:fdpi_app/bloc/approval_loan/approval_loan_list/approval_loan_list_bloc.dart';
 import 'package:fdpi_app/bloc/approval_loan/approve_loan/approve_loan_bloc.dart';
 import 'package:fdpi_app/bloc/auth/authentication/authentication_bloc.dart';
@@ -27,6 +29,7 @@ class ApprovalScreenState extends State<ApprovalScreen> {
 
   @override
   void initState() {
+    log('Access to lib/presentation/approval/approval_loan_screen.dart');
     super.initState();
     _initializeControllers();
   }

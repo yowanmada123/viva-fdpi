@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fdpi_app/data/repository/auth_repository.dart';
 import 'package:fdpi_app/models/errors/custom_exception.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log('Access to lib/presentation/profile/profile_screen.dart');
     return BlocProvider(
       create: (context) => LogoutBloc(context.read<AuthRepository>()),
       child: const ProfileView(),

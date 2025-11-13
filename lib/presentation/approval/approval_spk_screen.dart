@@ -1,4 +1,6 @@
 // approval_screen.dart
+import 'dart:developer';
+
 import 'package:fdpi_app/bloc/auth/authentication/authentication_bloc.dart';
 import 'package:fdpi_app/bloc/authorization/credentials/credentials_bloc.dart';
 import 'package:fdpi_app/models/errors/custom_exception.dart';
@@ -28,6 +30,7 @@ class ApprovalSpkScreenState extends State<ApprovalSpkScreen> {
 
   @override
   void initState() {
+    log('Access to lib/presentation/approval/approval_spk_screen.dart');
     super.initState();
     _initializeControllers();
   }

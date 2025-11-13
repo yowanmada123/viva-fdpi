@@ -1,5 +1,4 @@
-import 'dart:math';
-
+import 'dart:math' hide log;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -43,7 +42,7 @@ class ResidenceCard extends StatelessWidget {
                 aspectRatio: 16 / 9, // Your desired ratio (width/height)
                 child: Image(
                   image: CachedNetworkImageProvider(
-                    'https://v2.kencana.org/storage/${detailResidence.imgClusterThumbnail}',
+                    'https://v3.kencana.org/storage/${detailResidence.imgClusterThumbnail}',
                   ),
                   fit: BoxFit.cover,
                 ),

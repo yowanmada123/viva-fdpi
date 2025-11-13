@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fdpi_app/presentation/widgets/ui/dropdown_with_clear.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,6 +27,7 @@ class SpkListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log('Access to lib/presentation/SPK/spk_list_screen.dart');
     return MultiBlocProvider(
       providers: [
         BlocProvider(

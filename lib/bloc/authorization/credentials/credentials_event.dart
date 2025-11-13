@@ -12,4 +12,7 @@ final class CredentialsLoad extends CredentialsEvent {
   final String applId;
 
   const CredentialsLoad({this.entityId = "FDPI", this.applId = "MOBILE"});
+
+  @override
+  List<Object> get props => [entityId, applId];
 }

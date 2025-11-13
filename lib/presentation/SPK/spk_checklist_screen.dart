@@ -1,5 +1,5 @@
-import 'dart:math';
-
+import 'dart:math' hide log;
+import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fdpi_app/bloc/QC/approve_detail/approve_detail_bloc.dart';
 import 'package:fdpi_app/bloc/QC/checklist/checklist_bloc.dart';
@@ -21,6 +21,7 @@ class NewSpkChecklistScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log('Access to lib/presentation/SPK/spk_checklist_screen.dart');
     return MultiBlocProvider(
       providers: [
         BlocProvider(

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fdpi_app/bloc/booking/booking_list/booking_bloc.dart';
 import 'package:fdpi_app/bloc/fdpi/house_item/house_item_bloc.dart';
 import 'package:fdpi_app/data/repository/booking_repository.dart';
@@ -27,6 +29,7 @@ class BookingFormScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log('Access to lib/presentation/booking/booking_form_screen.dart');
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(value: bookingBloc),

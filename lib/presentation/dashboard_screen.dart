@@ -1,5 +1,5 @@
-import 'dart:math';
-
+import 'dart:math' hide log;
+import 'dart:developer';
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:fdpi_app/presentation/approval/approval_pr_screen.dart';
 import 'package:flutter/material.dart';
@@ -25,13 +25,13 @@ import 'fdpi/fdpi_residences_screen.dart';
 import 'loan/loan_screen.dart';
 import 'profile/profile_screen.dart';
 import 'widgets/bottom_navigator.dart';
-import 'widgets/logout_button.dart';
 
 class DriverDashboardScreen extends StatelessWidget {
   const DriverDashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    log('Access to lib/presentation/dashboard_screen.dart');
     final authRepository = context.read<AuthRepository>();
     final authorizationRepository = context.read<AuthorizationRepository>();
 

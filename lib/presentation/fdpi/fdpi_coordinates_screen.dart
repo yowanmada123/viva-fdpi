@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,6 +30,7 @@ class FDPICoordinatesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log('Access to lib/presentation/fdpi/fdpi_coordinates_screen.dart');
     final fdpiRepository = context.read<FdpiRepository>();
 
     return LandscapeOrientationWrapper(
@@ -189,7 +192,7 @@ class _MapViewState extends State<MapView> {
               bounds: _imageBounds,
               opacity: 1.0,
               imageProvider: CachedNetworkImageProvider(
-                'https://v2.kencana.org/storage/${widget.clusterImg}',
+                'https://v3.kencana.org/storage/${widget.clusterImg}',
               ),
             ),
           ],
