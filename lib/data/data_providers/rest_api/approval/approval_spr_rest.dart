@@ -126,6 +126,7 @@ class ApprovalSprRest {
   }) async {
     try {
       http.options.headers['requiresToken'] = true;
+
       log(
         'Request to https://api-fpi.kencana.org/api/fpi/master/getDocumentStatus (POST)',
       );
@@ -137,18 +138,24 @@ class ApprovalSprRest {
         data: body,
       );
 
+      log('$response');
+
       if (response.statusCode != 200) {
         return Left(NetUtils.parseErrorResponse(response: response.data));
       }
 
       final data = response.data;
+      final List list = data['data'] ?? [];
 
-      return Right(ApprovalSprDetail.fromMap(data['data'][0]));
+      /// jika API return data kosong
+      if (list.isEmpty) {
+        return Right(ApprovalSprDetail.empty());
+      }
+
+      return Right(ApprovalSprDetail.fromMap(list.first));
     } on DioException catch (e) {
       return Left(NetUtils.parseDioException(e));
     } on Exception catch (e) {
-      return Future.value(Left(CustomException(message: e.toString())));
-    } catch (e) {
       return Left(CustomException(message: e.toString()));
     }
   }

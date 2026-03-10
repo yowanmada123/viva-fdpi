@@ -97,7 +97,7 @@ class MyGridLayout extends StatelessWidget {
         'icon': Icons.edit_document,
         'text': 'Approval Pengajuan',
         'description': 'Approval SPB',
-        'route': ApprovalSprScreen(title: submenu.menu_caption),
+        'route': ApprovalSpbScreen(title: submenu.menu_caption),
         // 'route': ApprovalSpbScreen(title: submenu.menu_caption),
       },
       // NEW

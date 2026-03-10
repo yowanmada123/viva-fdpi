@@ -178,6 +178,37 @@ class ApprovalSprDetail {
     );
   }
 
+  factory ApprovalSprDetail.empty() {
+    return ApprovalSprDetail(
+      docType: '',
+      docId: '',
+      docCat: '',
+      wDocCat: '',
+      idSite: '',
+      idCluster: '',
+      idHouse: '',
+      siteName: '',
+      clusterName: '',
+      houseName: '',
+      dtCreated: DateTime.now(),
+      createdBy: '',
+      dtAprv1: DateTime.now(),
+      aprv1By: '',
+      dtAprv2: DateTime.now(),
+      aprv2By: '',
+      dtReject: '',
+      rejectBy: '',
+      dtReject2: '',
+      reject2By: '',
+      status: '',
+      wCreatedBy: '',
+      wAprv1By: '',
+      wAprv2By: '',
+      wReject1By: '',
+      wReject2By: '',
+    );
+  }
+
   String toJson() => json.encode(toMap());
 
   factory ApprovalSprDetail.fromJson(String source) =>

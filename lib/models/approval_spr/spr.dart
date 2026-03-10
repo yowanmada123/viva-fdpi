@@ -2,15 +2,19 @@ import 'dart:convert';
 
 class Spr {
   final String idSpr;
+  final String idSite;
+  final String idCluster;
+  final String idHouseUnit;
+  final String orderAmt;
+  final String namaSales;
+  final String status;
+
   final String remark;
   final String dtAprv1;
   final String aprv1By;
-  final String dtAprv2;
-  final String aprv2By;
   final String dtReject;
   final String rejectBy;
-  final String dtReject2;
-  final String reject2By;
+
   final String siteName;
   final String clusterName;
   final String remarkCluster;
@@ -18,17 +22,24 @@ class Spr {
   final String commonName;
   final String sbkName;
   final String category;
+
+  final String wCreatedBy;
+  final String wAprv1By;
+  final String wReject1By;
+
   Spr({
     required this.idSpr,
+    required this.idSite,
+    required this.idCluster,
+    required this.idHouseUnit,
+    required this.orderAmt,
+    required this.namaSales,
+    required this.status,
     required this.remark,
     required this.dtAprv1,
     required this.aprv1By,
-    required this.dtAprv2,
-    required this.aprv2By,
     required this.dtReject,
     required this.rejectBy,
-    required this.dtReject2,
-    required this.reject2By,
     required this.siteName,
     required this.clusterName,
     required this.remarkCluster,
@@ -36,19 +47,24 @@ class Spr {
     required this.commonName,
     required this.sbkName,
     required this.category,
+    required this.wCreatedBy,
+    required this.wAprv1By,
+    required this.wReject1By,
   });
 
   Spr copyWith({
     String? idSpr,
+    String? idSite,
+    String? idCluster,
+    String? idHouseUnit,
+    String? orderAmt,
+    String? namaSales,
+    String? status,
     String? remark,
     String? dtAprv1,
     String? aprv1By,
-    String? dtAprv2,
-    String? aprv2By,
     String? dtReject,
     String? rejectBy,
-    String? dtReject2,
-    String? reject2By,
     String? siteName,
     String? clusterName,
     String? remarkCluster,
@@ -56,18 +72,23 @@ class Spr {
     String? commonName,
     String? sbkName,
     String? category,
+    String? wCreatedBy,
+    String? wAprv1By,
+    String? wReject1By,
   }) {
     return Spr(
       idSpr: idSpr ?? this.idSpr,
+      idSite: idSite ?? this.idSite,
+      idCluster: idCluster ?? this.idCluster,
+      idHouseUnit: idHouseUnit ?? this.idHouseUnit,
+      orderAmt: orderAmt ?? this.orderAmt,
+      namaSales: namaSales ?? this.namaSales,
+      status: status ?? this.status,
       remark: remark ?? this.remark,
       dtAprv1: dtAprv1 ?? this.dtAprv1,
       aprv1By: aprv1By ?? this.aprv1By,
-      dtAprv2: dtAprv2 ?? this.dtAprv2,
-      aprv2By: aprv2By ?? this.aprv2By,
       dtReject: dtReject ?? this.dtReject,
       rejectBy: rejectBy ?? this.rejectBy,
-      dtReject2: dtReject2 ?? this.dtReject2,
-      reject2By: reject2By ?? this.reject2By,
       siteName: siteName ?? this.siteName,
       clusterName: clusterName ?? this.clusterName,
       remarkCluster: remarkCluster ?? this.remarkCluster,
@@ -75,21 +96,26 @@ class Spr {
       commonName: commonName ?? this.commonName,
       sbkName: sbkName ?? this.sbkName,
       category: category ?? this.category,
+      wCreatedBy: wCreatedBy ?? this.wCreatedBy,
+      wAprv1By: wAprv1By ?? this.wAprv1By,
+      wReject1By: wReject1By ?? this.wReject1By,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'id_spr': idSpr,
+      'id_site': idSite,
+      'id_cluster': idCluster,
+      'id_house_unit': idHouseUnit,
+      'order_amt': orderAmt,
+      'nama_sales': namaSales,
+      'status': status,
       'remark': remark,
       'dt_aprv1': dtAprv1,
       'aprv1_by': aprv1By,
-      'dt_aprv2': dtAprv2,
-      'aprv2_by': aprv2By,
       'dt_reject': dtReject,
       'reject_by': rejectBy,
-      'dt_reject2': dtReject2,
-      'reject2_by': reject2By,
       'site_name': siteName,
       'cluster_name': clusterName,
       'remark_cluster': remarkCluster,
@@ -97,21 +123,26 @@ class Spr {
       'common_name': commonName,
       'sbk_name': sbkName,
       'category': category,
+      'w_created_by': wCreatedBy,
+      'w_aprv1_by': wAprv1By,
+      'w_reject1_by': wReject1By,
     };
   }
 
   factory Spr.fromMap(Map<String, dynamic> map) {
     return Spr(
       idSpr: map['id_spr'] ?? '',
+      idSite: map['id_site'] ?? '',
+      idCluster: map['id_cluster'] ?? '',
+      idHouseUnit: map['id_house_unit'] ?? '',
+      orderAmt: map['order_amt'] ?? '',
+      namaSales: map['nama_sales'] ?? '',
+      status: map['status'] ?? '',
       remark: map['remark'] ?? '',
       dtAprv1: map['dt_aprv1'] ?? '',
       aprv1By: map['aprv1_by'] ?? '',
-      dtAprv2: map['dt_aprv2'] ?? '',
-      aprv2By: map['aprv2_by'] ?? '',
       dtReject: map['dt_reject'] ?? '',
       rejectBy: map['reject_by'] ?? '',
-      dtReject2: map['dt_reject2'] ?? '',
-      reject2By: map['reject2_by'] ?? '',
       siteName: map['site_name'] ?? '',
       clusterName: map['cluster_name'] ?? '',
       remarkCluster: map['remark_cluster'] ?? '',
@@ -119,6 +150,9 @@ class Spr {
       commonName: map['common_name'] ?? '',
       sbkName: map['sbk_name'] ?? '',
       category: map['category'] ?? '',
+      wCreatedBy: map['w_created_by'] ?? '',
+      wAprv1By: map['w_aprv1_by'] ?? '',
+      wReject1By: map['w_reject1_by'] ?? '',
     );
   }
 
@@ -128,7 +162,7 @@ class Spr {
 
   @override
   String toString() {
-    return 'Spr(idSpr: $idSpr, remark: $remark, dtAprv1: $dtAprv1, aprv1By: $aprv1By, dtAprv2: $dtAprv2, aprv2By: $aprv2By, dtReject: $dtReject, rejectBy: $rejectBy, dtReject2: $dtReject2, reject2By: $reject2By, siteName: $siteName, clusterName: $clusterName, remarkCluster: $remarkCluster, houseName: $houseName, commonName: $commonName, sbkName: $sbkName, category: $category)';
+    return 'Spr(idSpr: $idSpr, namaSales: $namaSales, houseName: $houseName)';
   }
 
   @override
@@ -137,42 +171,52 @@ class Spr {
 
     return other is Spr &&
         other.idSpr == idSpr &&
+        other.idSite == idSite &&
+        other.idCluster == idCluster &&
+        other.idHouseUnit == idHouseUnit &&
+        other.orderAmt == orderAmt &&
+        other.namaSales == namaSales &&
+        other.status == status &&
         other.remark == remark &&
         other.dtAprv1 == dtAprv1 &&
         other.aprv1By == aprv1By &&
-        other.dtAprv2 == dtAprv2 &&
-        other.aprv2By == aprv2By &&
         other.dtReject == dtReject &&
         other.rejectBy == rejectBy &&
-        other.dtReject2 == dtReject2 &&
-        other.reject2By == reject2By &&
         other.siteName == siteName &&
         other.clusterName == clusterName &&
         other.remarkCluster == remarkCluster &&
         other.houseName == houseName &&
         other.commonName == commonName &&
         other.sbkName == sbkName &&
-        other.category == category;
+        other.category == category &&
+        other.wCreatedBy == wCreatedBy &&
+        other.wAprv1By == wAprv1By &&
+        other.wReject1By == wReject1By;
   }
 
   @override
   int get hashCode {
     return idSpr.hashCode ^
+        idSite.hashCode ^
+        idCluster.hashCode ^
+        idHouseUnit.hashCode ^
+        orderAmt.hashCode ^
+        namaSales.hashCode ^
+        status.hashCode ^
         remark.hashCode ^
         dtAprv1.hashCode ^
         aprv1By.hashCode ^
-        dtAprv2.hashCode ^
-        aprv2By.hashCode ^
         dtReject.hashCode ^
         rejectBy.hashCode ^
-        dtReject2.hashCode ^
-        reject2By.hashCode ^
         siteName.hashCode ^
         clusterName.hashCode ^
         remarkCluster.hashCode ^
         houseName.hashCode ^
         commonName.hashCode ^
         sbkName.hashCode ^
-        category.hashCode;
+        category.hashCode ^
+        wCreatedBy.hashCode ^
+        wAprv1By.hashCode ^
+        wReject1By.hashCode;
   }
 }

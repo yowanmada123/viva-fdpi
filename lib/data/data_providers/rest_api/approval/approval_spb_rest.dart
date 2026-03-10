@@ -137,6 +137,8 @@ class ApprovalSpbRest {
         data: body,
       );
 
+      log('$response');
+
       if (response.statusCode != 200) {
         return Left(NetUtils.parseErrorResponse(response: response.data));
       }

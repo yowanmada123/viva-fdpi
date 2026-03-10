@@ -1,4 +1,6 @@
 // approval_card.dart
+import 'dart:developer';
+
 import 'package:fdpi_app/bloc/approval_spr/approval_spr_detail/approval_spr_detail_bloc.dart';
 import 'package:fdpi_app/models/approval_spr/spr.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +52,7 @@ class _ApprovalSprCardState extends State<ApprovalSprCard> {
 
   @override
   Widget build(BuildContext context) {
+    log("ApprovalSprCard build: ${widget.requests.idSpr}");
     return SingleChildScrollView(
       controller: widget.scrollController,
       physics: const BouncingScrollPhysics(),
@@ -110,21 +113,21 @@ class _ApprovalSprCardState extends State<ApprovalSprCard> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      TimelineProgress(
-                        steps: [
-                          TimelineStep(
-                            header: "Pengajuan",
-                            detail: state.sprDetail.wCreatedBy,
-                            date: state.sprDetail.dtCreated,
-                          ),
-                          TimelineStep(
-                            header: "Approve 1",
-                            detail: state.sprDetail.wAprv1By,
-                            date: state.sprDetail.dtAprv1,
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 320.w),
+                      // TimelineProgress(
+                      //   steps: [
+                      //     TimelineStep(
+                      //       header: "Pengajuan",
+                      //       detail: state.sprDetail.wCreatedBy,
+                      //       date: state.sprDetail.dtCreated,
+                      //     ),
+                      //     TimelineStep(
+                      //       header: "Approve 1",
+                      //       detail: state.sprDetail.wAprv1By,
+                      //       date: state.sprDetail.dtAprv1,
+                      //     ),
+                      //   ],
+                      // ),
+                      SizedBox(height: 400.w),
                     ],
                   ),
                 );
