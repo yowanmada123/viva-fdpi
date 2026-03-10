@@ -2,6 +2,7 @@ import 'dart:math' hide log;
 import 'dart:developer';
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:fdpi_app/presentation/approval/approval_pr_screen.dart';
+import 'package:fdpi_app/presentation/approval/approval_spr_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -90,24 +91,31 @@ class MyGridLayout extends StatelessWidget {
         'description': 'Approval Pengajuan',
         'route': ApprovalScreen(title: submenu.menu_caption),
       },
+      // ONDEVELOPMENT
+      // TESTING TAMPILAN SPR
       'approvalSPB': {
         'icon': Icons.edit_document,
         'text': 'Approval Pengajuan',
         'description': 'Approval SPB',
-        'route': ApprovalSpbScreen(title: submenu.menu_caption),
+        'route': ApprovalSprScreen(title: submenu.menu_caption),
+        // 'route': ApprovalSpbScreen(title: submenu.menu_caption),
       },
+      // NEW
+      'approvalSPR': {
+        'icon': Icons.edit_document,
+        'text': 'Approval Pengajuan',
+        'description': 'Approval SPR',
+        'route': ApprovalSprScreen(title: submenu.menu_caption),
+      },
+
+      ///
       'approvalSPK': {
         'icon': Icons.edit_document,
         'text': 'Approval Pengajuan',
         'description': 'Approval SPK',
         'route': ApprovalSpkScreen(title: submenu.menu_caption),
       },
-      'approvalSPR': {
-        'icon': Icons.edit_document,
-        'text': 'Approval Pengajuan',
-        'description': 'Approval SPR',
-        'route': ApprovalScreen(title: submenu.menu_caption),
-      },
+
       'approvalPO': {
         'icon': Icons.edit_document,
         'text': 'Approval Pengajuan',

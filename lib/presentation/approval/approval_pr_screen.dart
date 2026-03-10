@@ -288,7 +288,9 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
         bottomNavigationBar:
             BlocBuilder<ApprovalPrListBloc, ApprovalPrListState>(
               builder: (context, state) {
+                log("This Work");
                 if (state is! ApprovalPrListSuccessState) {
+                  log("A");
                   return SizedBox.shrink();
                 }
 
@@ -297,19 +299,28 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
 
                 if (_currentPage >= poList.length) return SizedBox.shrink();
                 final currentPr = poList[_currentPage];
+                log("B");
 
                 bool canApprove = false;
 
                 if (credentialState is CredentialsLoadSuccess) {
+                  log("C");
+
                   if (currentPr.aprvBy == "" && currentPr.rjcBy == "") {
+                    log("D");
+
                     canApprove = true;
                   } else if (currentPr.aprv2By == "" &&
                       currentPr.rjc2By == "") {
+                    log("E");
+
                     canApprove = true;
                   }
                 }
 
                 if (!canApprove) return SizedBox.shrink();
+                log("This Button Must Be Shown");
+
                 return ApprovalBottomBar(
                   isLoading: false,
                   onApprove:

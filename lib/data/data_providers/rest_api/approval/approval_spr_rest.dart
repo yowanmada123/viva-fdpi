@@ -2,19 +2,19 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:fdpi_app/models/approval_spr/approval_spr_detail.dart';
+import 'package:fdpi_app/models/approval_spr/approve_spr_request.dart';
+import 'package:fdpi_app/models/approval_spr/spr.dart';
 
-import '../../../../models/approval_spb/approval_spb_detail.dart';
-import '../../../../models/approval_spb/approve_spb_request.dart';
-import '../../../../models/approval_spb/spb.dart';
 import '../../../../models/errors/custom_exception.dart';
 import '../../../../utils/net_utils.dart';
 
-class ApprovalSpbRest {
+class ApprovalSprRest {
   Dio http;
 
-  ApprovalSpbRest(this.http);
+  ApprovalSprRest(this.http);
 
-  Future<Either<CustomException, List<Spb>>> getSpbList({
+  Future<Either<CustomException, List<Spr>>> getSprList({
     required String idSite,
     required String idCluster,
     required String idHouse,
@@ -23,9 +23,9 @@ class ApprovalSpbRest {
   }) async {
     try {
       http.options.headers['requiresToken'] = true;
-      log(
-        'Request to https://api-fpi.kencana.org/api/fpi/aprv-spb/getListSPB (POST)',
-      );
+      // log(
+      //   'Request to https://api-fpi.kencana.org/api/fpi/aprv-spr/getListSPR (POST)',
+      // );
 
       final body = {
         "id_site": idSite,
@@ -36,17 +36,17 @@ class ApprovalSpbRest {
       };
 
       final response = await http.post(
-        "api/fpi/aprv-spb/getListSPB",
+        "api/fpi/aprv-spr/getListSPR",
         data: body,
       );
 
-      log('Response : $response');
+      log('Response from: $response');
 
       if (response.statusCode == 200) {
         final data = response.data;
 
-        final List<Spb> items =
-            List<Spb>.from(data['data'].map((e) => Spb.fromMap(e))).toList();
+        final List<Spr> items =
+            List<Spr>.from(data['data'].map((e) => Spr.fromMap(e))).toList();
 
         return Right(items);
       } else {
@@ -61,19 +61,19 @@ class ApprovalSpbRest {
     }
   }
 
-  Future<Either<CustomException, String>> approvalSpb({
-    required ApproveSpbRequest data,
+  Future<Either<CustomException, String>> approvalSpr({
+    required ApproveSprRequest data,
   }) async {
     try {
       http.options.headers['requiresToken'] = true;
       log(
-        'Request to https://api-fpi.kencana.org/api/fpi/aprv-spb/approvalSPB (POST)',
+        'Request to https://api-fpi.kencana.org/api/fpi/aprv-spr/approvalSPR (POST)',
       );
 
-      final body = {"id_spb": data.idSpb, "type_aprv": data.typeAprv};
+      final body = {"id_spr": data.idSpr, "type_aprv": data.typeAprv};
 
       final response = await http.post(
-        "api/fpi/aprv-spb/approvalSPB",
+        "api/fpi/aprv-spr/approvalSPR",
         data: body,
       );
 
@@ -91,19 +91,19 @@ class ApprovalSpbRest {
     }
   }
 
-  Future<Either<CustomException, String>> rejectSpb({
-    required ApproveSpbRequest data,
+  Future<Either<CustomException, String>> rejectSpr({
+    required ApproveSprRequest data,
   }) async {
     try {
       http.options.headers['requiresToken'] = true;
       log(
-        'Request to https://api-fpi.kencana.org/api/fpi/aprv-spb/rejectApprove (POST)',
+        'Request to https://api-fpi.kencana.org/api/fpi/aprv-spr/rejectApprove (POST)',
       );
 
-      final body = {"id_spb": data.idSpb, "type_aprv": data.typeAprv};
+      final body = {"id_spr": data.idSpr, "type_aprv": data.typeAprv};
 
       final response = await http.post(
-        "api/fpi/aprv-spb/rejectApprove",
+        "api/fpi/aprv-spr/rejectApprove",
         data: body,
       );
 
@@ -121,8 +121,8 @@ class ApprovalSpbRest {
     }
   }
 
-  Future<Either<CustomException, ApprovalSpbDetail>> getSpbDetail({
-    required String idSpb,
+  Future<Either<CustomException, ApprovalSprDetail>> getSprDetail({
+    required String idSpr,
   }) async {
     try {
       http.options.headers['requiresToken'] = true;
@@ -130,7 +130,7 @@ class ApprovalSpbRest {
         'Request to https://api-fpi.kencana.org/api/fpi/master/getDocumentStatus (POST)',
       );
 
-      final body = {"doc_id": idSpb, "doc_type": "SPB"};
+      final body = {"doc_id": idSpr, "doc_type": "SPR"};
 
       final response = await http.post(
         "api/fpi/master/getDocumentStatus",
@@ -143,7 +143,7 @@ class ApprovalSpbRest {
 
       final data = response.data;
 
-      return Right(ApprovalSpbDetail.fromMap(data['data'][0]));
+      return Right(ApprovalSprDetail.fromMap(data['data'][0]));
     } on DioException catch (e) {
       return Left(NetUtils.parseDioException(e));
     } on Exception catch (e) {

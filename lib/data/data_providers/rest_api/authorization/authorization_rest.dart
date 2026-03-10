@@ -58,7 +58,7 @@ class AuthorizationRest {
       final response = await dio.post("api/mobile/getEnvConf", data: data);
 
       if (response.statusCode == 200) {
-        log('Response body: ${response.data}');
+        log('Response body from api/mobile/getEnvConf : ${response.data}');
         final body = response.data;
 
         Map<String, String> result = {};

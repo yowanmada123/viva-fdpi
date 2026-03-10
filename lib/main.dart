@@ -6,11 +6,13 @@ import 'package:fdpi_app/data/data_providers/rest_api/approval/approval_loan_res
 import 'package:fdpi_app/data/data_providers/rest_api/approval/approval_po.dart';
 import 'package:fdpi_app/data/data_providers/rest_api/approval/approval_pr_rest.dart';
 import 'package:fdpi_app/data/data_providers/rest_api/approval/approval_spb_rest.dart';
+import 'package:fdpi_app/data/data_providers/rest_api/approval/approval_spr_rest.dart';
 import 'package:fdpi_app/data/repository/approval_loan_repository.dart';
 import 'package:fdpi_app/data/repository/approval_po_repository.dart';
 import 'package:fdpi_app/data/repository/approval_pr_repository.dart';
 import 'package:fdpi_app/data/repository/approval_spb.dart';
 import 'package:fdpi_app/data/repository/approval_spk.dart';
+import 'package:fdpi_app/data/repository/approval_spr.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -75,6 +77,7 @@ void main() async {
   final spkRest = SPKRest(dioFdpiClient);
   final loanRest = LoanRest(dioFdpiClient);
   final approvalSpbRest = ApprovalSpbRest(dioFdpiClient);
+  final approvalSprRest = ApprovalSprRest(dioFdpiClient);
   final approvalSpkRest = ApprovalSpkRest(dioFdpiClient);
   final approvalLoanRest = ApprovalLoanRest(dioFdpiClient);
   final approvalPoRest = ApprovalPORest(dioFdpiClient);
@@ -94,6 +97,9 @@ void main() async {
   final loanRepostitory = LoanRepository(loanRest: loanRest);
   final approvalSpbRepository = ApprovalSpbRepository(
     approvalSpbRest: approvalSpbRest,
+  );
+  final approvalSprRepository = ApprovalSprRepository(
+    approvalSprRest: approvalSprRest,
   );
   final approvalSpkRepository = ApprovalSpkRepository(
     approvalSpkRest: approvalSpkRest,
@@ -119,6 +125,7 @@ void main() async {
         RepositoryProvider.value(value: spkRepository),
         RepositoryProvider.value(value: loanRepostitory),
         RepositoryProvider.value(value: approvalSpbRepository),
+        RepositoryProvider.value(value: approvalSprRepository),
         RepositoryProvider.value(value: approvalSpkRepository),
         RepositoryProvider.value(value: approvalLoanRepository),
         RepositoryProvider.value(value: approvalPoRepository),
