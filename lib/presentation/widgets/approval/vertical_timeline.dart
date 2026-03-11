@@ -75,11 +75,11 @@ class TimelineProgress extends StatelessWidget {
                             step.header,
                             style: TextStyle(
                               fontSize: 14.sp,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              color: const Color.fromARGB(255, 31, 31, 31),
                             ),
                           ),
-                          if (step.date != null)
+                          if (step.date != null && step.date!.year != 1900)
                             Text(
                               DateFormat(
                                 'd MMM yyyy HH:mm',
@@ -98,7 +98,7 @@ class TimelineProgress extends StatelessWidget {
                         step.detail,
                         style: TextStyle(
                           fontSize: 14.sp,
-                          color: Colors.black87,
+                          color: const Color.fromARGB(221, 34, 34, 34),
                         ),
                       ),
                       // Additional content can be added here

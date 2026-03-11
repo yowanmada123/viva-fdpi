@@ -2,6 +2,12 @@ import 'dart:convert';
 
 class Spr {
   final String idSpr;
+
+  /// FIELD BARU
+  final String namaCustomer;
+  final String orderDate;
+  final String payMethod;
+
   final String idSite;
   final String idCluster;
   final String idHouseUnit;
@@ -29,6 +35,12 @@ class Spr {
 
   Spr({
     required this.idSpr,
+
+    /// FIELD BARU
+    required this.namaCustomer,
+    required this.orderDate,
+    required this.payMethod,
+
     required this.idSite,
     required this.idCluster,
     required this.idHouseUnit,
@@ -54,6 +66,9 @@ class Spr {
 
   Spr copyWith({
     String? idSpr,
+    String? namaCustomer,
+    String? orderDate,
+    String? payMethod,
     String? idSite,
     String? idCluster,
     String? idHouseUnit,
@@ -78,6 +93,9 @@ class Spr {
   }) {
     return Spr(
       idSpr: idSpr ?? this.idSpr,
+      namaCustomer: namaCustomer ?? this.namaCustomer,
+      orderDate: orderDate ?? this.orderDate,
+      payMethod: payMethod ?? this.payMethod,
       idSite: idSite ?? this.idSite,
       idCluster: idCluster ?? this.idCluster,
       idHouseUnit: idHouseUnit ?? this.idHouseUnit,
@@ -105,6 +123,9 @@ class Spr {
   Map<String, dynamic> toMap() {
     return {
       'id_spr': idSpr,
+      'nama_customer': namaCustomer,
+      'order_date': orderDate,
+      'pay_method': payMethod,
       'id_site': idSite,
       'id_cluster': idCluster,
       'id_house_unit': idHouseUnit,
@@ -132,6 +153,9 @@ class Spr {
   factory Spr.fromMap(Map<String, dynamic> map) {
     return Spr(
       idSpr: map['id_spr'] ?? '',
+      namaCustomer: map['nama_customer'] ?? '',
+      orderDate: map['order_date'] ?? '',
+      payMethod: map['pay_method'] ?? '',
       idSite: map['id_site'] ?? '',
       idCluster: map['id_cluster'] ?? '',
       idHouseUnit: map['id_house_unit'] ?? '',
@@ -162,7 +186,7 @@ class Spr {
 
   @override
   String toString() {
-    return 'Spr(idSpr: $idSpr, namaSales: $namaSales, houseName: $houseName)';
+    return 'Spr(idSpr: $idSpr, namaCustomer: $namaCustomer, namaSales: $namaSales, houseName: $houseName)';
   }
 
   @override
@@ -171,6 +195,9 @@ class Spr {
 
     return other is Spr &&
         other.idSpr == idSpr &&
+        other.namaCustomer == namaCustomer &&
+        other.orderDate == orderDate &&
+        other.payMethod == payMethod &&
         other.idSite == idSite &&
         other.idCluster == idCluster &&
         other.idHouseUnit == idHouseUnit &&
@@ -197,6 +224,9 @@ class Spr {
   @override
   int get hashCode {
     return idSpr.hashCode ^
+        namaCustomer.hashCode ^
+        orderDate.hashCode ^
+        payMethod.hashCode ^
         idSite.hashCode ^
         idCluster.hashCode ^
         idHouseUnit.hashCode ^

@@ -42,6 +42,30 @@ class _ApprovalSpbCardState extends State<ApprovalSpbCard> {
     }
   }
 
+  Widget _infoItem(String label, String value) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 12.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120.w,
+            child: Text(
+              label,
+              style: TextStyle(fontSize: 14.sp, color: Colors.grey.shade600),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   void dispose() {
     widget.scrollController.removeListener(_handleScroll);
@@ -79,35 +103,28 @@ class _ApprovalSpbCardState extends State<ApprovalSpbCard> {
                         ),
                       ),
                       SizedBox(height: 16.w),
-                      Text(
-                        "Site: ${widget.requests.siteName}",
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 16.w),
-                      Text(
-                        "Cluster: ${widget.requests.clusterName}",
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 16.w),
-                      Text(
-                        "House: ${widget.requests.houseName}",
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 16.w),
-                      Text(
-                        "Kategori Bangunan: ${widget.requests.category}",
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
+                      _infoItem("Site", widget.requests.siteName),
+                      _infoItem("Cluster", widget.requests.clusterName),
+                      _infoItem("Kategori", widget.requests.category),
+                      _infoItem("Tipe", widget.requests.commonName),
+                      _infoItem("House Number", widget.requests.houseName),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 4.h),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 150.w,
+                              child: Text(
+                                "Progress Approval: ",
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: const Color.fromARGB(255, 0, 0, 0),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       TimelineProgress(

@@ -3,9 +3,11 @@ import 'dart:developer';
 
 import 'package:fdpi_app/bloc/approval_spr/approval_spr_detail/approval_spr_detail_bloc.dart';
 import 'package:fdpi_app/models/approval_spr/spr.dart';
+import 'package:fdpi_app/utils/datetime_convertion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 import 'vertical_timeline.dart';
 
@@ -44,6 +46,43 @@ class _ApprovalSprCardState extends State<ApprovalSprCard> {
     }
   }
 
+  String formatRupiah(num number) {
+    final formatter = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    );
+
+    return formatter.format(number);
+  }
+
+  Widget _infoItem(String label, String? value) {
+    final displayValue =
+        (value == null || value.trim().isEmpty) ? '' : value.trim();
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: 12.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120.w,
+            child: Text(
+              label,
+              style: TextStyle(fontSize: 14.sp, color: Colors.grey.shade600),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              displayValue,
+              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   void dispose() {
     widget.scrollController.removeListener(_handleScroll);
@@ -74,59 +113,80 @@ class _ApprovalSprCardState extends State<ApprovalSprCard> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Pengajuan SPR untuk ${widget.requests.sbkName}",
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 16.w),
-                      Text(
-                        "Site: ${widget.requests.siteName}",
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 16.w),
-                      Text(
-                        "Cluster: ${widget.requests.clusterName}",
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 16.w),
-                      Text(
-                        "House: ${widget.requests.houseName}",
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 16.w),
-                      Text(
-                        "Kategori Bangunan: ${widget.requests.category}",
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      // TimelineProgress(
-                      //   steps: [
-                      //     TimelineStep(
-                      //       header: "Pengajuan",
-                      //       detail: state.sprDetail.wCreatedBy,
-                      //       date: state.sprDetail.dtCreated,
-                      //     ),
-                      //     TimelineStep(
-                      //       header: "Approve 1",
-                      //       detail: state.sprDetail.wAprv1By,
-                      //       date: state.sprDetail.dtAprv1,
-                      //     ),
-                      //   ],
+                      // Text(
+                      //   "Pengajuan SPR",
+                      //   style: TextStyle(
+                      //     fontSize: 18.sp,
+                      //     fontWeight: FontWeight.bold,
+                      //   ),
                       // ),
+                      SizedBox(height: 6.h),
+
+                      Text(
+                        widget.requests.sbkName,
+                        style: TextStyle(
+                          fontSize: 15.sp,
+                          color: const Color.fromARGB(255, 7, 0, 0),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      SizedBox(height: 20.h),
+
+                      _infoItem("Site", widget.requests.siteName),
+                      _infoItem("Cluster", widget.requests.clusterName),
+                      _infoItem("Kategori", widget.requests.category),
+
+                      _infoItem("Tipe", widget.requests.commonName),
+                      _infoItem("House Number", widget.requests.houseName),
+                      _infoItem("Customer", widget.requests.namaCustomer),
+                      _infoItem(
+                        "Order Date",
+                        formatDateTime(widget.requests.orderDate),
+                      ),
+                      _infoItem(
+                        "Order Amount",
+                        formatRupiah(double.parse(widget.requests.orderAmt)),
+                      ),
+                      _infoItem("Pay Term", widget.requests.payMethod),
+                      _infoItem("Sales", widget.requests.namaSales),
+                      _infoItem("Remark", widget.requests.remark),
+
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 8.h),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 150.w,
+                              child: Text(
+                                "Progress Approval: ",
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: const Color.fromARGB(255, 0, 0, 0),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      TimelineProgress(
+                        steps: [
+                          TimelineStep(
+                            header: "Pengajuan",
+                            detail: widget.requests.wCreatedBy,
+                            date: stringToDateTime(widget.requests.orderDate),
+                          ),
+                          TimelineStep(
+                            header: "Approve 1",
+                            detail: widget.requests.wAprv1By,
+                            date: stringToDateTime(widget.requests.dtAprv1),
+                          ),
+                        ],
+                      ),
+
                       SizedBox(height: 400.w),
                     ],
                   ),
