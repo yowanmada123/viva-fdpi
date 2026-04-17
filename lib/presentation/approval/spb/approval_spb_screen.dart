@@ -11,9 +11,9 @@ import 'package:fdpi_app/presentation/widgets/approval/aprrove_bottom_navigator.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/approval_spb/approval_spb_detail/approval_spb_detail_bloc.dart';
-import '../../bloc/authorization/credentials/credentials_bloc.dart';
-import '../widgets/approval/approval_spb_card.dart';
+import '../../../bloc/approval_spb/approval_spb_detail/approval_spb_detail_bloc.dart';
+import '../../../bloc/authorization/credentials/credentials_bloc.dart';
+import '../../widgets/approval/approval_spb_card.dart';
 
 class ApprovalSpbScreen extends StatefulWidget {
   final String title;

@@ -12,7 +12,7 @@ import 'package:fdpi_app/presentation/widgets/approval/aprrove_bottom_navigator.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/authorization/credentials/credentials_bloc.dart';
+import '../../../bloc/authorization/credentials/credentials_bloc.dart';
 
 class ApprovalPoScreen extends StatefulWidget {
   final String title;

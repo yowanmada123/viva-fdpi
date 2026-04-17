@@ -22,7 +22,7 @@ class LoanScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log('Access to lib/presentation/loan/loan_screen.dart');
+    log('Access to lib/presentation/finance/loan/loan_screen.dart');
     return MultiBlocProvider(
       providers: [
         BlocProvider(

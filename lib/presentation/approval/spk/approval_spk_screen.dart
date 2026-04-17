@@ -1,28 +1,28 @@
-// approval_pr_screen.dart
+// approval_screen.dart
 import 'dart:developer';
 
-import 'package:fdpi_app/bloc/approval_pr/approval_pr_list/approval_pr_list_bloc.dart';
-import 'package:fdpi_app/bloc/approval_pr/approve_pr/approve_pr_bloc.dart';
 import 'package:fdpi_app/bloc/auth/authentication/authentication_bloc.dart';
-import 'package:fdpi_app/data/repository/approval_pr_repository.dart';
-import 'package:fdpi_app/models/approval_pr/approval_pr.dart';
+import 'package:fdpi_app/bloc/authorization/credentials/credentials_bloc.dart';
 import 'package:fdpi_app/models/errors/custom_exception.dart';
-import 'package:fdpi_app/presentation/widgets/approval/approval_pr_card.dart';
 import 'package:fdpi_app/presentation/widgets/approval/aprrove_bottom_navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/authorization/credentials/credentials_bloc.dart';
+import '../../../bloc/approval_spk/approval_spk_list/approval_spk_list_bloc.dart';
+import '../../../bloc/approval_spk/approve_spk/approve_spk_bloc.dart';
+import '../../../data/repository/approval_spk.dart';
+import '../../../models/approval_spk/approval_spk.dart';
+import '../../widgets/approval/approval_spk_card.dart';
 
-class ApprovalPrScreen extends StatefulWidget {
+class ApprovalSpkScreen extends StatefulWidget {
   final String title;
-  const ApprovalPrScreen({super.key, required this.title});
+  const ApprovalSpkScreen({super.key, required this.title});
 
   @override
-  ApprovalPrScreenState createState() => ApprovalPrScreenState();
+  ApprovalSpkScreenState createState() => ApprovalSpkScreenState();
 }
 
-class ApprovalPrScreenState extends State<ApprovalPrScreen> {
+class ApprovalSpkScreenState extends State<ApprovalSpkScreen> {
   final PageController _pageController = PageController();
   final List<ScrollController> _scrollControllers = [];
   int _currentPage = 0;
@@ -30,7 +30,7 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
 
   @override
   void initState() {
-    log('Access to lib/presentation/approval/approval_pr_screen.dart');
+    log('Access to lib/presentation/approval/approval_spk_screen.dart');
     super.initState();
     _initializeControllers();
   }
@@ -43,17 +43,19 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
 
   void _handleApproval(
     int index,
-    List<ApprovalPR> poList,
+    List<ApprovalSpk> spkList,
     BuildContext context,
   ) {
     final credentialState = context.read<CredentialsBloc>().state;
-
-    if (poList[index].aprvBy == "" && poList[index].rjcBy == "") {
+    if (spkList[index].aprv1By == "" && spkList[index].rejectBy == "") {
+      print("masuk approve 1");
       if (credentialState is CredentialsLoadSuccess) {
-        if (credentialState.credentials["APPROVALPR1"] == "Y") {
-          context.read<ApprovePrBloc>().add(
-            ApprovePrLoadEvent(
-              prId: poList[index].prId,
+        print("masuk credential success 1 ${credentialState.credentials}");
+        if (credentialState.credentials["APPROVALSPK1"] == "Y") {
+          context.read<ApproveSpkBloc>().add(
+            ApproveSpkLoad(
+              idSpk: spkList[index].idSpk,
+              spkType: spkList[index].spkType,
               typeAprv: "approve1",
               status: "approve",
             ),
@@ -62,16 +64,15 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
           _showNoPermissionSnackBar(context);
           return;
         }
-      } else {
-        _showNoPermissionSnackBar(context);
-        return;
       }
-    } else if (poList[index].aprv2By == "" && poList[index].rjc2By == "") {
+    } else if (spkList[index].aprv2By == "" && spkList[index].reject2By == "") {
+      print("masuk approve 2");
       if (credentialState is CredentialsLoadSuccess) {
-        if (credentialState.credentials["APPROVALPR2"] == "Y") {
-          context.read<ApprovePrBloc>().add(
-            ApprovePrLoadEvent(
-              prId: poList[index].prId,
+        if (credentialState.credentials["APPROVALSPK2"] == "Y") {
+          context.read<ApproveSpkBloc>().add(
+            ApproveSpkLoad(
+              idSpk: spkList[index].idSpk,
+              spkType: spkList[index].spkType,
               typeAprv: "approve2",
               status: "approve",
             ),
@@ -80,26 +81,27 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
           _showNoPermissionSnackBar(context);
           return;
         }
-      } else {
-        _showNoPermissionSnackBar(context);
-        return;
       }
     }
 
-    if (index >= poList.length) return;
+    if (index >= spkList.length) return;
 
-    context.read<ApprovalPrListBloc>().add(RemoveListIndex(index: index));
+    context.read<ApprovalSpkListBloc>().add(RemoveListIndex(index: index));
   }
 
-  void _handleReject(int index, List<ApprovalPR> poList, BuildContext context) {
+  void _handleReject(
+    int index,
+    List<ApprovalSpk> spkList,
+    BuildContext context,
+  ) {
     final credentialState = context.read<CredentialsBloc>().state;
-
-    if (poList[index].aprvBy == "" && poList[index].rjcBy == "") {
+    if (spkList[index].aprv1By == "" && spkList[index].rejectBy == "") {
       if (credentialState is CredentialsLoadSuccess) {
-        if (credentialState.credentials["APPROVALPR1"] == "Y") {
-          context.read<ApprovePrBloc>().add(
-            ApprovePrLoadEvent(
-              prId: poList[index].prId,
+        if (credentialState.credentials["APPROVALSPK1"] == "Y") {
+          context.read<ApproveSpkBloc>().add(
+            ApproveSpkLoad(
+              idSpk: spkList[index].idSpk,
+              spkType: spkList[index].spkType,
               typeAprv: "approve1",
               status: "reject",
             ),
@@ -108,39 +110,29 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
           _showNoPermissionSnackBar(context);
           return;
         }
-      } else {
-        _showNoPermissionSnackBar(context);
-        return;
       }
-    } else if (poList[index].aprv2By == "" && poList[index].rjcBy == "") {
+    } else {
       if (credentialState is CredentialsLoadSuccess) {
-        if (credentialState.credentials["APPROVALPR2"] == "Y") {
-          context.read<ApprovePrBloc>().add(
-            ApprovePrLoadEvent(
-              prId: poList[index].prId,
-              typeAprv: "approve2",
-              status: "reject",
-            ),
-          );
+        if (credentialState.credentials["APPROVALSPK2"] == "Y") {
+          _showNoPermissionSnackBar(context);
         } else {
           _showNoPermissionSnackBar(context);
           return;
         }
-      } else {
-        _showNoPermissionSnackBar(context);
-        return;
       }
     }
 
-    if (index >= poList.length) return;
+    if (index >= spkList.length) return;
 
-    context.read<ApprovalPrListBloc>().add(RemoveListIndex(index: index));
+    context.read<ApprovalSpkListBloc>().add(RemoveListIndex(index: index));
   }
 
   void _showNoPermissionSnackBar(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text("Anda tidak memiliki permission untuk approve PR"),
+        content: Text(
+          "Anda tidak memiliki permission untuk melakukan approve SPB",
+        ),
       ),
     );
   }
@@ -164,23 +156,31 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
       providers: [
         BlocProvider(
           create:
-              (context) => ApprovalPrListBloc(
-                approvalPRRepository: context.read<ApprovalPRRepository>(),
-              )..add(GetApprovalPRListEvent()),
+              (context) => ApprovalSpkListBloc(
+                approvalSpkRepository: context.read<ApprovalSpkRepository>(),
+              )..add(
+                GetSpkListEvent(
+                  idSite: "",
+                  idCluster: "",
+                  idHouse: "",
+                  approvalType: "",
+                  approvalStatus: "",
+                ),
+              ),
         ),
         BlocProvider(
           create:
-              (context) => ApprovePrBloc(
-                approvalPRRepository: context.read<ApprovalPRRepository>(),
+              (context) => ApproveSpkBloc(
+                approvalSpkRepository: context.read<ApprovalSpkRepository>(),
               ),
         ),
       ],
       child: Scaffold(
         appBar: AppBar(title: Text(widget.title)),
         body: SafeArea(
-          child: BlocConsumer<ApprovalPrListBloc, ApprovalPrListState>(
+          child: BlocConsumer<ApprovalSpkListBloc, ApprovalSpkListState>(
             listener: (context, state) {
-              if (state is ApprovalPrListFailureState) {
+              if (state is ApprovalSpkListLoadFailure) {
                 if (state.error is UnauthorizedException) {
                   context.read<AuthenticationBloc>().add(
                     SetAuthenticationStatus(isAuthenticated: false),
@@ -207,17 +207,17 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
               }
             },
             builder: (context, state) {
-              if (state is ApprovalPrListInitial ||
-                  state is ApprovalPrListLoadingState) {
+              if (state is ApprovalSpkListInitial ||
+                  state is ApprovalSpkListLoading) {
                 return Center(child: CircularProgressIndicator());
               }
-              if (state is ApprovalPrListFailureState) {
+              if (state is ApprovalSpkListLoadFailure) {
                 return Center(child: Text(state.message));
               }
-              if (state is ApprovalPrListSuccessState) {
-                if (_currentPage >= state.data.length &&
-                    state.data.isNotEmpty) {
-                  _currentPage = state.data.length - 1;
+              if (state is ApprovalSpkListLoadSuccess) {
+                if (_currentPage >= state.spkList.length &&
+                    state.spkList.isNotEmpty) {
+                  _currentPage = state.spkList.length - 1;
                   _pageController.animateToPage(
                     _currentPage,
                     duration: const Duration(milliseconds: 300),
@@ -225,33 +225,29 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
                   );
                 }
 
-                if (state.data.isEmpty) {
-                  return Center(
-                    child: Text(
-                      "Approval PR Tidak Tersedia",
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  );
+                if (state.spkList.isEmpty) {
+                  return Center(child: Text("Tidak ada data"));
                 }
+
                 return NotificationListener<ScrollNotification>(
                   onNotification: (notification) => true,
                   child: PageView.builder(
                     controller: _pageController,
                     scrollDirection: Axis.vertical,
-                    itemCount: state.data.length,
+                    itemCount: state.spkList.length,
                     onPageChanged: (index) {
                       setState(() => _currentPage = index);
                     },
                     itemBuilder: (context, index) {
-                      return ApprovalPrCard(
-                        requests: state.data[index],
+                      return ApprovalSpkCard(
+                        requests: state.spkList[index],
                         scrollController: _getController(index),
                         onReachBottom: () async {
                           if (_isAnimated) return;
                           setState(() => _isAnimated = true);
 
                           final nextPage = index + 1;
-                          if (nextPage < state.data.length) {
+                          if (nextPage < state.spkList.length) {
                             await _pageController.animateToPage(
                               nextPage,
                               duration: Duration(milliseconds: 300),
@@ -286,47 +282,37 @@ class ApprovalPrScreenState extends State<ApprovalPrScreen> {
           ),
         ),
         bottomNavigationBar:
-            BlocBuilder<ApprovalPrListBloc, ApprovalPrListState>(
+            BlocBuilder<ApprovalSpkListBloc, ApprovalSpkListState>(
               builder: (context, state) {
-                log("This Work");
-                if (state is! ApprovalPrListSuccessState) {
-                  log("A");
+                if (state is! ApprovalSpkListLoadSuccess) {
                   return SizedBox.shrink();
                 }
 
                 final credentialState = context.read<CredentialsBloc>().state;
-                final poList = state.data;
+                final spkList = state.spkList;
 
-                if (_currentPage >= poList.length) return SizedBox.shrink();
-                final currentPr = poList[_currentPage];
-                log("B");
+                if (_currentPage >= spkList.length) return SizedBox.shrink();
+                // final currentPr = spkList[_currentPage];
 
                 bool canApprove = false;
 
                 if (credentialState is CredentialsLoadSuccess) {
-                  log("C");
-
-                  if (currentPr.aprvBy == "" && currentPr.rjcBy == "") {
-                    log("D");
-
+                  if (credentialState.credentials["APPROVALSPK1"] == "Y") {
                     canApprove = true;
-                  } else if (currentPr.aprv2By == "" &&
-                      currentPr.rjc2By == "") {
-                    log("E");
-
+                  }
+                  if (credentialState.credentials["APPROVALSPK2"] == "Y") {
                     canApprove = true;
                   }
                 }
 
                 if (!canApprove) return SizedBox.shrink();
-                log("This Button Must Be Shown");
-
                 return ApprovalBottomBar(
                   isLoading: false,
                   onApprove:
-                      () => _handleApproval(_currentPage, state.data, context),
+                      () =>
+                          _handleApproval(_currentPage, state.spkList, context),
                   onReject: () {
-                    _handleReject(_currentPage, state.data, context);
+                    _handleReject(_currentPage, state.spkList, context);
                   },
                   canApprove: canApprove,
                 );

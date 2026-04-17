@@ -1,8 +1,8 @@
 import 'dart:math' hide log;
 import 'dart:developer';
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
-import 'package:fdpi_app/presentation/approval/approval_pr_screen.dart';
-import 'package:fdpi_app/presentation/approval/approval_spr_screen.dart';
+import 'package:fdpi_app/presentation/approval/pr/approval_pr_screen.dart';
+import 'package:fdpi_app/presentation/approval/spr/approval_spr_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,12 +15,12 @@ import '../data/repository/auth_repository.dart';
 import '../data/repository/authorization_repository.dart';
 import '../models/authorization/menu.dart';
 import '../models/errors/custom_exception.dart';
-import 'checklist/SPK/spk_list_screen.dart';
-import 'checklist/SPK/spr_list_screen.dart';
-import 'approval/approval_po_screen.dart';
-import 'approval/approval_loan_screen.dart';
-import 'approval/approval_spb_screen.dart';
-import 'approval/approval_spk_screen.dart';
+import 'checklist/spk/spk_list_screen.dart';
+import 'checklist/spr/spr_list_screen.dart';
+import 'approval/po/approval_po_screen.dart';
+import 'approval/loan/approval_loan_screen.dart';
+import 'approval/spb/approval_spb_screen.dart';
+import 'approval/spk/approval_spk_screen.dart';
 import 'transaction/booking/booking_screen.dart';
 import 'transaction/fdpi/fdpi_residences_screen.dart';
 import 'finance/loan/loan_screen.dart';
@@ -85,6 +85,11 @@ class MyGridLayout extends StatelessWidget {
         'description': 'Monitoring Pembangunan Rumah',
         'route': SpkListScreen(title: submenu.menu_caption),
       },
+      'checkListKebersihan': {
+        'icon': Icons.clean_hands,
+        'description': 'Monitoring Kebersihan',
+        'route': SpkListScreen(title: submenu.menu_caption),
+      },
       'approvalKasBon': {
         'icon': Icons.edit_document,
         'text': 'Approval Pengajuan',
@@ -115,7 +120,6 @@ class MyGridLayout extends StatelessWidget {
         'description': 'Approval SPK',
         'route': ApprovalSpkScreen(title: submenu.menu_caption),
       },
-
       'approvalPO': {
         'icon': Icons.edit_document,
         'text': 'Approval Pengajuan',

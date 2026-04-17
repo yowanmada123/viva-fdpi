@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/QC/SPK.dart';
-import '../checklist/SPK/spk_checklist_screen.dart';
+import '../checklist/spk/spk_checklist_screen.dart';
 
 class GroupedSPKList extends StatelessWidget {
   final List<SPKGroupedByClusterHome> groupedSPK;
