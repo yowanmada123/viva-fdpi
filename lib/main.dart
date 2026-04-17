@@ -45,7 +45,7 @@ import 'data/repository/master_repository.dart';
 import 'data/repository/spk_repository.dart';
 import 'environment.dart';
 import 'presentation/dashboard_screen.dart';
-import 'presentation/login/login_form_screen.dart';
+import 'presentation/auth/login/login_form_screen.dart';
 import 'utils/interceptors/dio_request_token_interceptor.dart';
 
 void main() async {
@@ -163,7 +163,7 @@ class MyApp extends StatelessWidget {
       builder:
           (context, widget) => MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Viva Kencana Ekspedisi',
+            title: 'Fasindo',
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
               primaryColor: Color(0xFF1C3FAA),

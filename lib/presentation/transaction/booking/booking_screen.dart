@@ -5,15 +5,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
-import '../../bloc/auth/authentication/authentication_bloc.dart';
-import '../../bloc/booking/booking_list/booking_bloc.dart';
-import '../../bloc/fdpi/residence/residence_bloc.dart';
-import '../../bloc/fdpi/site/site_bloc.dart';
-import '../../data/repository/booking_repository.dart';
-import '../../data/repository/fdpi_repository.dart';
-import '../../models/booking.dart';
-import '../../models/errors/custom_exception.dart';
-import '../widgets/AlertDialog/filter_booking.dart';
+import '../../../bloc/auth/authentication/authentication_bloc.dart';
+import '../../../bloc/booking/booking_list/booking_bloc.dart';
+import '../../../bloc/fdpi/residence/residence_bloc.dart';
+import '../../../bloc/fdpi/site/site_bloc.dart';
+import '../../../data/repository/booking_repository.dart';
+import '../../../data/repository/fdpi_repository.dart';
+import '../../../models/booking.dart';
+import '../../../models/errors/custom_exception.dart';
+import '../../widgets/AlertDialog/filter_booking.dart';
 import 'booking_form_screen.dart';
 
 class BookingScreen extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../dashboard_screen.dart';
-import '../profile/profile_screen.dart';
+import '../auth/profile/profile_screen.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   final int currentIndex;

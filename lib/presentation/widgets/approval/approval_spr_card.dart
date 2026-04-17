@@ -61,7 +61,7 @@ class _ApprovalSprCardState extends State<ApprovalSprCard> {
         (value == null || value.trim().isEmpty) ? '' : value.trim();
 
     return Padding(
-      padding: EdgeInsets.only(bottom: 12.h),
+      padding: EdgeInsets.only(bottom: 8.h),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -76,6 +76,65 @@ class _ApprovalSprCardState extends State<ApprovalSprCard> {
             child: Text(
               displayValue,
               style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _infoListItem(String label, String? value) {
+    final items =
+        (value ?? '')
+            .split(',')
+            .map((e) => e.trim())
+            .where((e) => e.isNotEmpty)
+            .toList();
+
+    if (items.isEmpty) return const SizedBox();
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: 12.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120.w,
+            child: Text(
+              label,
+              style: TextStyle(fontSize: 14.sp, color: Colors.grey.shade600),
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children:
+                  items.map((item) {
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 4.h),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "• ",
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              item,
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
             ),
           ),
         ],
@@ -151,6 +210,8 @@ class _ApprovalSprCardState extends State<ApprovalSprCard> {
                       _infoItem("Pay Term", widget.requests.payMethod),
                       _infoItem("Sales", widget.requests.namaSales),
                       _infoItem("Remark", widget.requests.remark),
+                      _infoListItem("Bonus", widget.requests.bonus),
+                      _infoListItem("Add On", widget.requests.addOn),
 
                       Padding(
                         padding: EdgeInsets.only(bottom: 8.h),

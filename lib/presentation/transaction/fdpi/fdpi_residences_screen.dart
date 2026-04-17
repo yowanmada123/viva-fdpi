@@ -5,12 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-import '../../bloc/auth/authentication/authentication_bloc.dart';
-import '../../bloc/fdpi/residence/residence_bloc.dart';
-import '../../data/repository/fdpi_repository.dart';
-import '../../models/errors/custom_exception.dart';
-import '../widgets/bottom_navigator.dart';
-import '../widgets/residence_card.dart';
+import '../../../bloc/auth/authentication/authentication_bloc.dart';
+import '../../../bloc/fdpi/residence/residence_bloc.dart';
+import '../../../data/repository/fdpi_repository.dart';
+import '../../../models/errors/custom_exception.dart';
+import '../../widgets/bottom_navigator.dart';
+import '../../widgets/residence_card.dart';
 
 class FDPIResidencesScreen extends StatelessWidget {
   final String title;

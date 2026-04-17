@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../bloc/QC/approve_checklist/approve_checklist_bloc.dart';
-import '../../bloc/QC/approve_detail/approve_detail_bloc.dart';
-import '../../bloc/QC/spr_checklist/spr_checklist_bloc.dart';
-import '../../data/repository/spk_repository.dart';
-import '../../models/attachment.dart';
-import '../widgets/qc_checklist/spr_checklist.dart';
+import '../../../bloc/QC/approve_checklist/approve_checklist_bloc.dart';
+import '../../../bloc/QC/approve_detail/approve_detail_bloc.dart';
+import '../../../bloc/QC/spr_checklist/spr_checklist_bloc.dart';
+import '../../../data/repository/spk_repository.dart';
+import '../../../models/attachment.dart';
+import '../../widgets/qc_checklist/spr_checklist.dart';
 
 class SprProgressListScreen extends StatelessWidget {
   final String qcTransId;

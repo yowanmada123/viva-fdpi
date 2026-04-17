@@ -15,16 +15,16 @@ import '../data/repository/auth_repository.dart';
 import '../data/repository/authorization_repository.dart';
 import '../models/authorization/menu.dart';
 import '../models/errors/custom_exception.dart';
-import 'SPK/spk_list_screen.dart';
-import 'SPK/spr_list_screen.dart';
+import 'checklist/SPK/spk_list_screen.dart';
+import 'checklist/SPK/spr_list_screen.dart';
 import 'approval/approval_po_screen.dart';
 import 'approval/approval_loan_screen.dart';
 import 'approval/approval_spb_screen.dart';
 import 'approval/approval_spk_screen.dart';
-import 'booking/booking_screen.dart';
-import 'fdpi/fdpi_residences_screen.dart';
-import 'loan/loan_screen.dart';
-import 'profile/profile_screen.dart';
+import 'transaction/booking/booking_screen.dart';
+import 'transaction/fdpi/fdpi_residences_screen.dart';
+import 'finance/loan/loan_screen.dart';
+import 'auth/profile/profile_screen.dart';
 import 'widgets/bottom_navigator.dart';
 
 class DriverDashboardScreen extends StatelessWidget {

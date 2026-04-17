@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
-import '../../models/fdpi/house.dart';
+import '../../../models/fdpi/house.dart';
 
 class FDPIDetailUnitScreen extends StatelessWidget {
   final Coordinates selectedCoordinates;

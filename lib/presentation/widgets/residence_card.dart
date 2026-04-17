@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../models/fdpi/residence.dart';
-import '../fdpi/fdpi_coordinates_screen.dart';
+import '../transaction/fdpi/fdpi_coordinates_screen.dart';
 
 class ResidenceCard extends StatelessWidget {
   final Residence detailResidence;

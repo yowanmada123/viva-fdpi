@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../bloc/auth/logout/logout_bloc.dart';
-import '../widgets/base_pop_up.dart';
-import '../widgets/bottom_navigator.dart';
-import '../../bloc/auth/authentication/authentication_bloc.dart'; // Import the authentication bloc
+import '../../../bloc/auth/logout/logout_bloc.dart';
+import '../../widgets/base_pop_up.dart';
+import '../../widgets/bottom_navigator.dart';
+import '../../../bloc/auth/authentication/authentication_bloc.dart'; // Import the authentication bloc
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});

@@ -9,11 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../bloc/QC/approve_checklist/approve_checklist_bloc.dart';
-import '../../bloc/auth/authentication/authentication_bloc.dart';
-import '../../data/repository/spk_repository.dart';
-import '../../models/attachment.dart';
-import '../../models/errors/custom_exception.dart';
+import '../../../bloc/QC/approve_checklist/approve_checklist_bloc.dart';
+import '../../../bloc/auth/authentication/authentication_bloc.dart';
+import '../../../data/repository/spk_repository.dart';
+import '../../../models/attachment.dart';
+import '../../../models/errors/custom_exception.dart';
 
 class NewSpkChecklistScreen extends StatelessWidget {
   final String qcTransId;

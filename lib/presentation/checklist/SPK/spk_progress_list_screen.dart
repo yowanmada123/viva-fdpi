@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../bloc/QC/approve_checklist/approve_checklist_bloc.dart';
-import '../../bloc/QC/checklist/checklist_bloc.dart';
-import '../../data/repository/spk_repository.dart';
+import '../../../bloc/QC/approve_checklist/approve_checklist_bloc.dart';
+import '../../../bloc/QC/checklist/checklist_bloc.dart';
+import '../../../data/repository/spk_repository.dart';
 
 class SpkProgressListScreen extends StatelessWidget {
   final String qcTransId;

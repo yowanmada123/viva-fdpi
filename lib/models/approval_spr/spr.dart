@@ -7,6 +7,8 @@ class Spr {
   final String namaCustomer;
   final String orderDate;
   final String payMethod;
+  final String bonus;
+  final String addOn;
 
   final String idSite;
   final String idCluster;
@@ -40,6 +42,8 @@ class Spr {
     required this.namaCustomer,
     required this.orderDate,
     required this.payMethod,
+    required this.bonus,
+    required this.addOn,
 
     required this.idSite,
     required this.idCluster,
@@ -69,6 +73,8 @@ class Spr {
     String? namaCustomer,
     String? orderDate,
     String? payMethod,
+    String? bonus,
+    String? addOn,
     String? idSite,
     String? idCluster,
     String? idHouseUnit,
@@ -96,6 +102,8 @@ class Spr {
       namaCustomer: namaCustomer ?? this.namaCustomer,
       orderDate: orderDate ?? this.orderDate,
       payMethod: payMethod ?? this.payMethod,
+      bonus: bonus ?? this.bonus,
+      addOn: addOn ?? this.addOn,
       idSite: idSite ?? this.idSite,
       idCluster: idCluster ?? this.idCluster,
       idHouseUnit: idHouseUnit ?? this.idHouseUnit,
@@ -126,6 +134,8 @@ class Spr {
       'nama_customer': namaCustomer,
       'order_date': orderDate,
       'pay_method': payMethod,
+      'bonus': bonus,
+      'add_on': addOn,
       'id_site': idSite,
       'id_cluster': idCluster,
       'id_house_unit': idHouseUnit,
@@ -156,6 +166,8 @@ class Spr {
       namaCustomer: map['nama_customer'] ?? '',
       orderDate: map['order_date'] ?? '',
       payMethod: map['pay_method'] ?? '',
+      bonus: map['bonus'] ?? '',
+      addOn: map['add_on'] ?? '',
       idSite: map['id_site'] ?? '',
       idCluster: map['id_cluster'] ?? '',
       idHouseUnit: map['id_house_unit'] ?? '',
@@ -198,6 +210,8 @@ class Spr {
         other.namaCustomer == namaCustomer &&
         other.orderDate == orderDate &&
         other.payMethod == payMethod &&
+        other.bonus == bonus &&
+        other.addOn == addOn &&
         other.idSite == idSite &&
         other.idCluster == idCluster &&
         other.idHouseUnit == idHouseUnit &&
@@ -227,6 +241,8 @@ class Spr {
         namaCustomer.hashCode ^
         orderDate.hashCode ^
         payMethod.hashCode ^
+        bonus.hashCode ^
+        addOn.hashCode ^
         idSite.hashCode ^
         idCluster.hashCode ^
         idHouseUnit.hashCode ^

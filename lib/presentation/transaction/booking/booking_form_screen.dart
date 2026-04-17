@@ -14,14 +14,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-import '../../bloc/auth/authentication/authentication_bloc.dart';
-import '../../bloc/booking/booking_form/booking_form_bloc.dart';
-import '../../bloc/fdpi/residence/residence_bloc.dart';
-import '../../bloc/fdpi/site/site_bloc.dart';
-import '../../bloc/master/bank/bank_bloc.dart';
-import '../../data/repository/fdpi_repository.dart';
-import '../../data/repository/master_repository.dart';
-import '../../models/fdpi/residence.dart';
+import '../../../bloc/auth/authentication/authentication_bloc.dart';
+import '../../../bloc/booking/booking_form/booking_form_bloc.dart';
+import '../../../bloc/fdpi/residence/residence_bloc.dart';
+import '../../../bloc/fdpi/site/site_bloc.dart';
+import '../../../bloc/master/bank/bank_bloc.dart';
+import '../../../data/repository/fdpi_repository.dart';
+import '../../../data/repository/master_repository.dart';
+import '../../../models/fdpi/residence.dart';
 
 class BookingFormScreen extends StatelessWidget {
   final BookingBloc bookingBloc;
