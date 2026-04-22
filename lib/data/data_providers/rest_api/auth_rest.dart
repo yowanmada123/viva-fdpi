@@ -26,7 +26,7 @@ class AuthRest {
       log('Request to https://v2.kencana.org/api/login (POST)');
       final response = await http.post('api/login', data: body);
       if (response.statusCode == 200) {
-        log('Response body: ${response.data}');
+        // log('Response body: ${response.data}');
         final body = response.data;
         final auth = Auth.fromMap(body['data']);
         return Right(auth);
@@ -47,7 +47,7 @@ class AuthRest {
       log('Request to https://v2.kencana.org/api/logout (GET))');
       final response = await http.get('api/logout');
       if (response.statusCode == 200) {
-        log('Response body: ${response.data}');
+        // log('Response body: ${response.data}');
         return const Right(null);
       } else {
         return Left(NetUtils.parseErrorResponse(response: response.data));

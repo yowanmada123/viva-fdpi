@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:fdpi_app/models/QC/Cleaning.dart';
+import 'package:fdpi_app/models/checklistCleaningProgress.dart';
 
 import '../../../models/QC/SPK.dart';
 import '../../../models/QC/SPR.dart';
@@ -39,6 +41,8 @@ class SPKRest {
         "doc_type": "SPR",
       };
 
+      log("Request body getSPRList: $body");
+
       final response = await http.post(
         "api/fpi/checklist/getCheckListHdr",
         data: body,
@@ -63,6 +67,55 @@ class SPKRest {
     }
   }
 
+  Future<Either<CustomException, List<Cleaning>>> getCleaningList({
+    required String idSite,
+    required String idCluster,
+    required String idHouse,
+  }) async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log(
+        'Request to ${http.options.baseUrl}fpi/checklist/getCheckListHdr (POST)',
+      );
+
+      final body = {
+        "id_site": idSite,
+        "id_cluster": idCluster,
+        "id_house_item": idHouse,
+        "doc_type": "KK",
+      };
+
+      log("Request body getCleaningList: $body");
+
+      final response = await http.post(
+        "api/fpi/checklist/getCheckListHdr",
+        data: body,
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+
+        final List<Cleaning> items =
+            List<Cleaning>.from(
+              data['data'].map((e) => Cleaning.fromMap(e)),
+            ).toList();
+
+        return Right(items);
+      } else {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+    } on DioException catch (e) {
+      log("This is the exception A : $e");
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      log("This is the exception B: $e");
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      log("This is the exception C : $e");
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
   // Future<Either<CustomException, List<SPK>>> getSPKList({
   Future<Either<CustomException, List<SPKGroupedByClusterHome>>> getSPKList({
     required String idVendor,
@@ -73,7 +126,7 @@ class SPKRest {
     try {
       http.options.headers['requiresToken'] = true;
       log(
-        'Request to https://v2.kencana.org/api/fpi/checklist/getCheckListHdr (POST)',
+        'Request to ${http.options.baseUrl}api/fpi/checklist/getCheckListHdr (POST)',
       );
 
       final body = {
@@ -83,6 +136,8 @@ class SPKRest {
         "id_house_item": idHouse,
         "doc_type": "SPK",
       };
+
+      log("Request body getSPKList: $body");
 
       final response = await http.post(
         "api/fpi/checklist/getCheckListHdr",
@@ -141,7 +196,7 @@ class SPKRest {
     try {
       http.options.headers['requiresToken'] = true;
       log(
-        'Request to https://v2.kencana.org/api/fpi/checklist/getCheckListDtl (POST)',
+        'Request to ${http.options.baseUrl}fpi/checklist/getCheckListDtl (POST)',
       );
 
       final body = {"qc_trans_id": qcTransId};
@@ -183,7 +238,7 @@ class SPKRest {
     try {
       http.options.headers['requiresToken'] = true;
       log(
-        'Request to https://v2.kencana.org/api/fpi/checklist/getCheckListDtl (POST)',
+        'Request to ${http.options.baseUrl}fpi/checklist/getCheckListDtl (POST)',
       );
 
       final body = {"qc_trans_id": qcTransId};
@@ -207,6 +262,52 @@ class SPKRest {
             // Add each item with company and category info
             for (final item in items) {
               allItems.add(ChecklistSprItem.fromMap(item));
+            }
+          }
+        }
+
+        return Right(allItems);
+      } else {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
+  Future<Either<CustomException, List<ChecklistCleaningItem>>>
+  getCleaningChecklistItem({required String qcTransId}) async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log(
+        'Request to ${http.options.baseUrl}fpi/checklist/getCheckListDtl (POST)',
+      );
+
+      final body = {"qc_trans_id": qcTransId};
+
+      final response = await http.post(
+        "api/fpi/checklist/getCheckListDtl",
+        data: body,
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+
+        List<ChecklistCleaningItem> allItems = [];
+
+        for (final company in data['data']) {
+          final categories = company['categories'] as List<dynamic>;
+
+          for (final category in categories) {
+            final items = category['items'] as List<dynamic>;
+
+            // Add each item with company and category info
+            for (final item in items) {
+              allItems.add(ChecklistCleaningItem.fromMap(item));
             }
           }
         }
@@ -289,7 +390,7 @@ class SPKRest {
         "latitude": latitude,
       });
 
-      log("Request body: $formData");
+      // log("Request body: $formData");
 
       // final body = {
       //   "qc_trans_id": qcTransId,
@@ -309,7 +410,7 @@ class SPKRest {
       if (response.statusCode == 200) {
         final data = response.data;
 
-        log("Success");
+        // log("Success");
         return Right(data['message'] ?? "Approve Success");
       } else {
         return Left(NetUtils.parseErrorResponse(response: response.data));

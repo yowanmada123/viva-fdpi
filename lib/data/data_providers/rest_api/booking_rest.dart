@@ -39,7 +39,7 @@ class BookingRest {
       );
 
       if (response.statusCode == 200) {
-        log('Response body: ${response.data}');
+        // log('Response body: ${response.data}');
         final body = response.data;
         final bookings = List<Booking>.from(
           body['data'].map((e) {
@@ -100,7 +100,7 @@ class BookingRest {
       );
 
       if (response.statusCode == 200) {
-        log('Response body: ${response.data}');
+        // log('Response body: ${response.data}');
         return Right("Success");
       } else {
         return Left(NetUtils.parseErrorResponse(response: response.data));

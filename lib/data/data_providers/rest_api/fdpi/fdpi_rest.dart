@@ -90,7 +90,7 @@ class FdpiRest {
       };
       final response = await http.post("api/fpi/site/getSite", data: body);
       if (response.statusCode == 200) {
-        log('Response body: ${response.data}');
+        // log('Response body: ${response.data}');
         final body = response.data;
         final sites = List<Site>.from(
           body['data'].map((e) {
@@ -133,7 +133,7 @@ class FdpiRest {
         data: body,
       );
       if (response.statusCode == 200) {
-        log('Response body: ${response.data}');
+        // log('Response body: ${response.data}');
         final body = response.data;
         final residence = List<Residence>.from(
           body['data'].map((e) {

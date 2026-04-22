@@ -1,6 +1,8 @@
 import 'package:dartz/dartz.dart';
+import 'package:fdpi_app/models/QC/Cleaning.dart';
 import 'package:fdpi_app/models/QC/detail_approve.dart';
 import 'package:fdpi_app/models/attachment.dart';
+import 'package:fdpi_app/models/checklistCleaningProgress.dart';
 
 import '../../models/QC/SPK.dart';
 import '../../models/QC/SPR.dart';
@@ -31,6 +33,18 @@ class SPKRepository {
     );
   }
 
+  Future<Either<CustomException, List<Cleaning>>> getCleaningList({
+    required String idSite,
+    required String idCluster,
+    required String idHouse,
+  }) async {
+    return spkRest.getCleaningList(
+      idSite: idSite,
+      idCluster: idCluster,
+      idHouse: idHouse,
+    );
+  }
+
   Future<Either<CustomException, List<SPR>>> getSPRList({
     required String idSite,
     required String idCluster,
@@ -52,6 +66,11 @@ class SPKRepository {
     required String qcTransId,
   }) async {
     return spkRest.getSprChecklistItem(qcTransId: qcTransId);
+  }
+
+  Future<Either<CustomException, List<ChecklistCleaningItem>>>
+  getCleaningChecklistItem({required String qcTransId}) async {
+    return spkRest.getCleaningChecklistItem(qcTransId: qcTransId);
   }
 
   Future<Either<CustomException, Map<String, Map<String, dynamic>>>>

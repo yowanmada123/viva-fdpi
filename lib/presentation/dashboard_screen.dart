@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:fdpi_app/presentation/approval/pr/approval_pr_screen.dart';
 import 'package:fdpi_app/presentation/approval/spr/approval_spr_screen.dart';
+import 'package:fdpi_app/presentation/checklist/clean/clean_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -88,7 +89,7 @@ class MyGridLayout extends StatelessWidget {
       'checkListKebersihan': {
         'icon': Icons.clean_hands,
         'description': 'Monitoring Kebersihan',
-        'route': SpkListScreen(title: submenu.menu_caption),
+        'route': CleaningListScreen(title: submenu.menu_caption),
       },
       'approvalKasBon': {
         'icon': Icons.edit_document,
