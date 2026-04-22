@@ -31,7 +31,7 @@ class SPKRest {
     try {
       http.options.headers['requiresToken'] = true;
       log(
-        'Request to https://v2.kencana.org/api/fpi/checklist/getCheckListHdr (POST)',
+        'Request to ${http.options.baseUrl}fpi/checklist/getCheckListHdr (POST)',
       );
 
       final body = {
