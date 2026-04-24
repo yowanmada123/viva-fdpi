@@ -25,6 +25,7 @@ class AuthRest {
       };
       log('Request to https://v2.kencana.org/api/login (POST)');
       final response = await http.post('api/login', data: body);
+      log('Response status code: ${response.data}');
       if (response.statusCode == 200) {
         // log('Response body: ${response.data}');
         final body = response.data;

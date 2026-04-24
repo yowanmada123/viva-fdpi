@@ -59,10 +59,13 @@ class SPKRest {
         return Left(NetUtils.parseErrorResponse(response: response.data));
       }
     } on DioException catch (e) {
+      log("This is the exception A : $e");
       return Left(NetUtils.parseDioException(e));
     } on Exception catch (e) {
+      log("This is the exception B: $e");
       return Future.value(Left(CustomException(message: e.toString())));
     } catch (e) {
+      log("This is the exception C : $e");
       return Left(CustomException(message: e.toString()));
     }
   }
@@ -249,6 +252,8 @@ class SPKRest {
 
       final body = {"qc_trans_id": qcTransId};
 
+      log('Request body getSprChecklistItem: $body');
+
       final response = await http.post(
         "api/fpi/checklist/getCheckListDtl",
         data: body,
@@ -383,20 +388,31 @@ class SPKRest {
     try {
       http.options.headers['requiresToken'] = true;
       http.options.contentType = Headers.formUrlEncodedContentType;
+      // http.options.contentType = 'multipart/form-data';
       log(
         'Request to https://v2.kencana.org/api/fpi/checklist/aprvCheckList (POST)',
       );
 
       final fileAttachmentList = fileImage?.map((e) => e.file).toList();
 
-      log("fileAttachmentList: $fileAttachmentList");
+      final files =
+          fileAttachmentList?.map((file) async {
+            return await MultipartFile.fromFile(
+              file.path,
+              filename: file.path.split('/').last,
+            );
+          }).toList();
+
+      // log("fileAttachmentList: $fileAttachmentList");
+      log("Attachments: ${fileAttachmentList?.map((e) => e.path)}");
 
       final FormData formData = FormData.fromMap({
         "qc_trans_id": qcTransId,
         "id_qc_item": idQcItem,
         "id_work": idWork,
         "remark": remark,
-        "img[]": fileAttachmentList,
+        "img[]": files != null ? await Future.wait(files) : [],
+        // "img[]": fileAttachmentList,
         "longitude": longitude,
         "latitude": latitude,
       });
