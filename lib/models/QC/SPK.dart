@@ -29,6 +29,7 @@ class SPK {
   final String qcTransId;
   final String spkType;
   final String spkLabel;
+  final String remark;
 
   SPK({
     required this.idSite,
@@ -43,6 +44,7 @@ class SPK {
     required this.qcTransId,
     required this.spkType,
     required this.spkLabel,
+    required this.remark,
   });
 
   SPK copyWith({
@@ -58,6 +60,7 @@ class SPK {
     String? qcTransId,
     String? spkType,
     String? spkLabel,
+    String? remark,
   }) {
     return SPK(
       idSite: idSite ?? this.idSite,
@@ -72,6 +75,7 @@ class SPK {
       qcTransId: qcTransId ?? this.qcTransId,
       spkType: spkType ?? this.spkType,
       spkLabel: spkLabel ?? this.spkLabel,
+      remark: remark ?? this.remark,
     );
   }
 
@@ -89,6 +93,7 @@ class SPK {
       'qc_trans_id': qcTransId,
       'spk_type': spkType,
       'spk_label': spkLabel,
+      'remark': remark,
     };
   }
 
@@ -106,6 +111,7 @@ class SPK {
       qcTransId: map['qc_trans_id'] ?? '',
       spkType: map['spk_type'] ?? '',
       spkLabel: map['spk_label'] ?? '',
+      remark: map['remark'] ?? '',
     );
   }
 
@@ -115,7 +121,7 @@ class SPK {
 
   @override
   String toString() {
-    return 'SPK(idSite: $idSite, siteName: $siteName, idCluster: $idCluster, clusterName: $clusterName, idHouse: $idHouse, houseName: $houseName, idSPK: $idSPK, pihak2: $pihak2, vendorName: $vendorName, qcTransId: $qcTransId, spkType: $spkType, spkLabel: $spkLabel)';
+    return 'SPK(idSite: $idSite, siteName: $siteName, idCluster: $idCluster, clusterName: $clusterName, idHouse: $idHouse, houseName: $houseName, idSPK: $idSPK, pihak2: $pihak2, vendorName: $vendorName, qcTransId: $qcTransId, spkType: $spkType, spkLabel: $spkLabel, remark: $remark)';
   }
 
   @override
@@ -134,7 +140,8 @@ class SPK {
         other.vendorName == vendorName &&
         other.qcTransId == qcTransId &&
         other.spkType == spkType &&
-        other.spkLabel == spkLabel;
+        other.spkLabel == spkLabel &&
+        other.remark == remark;
   }
 
   @override
@@ -150,6 +157,7 @@ class SPK {
         vendorName.hashCode ^
         qcTransId.hashCode ^
         spkType.hashCode ^
-        spkLabel.hashCode;
+        spkLabel.hashCode ^
+        remark.hashCode;
   }
 }

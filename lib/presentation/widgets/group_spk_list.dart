@@ -42,7 +42,7 @@ class GroupedSPKList extends StatelessWidget {
             children:
                 group.spks.map((spk) {
                   return ListTile(
-                    title: Text(spk.spkLabel),
+                    title: Text("${spk.spkLabel} - ${spk.remark}"),
                     onTap: () => _navigateToChecklist(context, spk.qcTransId),
                   );
                 }).toList(),
