@@ -18,7 +18,7 @@ class SprProgressListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log('Access to lib/presentation/SPK/spr_progress_list.dart');
+    log('Access to lib/presentation/checklist/spr/spr_progress_list.dart');
     return MultiBlocProvider(
       providers: [
         BlocProvider(

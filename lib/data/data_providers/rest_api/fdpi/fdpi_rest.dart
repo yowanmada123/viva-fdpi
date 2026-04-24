@@ -22,7 +22,7 @@ class FdpiRest {
     try {
       http.options.headers['requiresToken'] = true;
       log(
-        'Request to https://v2.kencana.org/api/fpi/master/getProvince (POST)',
+        'Request to ${http.options.baseUrl}api/fpi/master/getProvince (POST)',
       );
       final response = await http.post("api/fpi/master/getProvince");
       if (response.statusCode == 200) {
@@ -49,7 +49,7 @@ class FdpiRest {
   Future<Either<CustomException, List<City>>> getCities(String id) async {
     try {
       http.options.headers['requiresToken'] = true;
-      log('Request to https://v2.kencana.org/api/fpi/master/getCity (POST)');
+      log('Request to ${http.options.baseUrl}api/fpi/master/getCity (POST)');
       final body = {"id_province": id};
       final response = await http.post("api/fpi/master/getCity", data: body);
       if (response.statusCode == 200) {
@@ -80,7 +80,7 @@ class FdpiRest {
   ) async {
     try {
       http.options.headers['requiresToken'] = true;
-      log('Request to https://v2.kencana.org/api/fpi/site/getSite (POST)');
+      log('Request to ${http.options.baseUrl}api/fpi/site/getSite (POST)');
       final body = {
         "id_site": "",
         "category": "",
@@ -90,7 +90,7 @@ class FdpiRest {
       };
       final response = await http.post("api/fpi/site/getSite", data: body);
       if (response.statusCode == 200) {
-        // log('Response body: ${response.data}');
+        log('Response api/fpi/site/getSite : ${response.data}');
         final body = response.data;
         final sites = List<Site>.from(
           body['data'].map((e) {
@@ -102,10 +102,15 @@ class FdpiRest {
         return Left(NetUtils.parseErrorResponse(response: response.data));
       }
     } on DioException catch (e) {
+      log(
+        'DioException in getSites: ${e.message}, response: ${e.response?.data}',
+      );
       return Left(NetUtils.parseDioException(e));
     } on Exception catch (e) {
+      log('Exception in getSites: ${e.toString()}');
       return Future.value(Left(CustomException(message: e.toString())));
     } catch (e) {
+      log('Unknown error in getSites: ${e.toString()}');
       return Left(CustomException(message: e.toString()));
     }
   }
@@ -119,7 +124,7 @@ class FdpiRest {
     try {
       http.options.headers['requiresToken'] = true;
       log(
-        'Request to https://v2.kencana.org/api/fpi/cluster/getCluster (POST)',
+        'Request to ${http.options.baseUrl}api/fpi/cluster/getCluster (POST)',
       );
       final body = {
         "id_site": idSite ?? "",
@@ -132,6 +137,7 @@ class FdpiRest {
         "api/fpi/cluster/getCluster",
         data: body,
       );
+      log('Response getResidences: ${response.data}');
       if (response.statusCode == 200) {
         // log('Response body: ${response.data}');
         final body = response.data;
@@ -160,7 +166,7 @@ class FdpiRest {
     try {
       http.options.headers['requiresToken'] = true;
       log(
-        'Request to https://v2.kencana.org/api/fpi/houseUnit/getKoordinat (POST)',
+        'Request to ${http.options.baseUrl}api/fpi/houseUnit/getKoordinat (POST)',
       );
       final body = {"id_cluster": idCluster, "id_site": idSite};
       final response = await http.post(

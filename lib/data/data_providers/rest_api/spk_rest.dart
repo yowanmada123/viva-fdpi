@@ -85,12 +85,14 @@ class SPKRest {
         "doc_type": "KK",
       };
 
-      log("Request body getCleaningList: $body");
+      log("Request body getCleaningListHdr: $body");
 
       final response = await http.post(
         "api/fpi/checklist/getCheckListHdr",
         data: body,
       );
+
+      log('Response getCleaningListHdr: ${response.data}');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -143,6 +145,8 @@ class SPKRest {
         "api/fpi/checklist/getCheckListHdr",
         data: body,
       );
+
+      log('Response getSPKList: ${response.data}');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -206,6 +210,8 @@ class SPKRest {
         data: body,
       );
 
+      log('Response getChecklistItem: ${response.data}');
+
       if (response.statusCode == 200) {
         final data = response.data;
 
@@ -248,6 +254,7 @@ class SPKRest {
         data: body,
       );
 
+      log('Response getSprChecklistItem: ${response.data}');
       if (response.statusCode == 200) {
         final data = response.data;
 
@@ -294,6 +301,8 @@ class SPKRest {
         data: body,
       );
 
+      log('Response getCleaningChecklistItem: ${response.data}');
+
       if (response.statusCode == 200) {
         final data = response.data;
 
@@ -339,6 +348,8 @@ class SPKRest {
         "api/fpi/checklist/getCheckListDtl",
         data: body,
       );
+
+      log('Response getSpkChecklistItem: ${response.data}');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -390,6 +401,8 @@ class SPKRest {
         "latitude": latitude,
       });
 
+      log("FormData fields: ${formData.fields}");
+
       // log("Request body: $formData");
 
       // final body = {
@@ -410,7 +423,7 @@ class SPKRest {
       if (response.statusCode == 200) {
         final data = response.data;
 
-        // log("Success");
+        log("Response approveChecklist: $data");
         return Right(data['message'] ?? "Approve Success");
       } else {
         return Left(NetUtils.parseErrorResponse(response: response.data));
@@ -462,7 +475,7 @@ class SPKRest {
     try {
       http.options.headers['requiresToken'] = true;
       log(
-        'Request to https://api-fpi.kencana.org/api/fpi/checklist/getCheckListHouse (POST)',
+        'Request to ${http.options.baseUrl}api/fpi/checklist/getCheckListHouse (POST)',
       );
 
       final payload = {
@@ -472,6 +485,8 @@ class SPKRest {
         "doc_type": docType,
       };
 
+      log("Request body getHouseWithSpk: $payload");
+
       final response = await http.post(
         "api/fpi/checklist/getCheckListHouse",
         data: payload,
@@ -480,6 +495,8 @@ class SPKRest {
       if (response.statusCode != 200) {
         return Left(NetUtils.parseErrorResponse(response: response.data));
       }
+
+      log("Response getHouseWithSpk: ${response.data}");
 
       final data = response.data;
 
@@ -503,7 +520,7 @@ class SPKRest {
     try {
       http.options.headers['requiresToken'] = true;
       log(
-        'Request to https://api-fpi.kencana.org/api/fpi/checklist/getAprvDtl (POST)',
+        'Request to ${http.options.baseUrl}api/fpi/checklist/getAprvDtl (POST)',
       );
 
       final payload = {
@@ -516,6 +533,8 @@ class SPKRest {
         "api/fpi/checklist/getAprvDtl",
         data: payload,
       );
+
+      log("Response getDetailApproveDetail: ${response.data}");
 
       if (response.statusCode != 200) {
         return Left(NetUtils.parseErrorResponse(response: response.data));
@@ -543,7 +562,7 @@ class SPKRest {
     try {
       http.options.headers['requiresToken'] = true;
       log(
-        'Request to https://api-fpi.kencana.org/api/fpi/checklist/cancelAprvCheckList  (POST)',
+        'Request to ${http.options.baseUrl}api/fpi/checklist/cancelAprvCheckList  (POST)',
       );
 
       final payload = {
@@ -586,7 +605,7 @@ class SPKRest {
     try {
       http.options.headers['requiresToken'] = true;
       log(
-        'Request to https://api-fpi.kencana.org/api/fpi/checklist/updateAprvCheckList (POST)',
+        'Request to ${http.options.baseUrl}api/fpi/checklist/updateAprvCheckList (POST)',
       );
 
       final payload = {

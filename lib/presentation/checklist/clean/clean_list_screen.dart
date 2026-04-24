@@ -180,7 +180,7 @@ class _CleaningListBodyState extends State<_CleaningListBody> {
                                 GetHouseItemWithSpkEvent(
                                   idSite: _site!,
                                   idCluster: value,
-                                  docType: "SPK",
+                                  docType: "KK",
                                   activeFlag: "Y",
                                 ),
                               );

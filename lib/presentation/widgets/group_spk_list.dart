@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import '../../models/QC/SPK.dart';
@@ -10,6 +12,7 @@ class GroupedSPKList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log('Access to lib/presentation/widgets/group_spk_list.dart');
     return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),

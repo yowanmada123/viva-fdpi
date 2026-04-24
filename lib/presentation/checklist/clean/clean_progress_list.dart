@@ -18,7 +18,7 @@ class CleaningProgressListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log('Access to lib/presentation/SPK/spr_progress_list.dart');
+    log('Access to lib/presentation/checklist/clean/clean_progress_list.dart');
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -127,7 +127,7 @@ class _CleaningProgressListScreenContentState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bank Check List', style: TextStyle(fontSize: 20.sp)),
+        title: Text('Kebersihan Check List', style: TextStyle(fontSize: 20.sp)),
       ),
       body: BlocListener<ApproveChecklistBloc, ApproveChecklistState>(
         listener: (context, state) {
@@ -227,12 +227,10 @@ class _CleaningProgressListScreenContentState
                                         if (qcItem.value.imgLink.isEmpty &&
                                             qcItem.value.imgLink2.isEmpty &&
                                             qcItem.value.imgLink3.isEmpty)
-                                          Container(
-                                            child: Text(
-                                              "No Attachment",
-                                              style: TextStyle(
-                                                color: Colors.grey,
-                                              ),
+                                          Text(
+                                            "No Attachment",
+                                            style: TextStyle(
+                                              color: Colors.grey,
                                             ),
                                           ),
                                         if (qcItem.value.imgLink.isNotEmpty)
