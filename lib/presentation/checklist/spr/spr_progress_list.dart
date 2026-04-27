@@ -212,7 +212,7 @@ class _SprProgressListScreenContentState
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "no Attachment",
+                                    "No Attachment",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12.sp,
