@@ -326,17 +326,17 @@ class _CheckboxConfirmationDialogState
                       ),
                     ),
                     SizedBox(height: 16.w),
-                    Text(
-                      'Attachment',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    SizedBox(height: 8.w),
-                    FileAttachmentPicker(
-                      onAttachmentsChanged: (attachments) {
-                        _attachments = attachments;
-                      },
-                    ),
-                    SizedBox(height: 16.w),
+                    // Text(
+                    //   'Attachment',
+                    //   style: Theme.of(context).textTheme.titleMedium,
+                    // ),
+                    // SizedBox(height: 8.w),
+                    // FileAttachmentPicker(
+                    //   onAttachmentsChanged: (attachments) {
+                    //     _attachments = attachments;
+                    //   },
+                    // ),
+                    // SizedBox(height: 16.w),
                     if (!widget.value)
                       Row(
                         children: [
