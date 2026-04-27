@@ -64,32 +64,32 @@ class ApprovalSpbScreenState extends State<ApprovalSpbScreen> {
         _showNoPermissionSnackBar(context);
         return;
       }
-      // } else if (spbList[index].aprv2By == "" && spbList[index].reject2By == "") {
-      //   if (credentialState is CredentialsLoadSuccess) {
-      //     if (credentialState.credentials["APPROVALSPB2"] == "Y") {
-      //       context.read<ApproveSpbBloc>().add(
-      //         ApproveSpbLoad(
-      //           idSpb: spbList[index].idSpb,
-      //           typeAprv: "approve2",
-      //           status: "approve",
-      //         ),
-      //       );
-      //     } else {
-      //       ScaffoldMessenger.of(context).showSnackBar(
-      //         SnackBar(
-      //           content: Text("Anda tidak memiliki permission untuk approve SPB"),
-      //         ),
-      //       );
-      //       return;
-      //     }
-      //   } else {
-      //     ScaffoldMessenger.of(context).showSnackBar(
-      //       SnackBar(
-      //         content: Text("Anda tidak memiliki permission untuk approve SPB"),
-      //       ),
-      //     );
-      //     return;
-      //   }
+    } else if (spbList[index].aprv2By == "" && spbList[index].reject2By == "") {
+      if (credentialState is CredentialsLoadSuccess) {
+        if (credentialState.credentials["APPROVALSPB2"] == "Y") {
+          context.read<ApproveSpbBloc>().add(
+            ApproveSpbLoad(
+              idSpb: spbList[index].idSpb,
+              typeAprv: "approve2",
+              status: "approve",
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Anda tidak memiliki permission untuk approve SPB"),
+            ),
+          );
+          return;
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Anda tidak memiliki permission untuk approve SPB"),
+          ),
+        );
+        return;
+      }
     }
 
     context.read<ApprovalSpbDetailBloc>().add(
@@ -122,32 +122,32 @@ class ApprovalSpbScreenState extends State<ApprovalSpbScreen> {
         _showNoPermissionSnackBar(context);
         return;
       }
-      // } else if (spbList[index].aprv2By == "" && spbList[index].reject2By == "") {
-      //   if (credentialState is CredentialsLoadSuccess) {
-      //     if (credentialState.credentials["APPROVALSPB2"] == "Y") {
-      //       context.read<ApproveSpbBloc>().add(
-      //         ApproveSpbLoad(
-      //           idSpb: spbList[index].idSpb,
-      //           typeAprv: "approve2",
-      //           status: "reject",
-      //         ),
-      //       );
-      //     } else {
-      //       ScaffoldMessenger.of(context).showSnackBar(
-      //         SnackBar(
-      //           content: Text("Anda tidak memiliki permission untuk approve SPB"),
-      //         ),
-      //       );
-      //       return;
-      //     }
-      //   } else {
-      //     ScaffoldMessenger.of(context).showSnackBar(
-      //       SnackBar(
-      //         content: Text("Anda tidak memiliki permission untuk approve SPB"),
-      //       ),
-      //     );
-      //     return;
-      //   }
+    } else if (spbList[index].aprv2By == "" && spbList[index].reject2By == "") {
+      if (credentialState is CredentialsLoadSuccess) {
+        if (credentialState.credentials["APPROVALSPB2"] == "Y") {
+          context.read<ApproveSpbBloc>().add(
+            ApproveSpbLoad(
+              idSpb: spbList[index].idSpb,
+              typeAprv: "approve2",
+              status: "reject",
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Anda tidak memiliki permission untuk approve SPB"),
+            ),
+          );
+          return;
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Anda tidak memiliki permission untuk approve SPB"),
+          ),
+        );
+        return;
+      }
     }
 
     context.read<ApprovalSpbDetailBloc>().add(
@@ -330,45 +330,60 @@ class ApprovalSpbScreenState extends State<ApprovalSpbScreen> {
             },
           ),
         ),
-        bottomNavigationBar:
-            BlocBuilder<ApprovalSpbListBloc, ApprovalSpbListState>(
-              builder: (context, state) {
-                if (state is! ApprovalSpbListSuccess) {
-                  return SizedBox.shrink();
-                }
+        bottomNavigationBar: BlocBuilder<
+          ApprovalSpbListBloc,
+          ApprovalSpbListState
+        >(
+          builder: (context, state) {
+            if (state is! ApprovalSpbListSuccess) {
+              return SizedBox.shrink();
+            }
 
-                final credentialState = context.read<CredentialsBloc>().state;
-                final spbList = state.spbList;
+            final credentialState = context.read<CredentialsBloc>().state;
+            final spbList = state.spbList;
 
-                if (_currentPage >= spbList.length) return SizedBox.shrink();
-                final currentPr = spbList[_currentPage];
+            if (_currentPage >= spbList.length) return SizedBox.shrink();
+            final currentPr = spbList[_currentPage];
 
-                bool canApprove = false;
+            bool canApprove = false;
 
-                if (credentialState is CredentialsLoadSuccess) {
-                  if (credentialState.credentials["APPROVALSPB1"] == "Y") {
-                    canApprove =
-                        currentPr.aprv1By == "" && currentPr.rejectBy == "";
-                  }
-                  // if (credentialState.credentials["APPROVALSPB2"] == "Y") {
-                  //   canApprove =
-                  //       currentPr.aprv2By == "" && currentPr.reject2By == "";
-                  // }
-                }
+            // if (credentialState is CredentialsLoadSuccess) {
+            //   if (credentialState.credentials["APPROVALSPB1"] == "Y") {
+            //     if (currentPr.aprv1By == "" && currentPr.rejectBy == "") {
+            //       canApprove = true;
+            //     }
+            //   }
 
-                if (!canApprove) return SizedBox.shrink();
-                return ApprovalBottomBar(
-                  isLoading: false,
-                  onApprove:
-                      () =>
-                          _handleApproval(_currentPage, state.spbList, context),
-                  onReject: () {
-                    _handleReject(_currentPage, state.spbList, context);
-                  },
-                  canApprove: canApprove,
-                );
+            //   if (credentialState.credentials["APPROVALSPB2"] == "Y") {
+            //     if (currentPr.aprv2By == "" && currentPr.reject2By == "") {
+            //       canApprove = true;
+            //     }
+            //   }
+            // }
+
+            if (credentialState is CredentialsLoadSuccess) {
+              if (credentialState.credentials["APPROVALSPB1"] == "Y") {
+                canApprove =
+                    currentPr.aprv1By == "" && currentPr.rejectBy == "";
+              }
+              if (credentialState.credentials["APPROVALSPB2"] == "Y") {
+                canApprove =
+                    currentPr.aprv2By == "" && currentPr.reject2By == "";
+              }
+            }
+
+            if (!canApprove) return SizedBox.shrink();
+            return ApprovalBottomBar(
+              isLoading: false,
+              onApprove:
+                  () => _handleApproval(_currentPage, state.spbList, context),
+              onReject: () {
+                _handleReject(_currentPage, state.spbList, context);
               },
-            ),
+              canApprove: canApprove,
+            );
+          },
+        ),
       ),
     );
   }
