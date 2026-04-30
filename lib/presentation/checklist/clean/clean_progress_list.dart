@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fdpi_app/presentation/widgets/qc_checklist/clean_checklist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -113,6 +113,26 @@ class _CleaningProgressListScreenContentState
     );
   }
 
+  void saveChecklist(
+    int param,
+    String id,
+    BuildContext context,
+    String remark,
+    List<Attachment>? fileImage,
+    List<String> deleteImage,
+  ) {
+    context.read<ApproveChecklistBloc>().add(
+      RemarkChecklistUpdate(
+        qcTransId: widget.qcTransId,
+        idQcItem: id,
+        idWork: param.toString(),
+        remark: remark,
+        fileImage: fileImage,
+        deleteImage: deleteImage,
+      ),
+    );
+  }
+
   Future<void> loadApproveDetail(int idWork, String idQcItem) async {
     context.read<ApproveDetailBloc>().add(
       LoadApproveDetail(
@@ -127,7 +147,10 @@ class _CleaningProgressListScreenContentState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Kebersihan Check List', style: TextStyle(fontSize: 20.sp)),
+        title: Text(
+          'Kebersihansss Check List',
+          style: TextStyle(fontSize: 20.sp),
+        ),
       ),
       body: BlocListener<ApproveChecklistBloc, ApproveChecklistState>(
         listener: (context, state) {
@@ -161,7 +184,7 @@ class _CleaningProgressListScreenContentState
                         state.sprChecklistItem.asMap().entries.map<Widget>((
                           qcItem,
                         ) {
-                          return SprChecklistAccordion(
+                          return SprChecklistCleanAccordion(
                             index: qcItem.key,
                             title: qcItem.value.itemName,
                             onApproveDetail: (idWork) {
@@ -202,6 +225,17 @@ class _CleaningProgressListScreenContentState
                                       );
                                     }
                                     : null,
+                            onSave: (remark, fileImage) {
+                              saveChecklist(
+                                // 🔥 fungsi baru kamu
+                                1,
+                                qcItem.value.idQcItem,
+                                context,
+                                remark,
+                                fileImage,
+                                [],
+                              );
+                            },
                             showIcon: false,
                             showCheckboxApplicator: true,
                             checkboxApplicatorInitalValue:
@@ -219,131 +253,6 @@ class _CleaningProgressListScreenContentState
                                       color: Color.fromARGB(255, 99, 99, 99),
                                     ),
                                   ),
-                                  // SizedBox(height: 4.w),
-                                  // SingleChildScrollView(
-                                  //   scrollDirection: Axis.horizontal,
-                                  //   child: Row(
-                                  //     children: [
-                                  //       if (qcItem.value.imgLink.isEmpty &&
-                                  //           qcItem.value.imgLink2.isEmpty &&
-                                  //           qcItem.value.imgLink3.isEmpty)
-                                  //         Text(
-                                  //           "No Attachment",
-                                  //           style: TextStyle(
-                                  //             color: Colors.grey,
-                                  //           ),
-                                  //         ),
-                                  //       if (qcItem.value.imgLink.isNotEmpty)
-                                  //         Padding(
-                                  //           padding: EdgeInsets.only(
-                                  //             right: 4.w,
-                                  //           ),
-                                  //           child: SizedBox(
-                                  //             width: 64.w,
-                                  //             height: 64.w,
-                                  //             child: Container(
-                                  //               clipBehavior: Clip.hardEdge,
-                                  //               decoration: BoxDecoration(
-                                  //                 borderRadius:
-                                  //                     BorderRadius.circular(2),
-                                  //                 color: Colors.grey[300],
-                                  //               ),
-                                  //               child: CachedNetworkImage(
-                                  //                 imageUrl:
-                                  //                     qcItem.value.imgLink,
-                                  //                 progressIndicatorBuilder:
-                                  //                     (
-                                  //                       context,
-                                  //                       url,
-                                  //                       progress,
-                                  //                     ) => Center(
-                                  //                       child:
-                                  //                           CircularProgressIndicator(
-                                  //                             value:
-                                  //                                 progress
-                                  //                                     .progress,
-                                  //                           ),
-                                  //                     ),
-                                  //                 fit: BoxFit.cover,
-                                  //               ),
-                                  //             ),
-                                  //           ),
-                                  //         ),
-                                  //       if (qcItem.value.imgLink2.isNotEmpty)
-                                  //         Padding(
-                                  //           padding: EdgeInsets.only(
-                                  //             right: 4.w,
-                                  //           ),
-                                  //           child: SizedBox(
-                                  //             width: 64.w,
-                                  //             height: 64.w,
-                                  //             child: Container(
-                                  //               clipBehavior: Clip.hardEdge,
-                                  //               decoration: BoxDecoration(
-                                  //                 borderRadius:
-                                  //                     BorderRadius.circular(2),
-                                  //                 color: Colors.grey[300],
-                                  //               ),
-                                  //               child: CachedNetworkImage(
-                                  //                 imageUrl:
-                                  //                     qcItem.value.imgLink2,
-                                  //                 progressIndicatorBuilder:
-                                  //                     (
-                                  //                       context,
-                                  //                       url,
-                                  //                       progress,
-                                  //                     ) => Center(
-                                  //                       child:
-                                  //                           CircularProgressIndicator(
-                                  //                             value:
-                                  //                                 progress
-                                  //                                     .progress,
-                                  //                           ),
-                                  //                     ),
-                                  //                 fit: BoxFit.cover,
-                                  //               ),
-                                  //             ),
-                                  //           ),
-                                  //         ),
-                                  //       if (qcItem.value.imgLink3.isNotEmpty)
-                                  //         Padding(
-                                  //           padding: EdgeInsets.only(
-                                  //             right: 4.w,
-                                  //           ),
-                                  //           child: SizedBox(
-                                  //             width: 64.w,
-                                  //             height: 64.w,
-                                  //             child: Container(
-                                  //               clipBehavior: Clip.hardEdge,
-                                  //               decoration: BoxDecoration(
-                                  //                 borderRadius:
-                                  //                     BorderRadius.circular(2),
-                                  //                 color: Colors.grey[300],
-                                  //               ),
-                                  //               child: CachedNetworkImage(
-                                  //                 imageUrl:
-                                  //                     qcItem.value.imgLink3,
-                                  //                 progressIndicatorBuilder:
-                                  //                     (
-                                  //                       context,
-                                  //                       url,
-                                  //                       progress,
-                                  //                     ) => Center(
-                                  //                       child:
-                                  //                           CircularProgressIndicator(
-                                  //                             value:
-                                  //                                 progress
-                                  //                                     .progress,
-                                  //                           ),
-                                  //                     ),
-                                  //                 fit: BoxFit.cover,
-                                  //               ),
-                                  //             ),
-                                  //           ),
-                                  //         ),
-                                  //     ],
-                                  //   ),
-                                  // ),
                                 ],
                               ),
                             ),

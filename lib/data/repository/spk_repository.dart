@@ -155,4 +155,26 @@ class SPKRepository {
       latitude: latitude,
     );
   }
+
+  Future<Either<CustomException, String>> updateRemarkChecklist({
+    required String qcTransId,
+    required String idQcItem,
+    required String idWork,
+    required String remark,
+    required List<Attachment>? fileImage,
+    required List<String> deleteImage,
+    required String longitude,
+    required String latitude,
+  }) async {
+    return spkRest.updateRemarkChecklist(
+      qcTransId: qcTransId,
+      idQcItem: idQcItem,
+      idWork: idWork,
+      remark: remark,
+      fileImage: fileImage,
+      deleteImage: deleteImage,
+      longitude: longitude,
+      latitude: latitude,
+    );
+  }
 }

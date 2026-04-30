@@ -52,3 +52,21 @@ class ApproveChecklistUpdate extends ApproveChecklistEvent {
     required this.deleteImage,
   });
 }
+
+class RemarkChecklistUpdate extends ApproveChecklistEvent {
+  final String qcTransId;
+  final String idQcItem;
+  final String idWork;
+  final String remark;
+  final List<Attachment>? fileImage;
+  final List<String> deleteImage;
+
+  const RemarkChecklistUpdate({
+    required this.qcTransId,
+    required this.idQcItem,
+    required this.idWork,
+    required this.remark,
+    required this.fileImage,
+    required this.deleteImage,
+  });
+}

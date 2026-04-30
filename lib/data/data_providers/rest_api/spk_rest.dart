@@ -655,4 +655,59 @@ class SPKRest {
       return Left(CustomException(message: e.toString()));
     }
   }
+
+  Future<Either<CustomException, String>> updateRemarkChecklist({
+    required String qcTransId,
+    required String idQcItem,
+    required String idWork,
+    required String remark,
+    required List<Attachment>? fileImage,
+    required List<String> deleteImage,
+    required String longitude,
+    required String latitude,
+  }) async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log(
+        'Request to ${http.options.baseUrl}api/fpi/checklist/updateRemarkChecklist (POST)',
+      );
+
+      final payload = {
+        "qc_trans_id": qcTransId,
+        "id_qc_item": idQcItem,
+        "id_work": idWork,
+        "remark": remark,
+        "img[]": fileImage?.map((e) => e.file).toList(),
+        "removed_file": deleteImage,
+        "longitude": longitude,
+        "latitude": latitude,
+      };
+
+      log("Request body updateRemarkChecklist: $payload");
+
+      final response = await http.post(
+        "api/fpi/checklist/updateRemarkCheckList",
+        data: payload,
+      );
+
+      if (response.statusCode != 200) {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+
+      final result = "Success";
+
+      return Right(result);
+    } on DioException catch (e) {
+      log("This is the DioException A: $e");
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      log("This is the DioException B: $e");
+
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      log("This is the DioException C: $e");
+
+      return Left(CustomException(message: e.toString()));
+    }
+  }
 }

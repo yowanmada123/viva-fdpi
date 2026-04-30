@@ -17,6 +17,7 @@ class ApproveChecklistBloc
     on<ApproveChecklistEventInit>(_approveChecklistEventInit);
     on<ApproveChecklistCancel>(_approveChecklistCancel);
     on<ApproveChecklistUpdate>(_onUpdateApproveChecklist);
+    on<RemarkChecklistUpdate>(_onUpdateRemarkChecklist);
   }
 
   Future<bool> _checkAndRequestPermission() async {
@@ -125,6 +126,40 @@ class ApproveChecklistBloc
       await _checkLocationRequirements();
 
       final result = await spkRepository.updateApproveChecklist(
+        qcTransId: event.qcTransId,
+        idQcItem: event.idQcItem,
+        idWork: event.idWork,
+        remark: event.remark ?? "",
+        fileImage: event.fileImage,
+        deleteImage: event.deleteImage,
+        latitude: position.latitude.toString(),
+        longitude: position.longitude.toString(),
+      );
+      result.fold(
+        (failure) => emit(
+          ApproveChecklistLoadFailure(
+            message: failure.message!,
+            error: failure,
+          ),
+        ),
+        (data) => emit(ApproveChecklistLoadSuccess(message: data)),
+      );
+    } on Exception catch (e, s) {
+      emit(ApproveChecklistLoadFailure(message: e.toString(), error: e));
+    }
+  }
+
+  Future<void> _onUpdateRemarkChecklist(
+    RemarkChecklistUpdate event,
+    Emitter<ApproveChecklistState> emit,
+  ) async {
+    try {
+      emit(ApproveChecklistLoading());
+
+      final position = await _getCurrentLocation();
+      await _checkLocationRequirements();
+
+      final result = await spkRepository.updateRemarkChecklist(
         qcTransId: event.qcTransId,
         idQcItem: event.idQcItem,
         idWork: event.idWork,
