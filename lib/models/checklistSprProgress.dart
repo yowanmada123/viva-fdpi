@@ -14,6 +14,10 @@ class ChecklistSprItem {
   final String imgLink;
   final String imgLink2;
   final String imgLink3;
+
+  // ✅ TAMBAHAN SAJA
+  final List<String> imgLinks;
+
   ChecklistSprItem({
     required this.idQcItem,
     required this.itemName,
@@ -26,6 +30,7 @@ class ChecklistSprItem {
     required this.imgLink,
     required this.imgLink2,
     required this.imgLink3,
+    required this.imgLinks, // ✅ tambah di constructor
   });
 
   ChecklistSprItem copyWith({
@@ -40,6 +45,7 @@ class ChecklistSprItem {
     String? imgLink,
     String? imgLink2,
     String? imgLink3,
+    List<String>? imgLinks, // ✅ tambah
   }) {
     return ChecklistSprItem(
       idQcItem: idQcItem ?? this.idQcItem,
@@ -53,6 +59,7 @@ class ChecklistSprItem {
       imgLink: imgLink ?? this.imgLink,
       imgLink2: imgLink2 ?? this.imgLink2,
       imgLink3: imgLink3 ?? this.imgLink3,
+      imgLinks: imgLinks ?? this.imgLinks, // ✅ tambah
     );
   }
 
@@ -69,12 +76,28 @@ class ChecklistSprItem {
       'img_link': imgLink,
       'img_link2': imgLink2,
       'img_link3': imgLink3,
+      'img_links': imgLinks, // ✅ optional tambah
     };
   }
 
   static String _generateUrlImage(String path) {
     if (path.isEmpty) return '';
     return 'https://v2.kencana.org/storage/${path}';
+  }
+
+  // ✅ TAMBAHAN HELPER
+  static List<String> _parseImgLinks(dynamic data) {
+    if (data == null) return [];
+
+    if (data is List) {
+      return data.map((e) => _generateUrlImage(e.toString())).toList();
+    }
+
+    if (data is String && data.isNotEmpty) {
+      return [_generateUrlImage(data)];
+    }
+
+    return [];
   }
 
   factory ChecklistSprItem.fromMap(Map<String, dynamic> map) {
@@ -90,6 +113,9 @@ class ChecklistSprItem {
       imgLink: _generateUrlImage(map['img_link']),
       imgLink2: _generateUrlImage(map['img_link2']),
       imgLink3: _generateUrlImage(map['img_link3']),
+
+      // ✅ TAMBAHAN SAJA (tidak ganggu existing)
+      imgLinks: _parseImgLinks(map['img_link']),
     );
   }
 
@@ -100,7 +126,7 @@ class ChecklistSprItem {
 
   @override
   String toString() {
-    return 'ChecklistSprItem(idQcItem: $idQcItem, itemName: $itemName, dtAprv: $dtAprv, dtAprv2: $dtAprv2, dtAprv3: $dtAprv3, statClosing: $statClosing, statClosing2: $statClosing2, statClosing3: $statClosing3, imgLink: $imgLink, imgLink2: $imgLink2, imgLink3: $imgLink3)';
+    return 'ChecklistSprItem(idQcItem: $idQcItem, itemName: $itemName, dtAprv: $dtAprv, dtAprv2: $dtAprv2, dtAprv3: $dtAprv3, statClosing: $statClosing, statClosing2: $statClosing2, statClosing3: $statClosing3, imgLink: $imgLink, imgLink2: $imgLink2, imgLink3: $imgLink3, imgLinks: $imgLinks)';
   }
 
   @override
@@ -118,7 +144,8 @@ class ChecklistSprItem {
         other.statClosing3 == statClosing3 &&
         other.imgLink == imgLink &&
         other.imgLink2 == imgLink2 &&
-        other.imgLink3 == imgLink3;
+        other.imgLink3 == imgLink3 &&
+        other.imgLinks == imgLinks; // ✅ tambah
   }
 
   @override
@@ -133,6 +160,7 @@ class ChecklistSprItem {
         statClosing3.hashCode ^
         imgLink.hashCode ^
         imgLink2.hashCode ^
-        imgLink3.hashCode;
+        imgLink3.hashCode ^
+        imgLinks.hashCode; // ✅ tambah
   }
 }

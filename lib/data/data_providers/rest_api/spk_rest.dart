@@ -259,7 +259,8 @@ class SPKRest {
         data: body,
       );
 
-      log('Response getSprChecklistItem: ${response.data}');
+      log('Response getSprChecklistItem A: ${response.data}');
+      log(" Yes True, this is the function!!!");
       if (response.statusCode == 200) {
         final data = response.data;
 
@@ -648,10 +649,13 @@ class SPKRest {
 
       return Right(result);
     } on DioException catch (e) {
+      log("This is the DioException A: $e");
       return Left(NetUtils.parseDioException(e));
     } on Exception catch (e) {
+      log("This is the Exception B: $e");
       return Future.value(Left(CustomException(message: e.toString())));
     } catch (e) {
+      log("This is the Exception C: $e");
       return Left(CustomException(message: e.toString()));
     }
   }
