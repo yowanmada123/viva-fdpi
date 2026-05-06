@@ -144,7 +144,7 @@ class _HeaderSection extends StatelessWidget {
             bottomRight: Radius.circular(isExpanded ? 0 : 4.0),
           ),
         ),
-        padding: EdgeInsets.all(16.w),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.w),
         child: Row(
           children: [
             Expanded(
@@ -153,7 +153,7 @@ class _HeaderSection extends StatelessWidget {
                   Expanded(
                     child: Text(
                       title,
-                      style: Theme.of(context).textTheme.titleMedium,
+                      style: Theme.of(context).textTheme.titleSmall,
                     ),
                   ),
                   if (showIcon)
@@ -273,7 +273,11 @@ class _CheckboxConfirmationDialog extends StatefulWidget {
 class _CheckboxConfirmationDialogState
     extends State<_CheckboxConfirmationDialog> {
   final TextEditingController _remarkController = TextEditingController();
-  List<Attachment>? _attachments;
+
+  // 🔥 NEW STATE
+  List<String> _existingImages = [];
+  List<Attachment>? _newImages;
+  List<String> _deletedImages = [];
 
   @override
   void dispose() {
@@ -298,7 +302,19 @@ class _CheckboxConfirmationDialogState
                 );
               }
 
-              _remarkController.text = state.detailApproveResponse.remark;
+              final detail = state.detailApproveResponse;
+
+              // ✅ SET DATA (JANGAN DI INITSTATE karena async)
+              if (_remarkController.text.isEmpty) {
+                _remarkController.text = detail.remark;
+              }
+
+              if (_existingImages.isEmpty && detail.imgLinks.isNotEmpty) {
+                _existingImages = List<String>.from(detail.imgLinks);
+              }
+
+              int totalImage =
+                  _existingImages.length + (_newImages?.length ?? 0);
 
               return Container(
                 padding: EdgeInsets.all(16.w),
@@ -306,11 +322,22 @@ class _CheckboxConfirmationDialogState
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Approve',
-                      style: Theme.of(context).textTheme.titleLarge,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Approve',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Icon(Icons.close, size: 30.w),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 16.w),
+
+                    /// ================= REMARK =================
                     Text(
                       'Remark',
                       style: Theme.of(context).textTheme.titleMedium,
@@ -326,18 +353,78 @@ class _CheckboxConfirmationDialogState
                         ),
                       ),
                     ),
-                    SizedBox(height: 16.w),
+
+                    SizedBox(height: 8.w),
+
+                    /// ================= ATTACHMENT =================
                     Text(
-                      'Attachment',
+                      'Existing Attachment',
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     SizedBox(height: 8.w),
-                    FileAttachmentPicker(
-                      onAttachmentsChanged: (attachments) {
-                        _attachments = attachments;
-                      },
+
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children:
+                          _existingImages.map((img) {
+                            return Stack(
+                              children: [
+                                Image.network(
+                                  img,
+                                  width: 64.w,
+                                  height: 64.w,
+                                  fit: BoxFit.cover,
+                                ),
+                                Positioned(
+                                  right: 0,
+                                  top: 0,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _existingImages.remove(img);
+
+                                        // 🔥 kirim filename ke BE
+                                        // _deletedImages.add(img.split('/').last);
+                                        _deletedImages.add(img.split('/').last);
+                                      });
+                                    },
+                                    child: Container(
+                                      color: Colors.black54,
+                                      child: const Icon(
+                                        Icons.close,
+                                        color: Colors.white,
+                                        size: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }).toList(),
                     ),
+
+                    SizedBox(height: 8.w),
+
+                    if (totalImage < 3)
+                      FileAttachmentPicker(
+                        onAttachmentsChanged: (attachments) {
+                          setState(() {
+                            _newImages ??= [];
+
+                            for (var file in attachments) {
+                              if ((_existingImages.length +
+                                      _newImages!.length) <
+                                  3) {
+                                _newImages!.add(file);
+                              }
+                            }
+                          });
+                        },
+                      ),
                     SizedBox(height: 16.w),
+
+                    /// ================= BUTTON =================
                     if (!widget.value)
                       Row(
                         children: [
@@ -357,7 +444,7 @@ class _CheckboxConfirmationDialogState
                               onPressed: () {
                                 widget.onConfirmed(
                                   _remarkController.text,
-                                  _attachments,
+                                  _newImages,
                                 );
                                 Navigator.pop(context);
                               },
@@ -365,6 +452,7 @@ class _CheckboxConfirmationDialogState
                           ),
                         ],
                       ),
+
                     if (widget.value)
                       Row(
                         children: [
@@ -385,10 +473,23 @@ class _CheckboxConfirmationDialogState
                             child: FilledButton(
                               child: const Text('Update'),
                               onPressed: () {
+                                if (_existingImages.isEmpty &&
+                                    (_newImages == null ||
+                                        _newImages!.isEmpty)) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        "Minimal 1 attachment diperlukan",
+                                      ),
+                                    ),
+                                  );
+                                  return;
+                                }
+
                                 widget.onUpdateChecklist?.call(
                                   _remarkController.text,
-                                  _attachments,
-                                  [],
+                                  _newImages,
+                                  _deletedImages,
                                 );
                                 Navigator.pop(context);
                               },

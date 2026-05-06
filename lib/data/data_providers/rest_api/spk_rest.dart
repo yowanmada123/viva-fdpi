@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
@@ -558,8 +559,13 @@ class SPKRest {
       }
 
       final data = response.data;
+      final map = Map<String, dynamic>.from({
+        ...data['data'][0],
+        'images': data['images'],
+      });
 
-      final result = DetailApproveResponse.fromMap(data['data'][0]);
+      final result = DetailApproveResponse.fromMap(map);
+      // final result = DetailApproveResponse.fromMap(data['data'][0]);
 
       return Right(result);
     } on DioException catch (e) {
@@ -621,24 +627,38 @@ class SPKRest {
   }) async {
     try {
       http.options.headers['requiresToken'] = true;
+
       log(
         'Request to ${http.options.baseUrl}api/fpi/checklist/updateAprvCheckList (POST)',
       );
 
-      final payload = {
+      // 🔥 PERBAIKAN DI SINI SAJA
+      final formData = FormData.fromMap({
         "qc_trans_id": qcTransId,
         "id_qc_item": idQcItem,
         "id_work": idWork,
         "remark": remark,
-        "img[]": fileImage?.map((e) => e.file).toList(),
-        "removed_file": deleteImage,
+        "removed_file": jsonEncode(deleteImage),
         "longitude": longitude,
         "latitude": latitude,
-      };
+
+        if (fileImage != null && fileImage.isNotEmpty)
+          "img[]": await Future.wait(
+            fileImage.map((e) async {
+              return await MultipartFile.fromFile(
+                e.file.path,
+                filename: e.file.path.split('/').last,
+              );
+            }),
+          ),
+      });
+
+      log("FormData fields for updateApproveChecklist: ${formData.fields}");
 
       final response = await http.post(
         "api/fpi/checklist/updateAprvCheckList",
-        data: payload,
+        data: formData,
+        options: Options(contentType: 'multipart/form-data'),
       );
 
       if (response.statusCode != 200) {
@@ -646,7 +666,6 @@ class SPKRest {
       }
 
       final result = "Success";
-
       return Right(result);
     } on DioException catch (e) {
       log("This is the DioException A: $e");

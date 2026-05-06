@@ -213,7 +213,7 @@ class _CleaningProgressListScreenContentState
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "No Attachment",
+                                    "Attachment",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12.sp,

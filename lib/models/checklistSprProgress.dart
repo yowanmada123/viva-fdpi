@@ -82,6 +82,10 @@ class ChecklistSprItem {
 
   static String _generateUrlImage(String path) {
     if (path.isEmpty) return '';
+
+    // ✅ kalau sudah full URL, langsung pakai
+    if (path.startsWith('http')) return path;
+
     return 'https://v2.kencana.org/storage/${path}';
   }
 
