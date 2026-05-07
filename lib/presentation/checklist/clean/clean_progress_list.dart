@@ -226,15 +226,14 @@ class _CleaningProgressListScreenContentState
                                       );
                                     }
                                     : null,
-                            onSave: (remark, fileImage) {
+                            onSave: (remark, fileImage, deleteImage) {
                               saveChecklist(
-                                // 🔥 fungsi baru kamu
                                 1,
                                 qcItem.value.idQcItem,
                                 context,
                                 remark,
                                 fileImage,
-                                [],
+                                deleteImage,
                               );
                             },
                             showIcon: false,

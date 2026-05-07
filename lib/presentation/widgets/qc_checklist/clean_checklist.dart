@@ -11,7 +11,11 @@ typedef CheckboxCallback =
     void Function(bool value, String remark, List<Attachment>? base64);
 
 typedef SaveCallback =
-    void Function(String remark, List<Attachment>? attachments);
+    void Function(
+      String remark,
+      List<Attachment>? attachments,
+      List<String> deleteImage,
+    );
 
 typedef ApproveDetailCallback = void Function(int idWork);
 typedef UnapproveChecklistCallback = void Function(int idWork);
@@ -252,8 +256,8 @@ class _AuthorizedCheckbox extends StatelessWidget {
             onConfirmed: (remark, attachments) {
               onChanged?.call(!value, remark, attachments);
             },
-            onSave: (remark, attachments) {
-              onSave?.call(remark, attachments); // 🔥
+            onSave: (remark, attachments, deleteImage) {
+              onSave?.call(remark, attachments, deleteImage);
             },
             approveDetailBloc: approveDetailBloc,
             onUnapproveChecklist: onUnapproveChecklist,
@@ -266,7 +270,7 @@ class _AuthorizedCheckbox extends StatelessWidget {
 
 class _CheckboxConfirmationDialog extends StatefulWidget {
   final void Function(String remark, List<Attachment>? attachments) onConfirmed;
-  final void Function(String, List<Attachment>?) onSave;
+  final void Function(String, List<Attachment>?, List<String>)? onSave;
 
   final ApproveDetailBloc approveDetailBloc;
   final VoidCallback? onUnapproveChecklist;
@@ -275,7 +279,7 @@ class _CheckboxConfirmationDialog extends StatefulWidget {
 
   const _CheckboxConfirmationDialog({
     required this.onConfirmed,
-    required this.onSave,
+    this.onSave,
     required this.approveDetailBloc,
     required this.onUnapproveChecklist,
     required this.onUpdateChecklist,
@@ -290,7 +294,7 @@ class _CheckboxConfirmationDialog extends StatefulWidget {
 class _CheckboxConfirmationDialogState
     extends State<_CheckboxConfirmationDialog> {
   final TextEditingController _remarkController = TextEditingController();
-  List<Attachment>? _attachments;
+  // List<Attachment>? _attachments;
 
   // 🔥 NEW STATE
   List<String> _existingImages = [];
@@ -490,9 +494,10 @@ class _CheckboxConfirmationDialogState
                               ),
                               child: const Text('Save'),
                               onPressed: () {
-                                widget.onSave(
+                                widget.onSave?.call(
                                   _remarkController.text,
-                                  _attachments,
+                                  _newImages.isEmpty ? null : _newImages,
+                                  _deletedImages.toList(),
                                 );
                                 Navigator.pop(context);
                               },
@@ -534,17 +539,17 @@ class _CheckboxConfirmationDialogState
                             child: FilledButton(
                               child: const Text('Update'),
                               onPressed: () {
-                                if (_existingImages.isEmpty &&
-                                    _newImages.isEmpty) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        "Minimal 1 attachment diperlukan",
-                                      ),
-                                    ),
-                                  );
-                                  return;
-                                }
+                                // if (_existingImages.isEmpty &&
+                                //     _newImages.isEmpty) {
+                                //   ScaffoldMessenger.of(context).showSnackBar(
+                                //     const SnackBar(
+                                //       content: Text(
+                                //         "Minimal 1 attachment diperlukan",
+                                //       ),
+                                //     ),
+                                //   );
+                                //   return;
+                                // }
 
                                 widget.onUpdateChecklist?.call(
                                   _remarkController.text,

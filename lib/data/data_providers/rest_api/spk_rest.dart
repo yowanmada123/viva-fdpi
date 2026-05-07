@@ -691,44 +691,53 @@ class SPKRest {
   }) async {
     try {
       http.options.headers['requiresToken'] = true;
+
       log(
-        'Request to ${http.options.baseUrl}api/fpi/checklist/updateRemarkChecklist (POST)',
+        'Request to ${http.options.baseUrl}api/fpi/checklist/updateRemarkCheckList (POST)',
       );
 
-      final payload = {
+      final formData = FormData.fromMap({
         "qc_trans_id": qcTransId,
         "id_qc_item": idQcItem,
         "id_work": idWork,
         "remark": remark,
-        "img[]": fileImage?.map((e) => e.file).toList(),
-        "removed_file": deleteImage,
+        "removed_file": jsonEncode(deleteImage),
         "longitude": longitude,
         "latitude": latitude,
-      };
 
-      log("Request body updateRemarkChecklist: $payload");
+        if (fileImage != null && fileImage.isNotEmpty)
+          "img[]": await Future.wait(
+            fileImage.map((e) async {
+              return await MultipartFile.fromFile(
+                e.file.path,
+                filename: e.file.path.split('/').last,
+              );
+            }),
+          ),
+      });
+
+      log("FormData fields for updateRemarkChecklist: ${formData.fields}");
 
       final response = await http.post(
         "api/fpi/checklist/updateRemarkCheckList",
-        data: payload,
+        data: formData,
+        options: Options(contentType: 'multipart/form-data'),
       );
 
       if (response.statusCode != 200) {
         return Left(NetUtils.parseErrorResponse(response: response.data));
       }
 
-      final result = "Success";
-
-      return Right(result);
+      return const Right("Success");
     } on DioException catch (e) {
       log("This is the DioException A: $e");
       return Left(NetUtils.parseDioException(e));
     } on Exception catch (e) {
-      log("This is the DioException B: $e");
+      log("This is the Exception B: $e");
 
       return Future.value(Left(CustomException(message: e.toString())));
     } catch (e) {
-      log("This is the DioException C: $e");
+      log("This is the Exception C: $e");
 
       return Left(CustomException(message: e.toString()));
     }
