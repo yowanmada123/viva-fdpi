@@ -61,26 +61,93 @@ class DetailApproveRequest {
   int get hashCode => qcTransId.hashCode ^ idQcItem.hashCode ^ idWork.hashCode;
 }
 
+// class DetailApproveResponse {
+//   final String remark;
+//   final String imgLink;
+//   DetailApproveResponse({required this.remark, required this.imgLink});
+
+//   DetailApproveResponse copyWith({String? remark, String? imgLink}) {
+//     return DetailApproveResponse(
+//       remark: remark ?? this.remark,
+//       imgLink: imgLink ?? this.imgLink,
+//     );
+//   }
+
+//   Map<String, dynamic> toMap() {
+//     return {'remark': remark, 'img_link': imgLink};
+//   }
+
+//   factory DetailApproveResponse.fromMap(Map<String, dynamic> map) {
+//     return DetailApproveResponse(
+//       remark: map['remark'] ?? '',
+//       imgLink: map['img_link'] ?? '',
+//     );
+//   }
+
+//   String toJson() => json.encode(toMap());
+
+//   factory DetailApproveResponse.fromJson(String source) =>
+//       DetailApproveResponse.fromMap(json.decode(source));
+
+//   @override
+//   String toString() =>
+//       'DetailApproveResponse(remark: $remark, imgLink: $imgLink)';
+
+//   @override
+//   bool operator ==(Object other) {
+//     if (identical(this, other)) return true;
+
+//     return other is DetailApproveResponse &&
+//         other.remark == remark &&
+//         other.imgLink == imgLink;
+//   }
+
+//   @override
+//   int get hashCode => remark.hashCode ^ imgLink.hashCode;
+// }
+
 class DetailApproveResponse {
   final String remark;
-  final String imgLink;
-  DetailApproveResponse({required this.remark, required this.imgLink});
+  final String imgLink; // existing (jangan diubah)
+  final List<String> imgLinks; // 🔥 tambahan
 
-  DetailApproveResponse copyWith({String? remark, String? imgLink}) {
+  DetailApproveResponse({
+    required this.remark,
+    required this.imgLink,
+    required this.imgLinks,
+  });
+
+  DetailApproveResponse copyWith({
+    String? remark,
+    String? imgLink,
+    List<String>? imgLinks,
+  }) {
     return DetailApproveResponse(
       remark: remark ?? this.remark,
       imgLink: imgLink ?? this.imgLink,
+      imgLinks: imgLinks ?? this.imgLinks,
     );
   }
 
   Map<String, dynamic> toMap() {
-    return {'remark': remark, 'img_link': imgLink};
+    return {'remark': remark, 'img_link': imgLink, 'img_links': imgLinks};
   }
 
   factory DetailApproveResponse.fromMap(Map<String, dynamic> map) {
     return DetailApproveResponse(
       remark: map['remark'] ?? '',
       imgLink: map['img_link'] ?? '',
+
+      // 🔥 SAFE PARSING (handle BE format sekarang)
+      imgLinks:
+          (map['images'] != null)
+              ? List<String>.from(
+                (map['images'] as List).map(
+                  (e) =>
+                      "https://api-fpi.kencana.org/storage/${e['doc_path']}${e['doc_name']}",
+                ),
+              )
+              : [],
     );
   }
 
@@ -91,7 +158,7 @@ class DetailApproveResponse {
 
   @override
   String toString() =>
-      'DetailApproveResponse(remark: $remark, imgLink: $imgLink)';
+      'DetailApproveResponse(remark: $remark, imgLink: $imgLink, imgLinks: $imgLinks)';
 
   @override
   bool operator ==(Object other) {
@@ -99,9 +166,18 @@ class DetailApproveResponse {
 
     return other is DetailApproveResponse &&
         other.remark == remark &&
-        other.imgLink == imgLink;
+        other.imgLink == imgLink &&
+        _listEquals(other.imgLinks, imgLinks);
   }
 
   @override
-  int get hashCode => remark.hashCode ^ imgLink.hashCode;
+  int get hashCode => remark.hashCode ^ imgLink.hashCode ^ imgLinks.hashCode;
+
+  static bool _listEquals(List a, List b) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
 }

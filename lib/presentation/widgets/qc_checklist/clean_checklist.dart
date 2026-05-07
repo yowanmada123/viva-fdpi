@@ -13,7 +13,7 @@ typedef CheckboxCallback =
 typedef SaveCallback =
     void Function(String remark, List<Attachment>? attachments);
 
-typedef ApproveDetailCallback = void Function(int idWok);
+typedef ApproveDetailCallback = void Function(int idWork);
 typedef UnapproveChecklistCallback = void Function(int idWork);
 typedef UpdateApproveChecklistCallback =
     void Function(
@@ -30,7 +30,7 @@ typedef UpdateCallback =
       List<String> deleteImage,
     );
 
-class SprChecklistCleanAccordion extends StatefulWidget {
+class CleanChecklistAccordion extends StatefulWidget {
   final int index;
   final String title;
   final Widget content;
@@ -44,7 +44,7 @@ class SprChecklistCleanAccordion extends StatefulWidget {
   final UnapproveChecklistCallback? onUnapproveChecklist;
   final UpdateApproveChecklistCallback? onUpdateChecklist;
 
-  const SprChecklistCleanAccordion({
+  const CleanChecklistAccordion({
     super.key,
     required this.index,
     required this.title,
@@ -61,12 +61,11 @@ class SprChecklistCleanAccordion extends StatefulWidget {
   });
 
   @override
-  State<SprChecklistCleanAccordion> createState() =>
-      _SprChecklistCleanAccordionState();
+  State<CleanChecklistAccordion> createState() =>
+      _CleanChecklistAccordionState();
 }
 
-class _SprChecklistCleanAccordionState
-    extends State<SprChecklistCleanAccordion> {
+class _CleanChecklistAccordionState extends State<CleanChecklistAccordion> {
   late bool _isExpanded;
 
   @override
@@ -154,7 +153,7 @@ class _HeaderSection extends StatelessWidget {
             bottomRight: Radius.circular(isExpanded ? 0 : 4.0),
           ),
         ),
-        padding: EdgeInsets.all(16.w),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.w),
         child: Row(
           children: [
             Expanded(
@@ -163,7 +162,7 @@ class _HeaderSection extends StatelessWidget {
                   Expanded(
                     child: Text(
                       title,
-                      style: Theme.of(context).textTheme.titleMedium,
+                      style: Theme.of(context).textTheme.titleSmall,
                     ),
                   ),
                   if (showIcon)
@@ -291,7 +290,13 @@ class _CheckboxConfirmationDialog extends StatefulWidget {
 class _CheckboxConfirmationDialogState
     extends State<_CheckboxConfirmationDialog> {
   final TextEditingController _remarkController = TextEditingController();
-  List<Attachment>? _attachments;
+
+  // 🔥 NEW STATE
+  List<String> _existingImages = [];
+  final List<Attachment> _newImages = [];
+  final Set<String> _deletedImages = {};
+
+  bool _isInitialized = false;
 
   @override
   void dispose() {
@@ -316,7 +321,16 @@ class _CheckboxConfirmationDialogState
                 );
               }
 
-              _remarkController.text = state.detailApproveResponse.remark;
+              final detail = state.detailApproveResponse;
+
+              // ✅ SET DATA (JANGAN DI INITSTATE karena async)
+              if (!_isInitialized) {
+                _remarkController.text = detail.remark;
+                _existingImages = List<String>.from(detail.imgLinks);
+                _isInitialized = true;
+              }
+
+              int totalImage = _existingImages.length + _newImages.length;
 
               return Container(
                 padding: EdgeInsets.all(16.w),
@@ -324,11 +338,22 @@ class _CheckboxConfirmationDialogState
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Approve',
-                      style: Theme.of(context).textTheme.titleLarge,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Approve',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Icon(Icons.close, size: 30.w),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 16.w),
+
+                    /// ================= REMARK =================
                     Text(
                       'Remark',
                       style: Theme.of(context).textTheme.titleMedium,
@@ -344,18 +369,116 @@ class _CheckboxConfirmationDialogState
                         ),
                       ),
                     ),
+
+                    SizedBox(height: 8.w),
+
+                    /// ================= ATTACHMENT =================
+                    Text(
+                      'Existing Attachment',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    SizedBox(height: 8.w),
+
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        ...List.generate(_existingImages.length, (index) {
+                          final img = _existingImages[index];
+
+                          return Stack(
+                            children: [
+                              Image.network(
+                                img,
+                                width: 64.w,
+                                height: 64.w,
+                                fit: BoxFit.cover,
+                              ),
+                              Positioned(
+                                right: 0,
+                                top: 0,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _existingImages.removeAt(index);
+                                      _deletedImages.add(img.split('/').last);
+                                    });
+                                  },
+                                  child: Container(
+                                    color: Colors.black54,
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                      size: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
+
+                        ...List.generate(_newImages.length, (index) {
+                          final file = _newImages[index];
+
+                          return Stack(
+                            children: [
+                              Image.file(
+                                file.file,
+                                width: 64.w,
+                                height: 64.w,
+                                fit: BoxFit.cover,
+                              ),
+                              Positioned(
+                                right: 0,
+                                top: 0,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _newImages.removeAt(index);
+                                    });
+                                  },
+                                  child: Container(
+                                    color: Colors.black54,
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                      size: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
+                      ],
+                    ),
+                    SizedBox(height: 8.w),
+
+                    if (totalImage < 3)
+                      FileAttachmentPicker(
+                        onAttachmentsChanged: (attachments) {
+                          setState(() {
+                            for (final attachment in attachments) {
+                              final isDuplicate = _newImages.any(
+                                (e) =>
+                                    e.name == attachment.name &&
+                                    e.base64 == attachment.base64,
+                              );
+
+                              final totalImage =
+                                  _existingImages.length + _newImages.length;
+
+                              if (!isDuplicate && totalImage < 3) {
+                                _newImages.add(attachment);
+                              }
+                            }
+                          });
+                        },
+                      ),
                     SizedBox(height: 16.w),
-                    // Text(
-                    //   'Attachment',
-                    //   style: Theme.of(context).textTheme.titleMedium,
-                    // ),
-                    // SizedBox(height: 8.w),
-                    // FileAttachmentPicker(
-                    //   onAttachmentsChanged: (attachments) {
-                    //     _attachments = attachments;
-                    //   },
-                    // ),
-                    // SizedBox(height: 16.w),
+
+                    /// ================= BUTTON =================
                     if (!widget.value)
                       Row(
                         children: [
@@ -364,14 +487,8 @@ class _CheckboxConfirmationDialogState
                               style: FilledButton.styleFrom(
                                 backgroundColor: const Color(0xFFAFAFAF),
                               ),
-                              child: const Text('Save'),
-                              onPressed: () {
-                                widget.onSave(
-                                  _remarkController.text,
-                                  _attachments,
-                                );
-                                Navigator.pop(context);
-                              },
+                              child: const Text('Close'),
+                              onPressed: () => Navigator.pop(context),
                             ),
                           ),
                           SizedBox(width: 16.w),
@@ -381,7 +498,7 @@ class _CheckboxConfirmationDialogState
                               onPressed: () {
                                 widget.onConfirmed(
                                   _remarkController.text,
-                                  _attachments,
+                                  _newImages.isEmpty ? null : _newImages,
                                 );
                                 Navigator.pop(context);
                               },
@@ -409,10 +526,22 @@ class _CheckboxConfirmationDialogState
                             child: FilledButton(
                               child: const Text('Update'),
                               onPressed: () {
+                                // if (_existingImages.isEmpty &&
+                                //     _newImages.isEmpty) {
+                                //   ScaffoldMessenger.of(context).showSnackBar(
+                                //     const SnackBar(
+                                //       content: Text(
+                                //         "Minimal 1 attachment diperlukan",
+                                //       ),
+                                //     ),
+                                //   );
+                                //   return;
+                                // }
+
                                 widget.onUpdateChecklist?.call(
                                   _remarkController.text,
-                                  _attachments,
-                                  [],
+                                  _newImages.isEmpty ? null : _newImages,
+                                  _deletedImages.toList(),
                                 );
                                 Navigator.pop(context);
                               },
