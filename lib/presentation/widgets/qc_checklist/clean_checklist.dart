@@ -9,7 +9,7 @@ import 'approval_section.dart';
 
 typedef CheckboxCallback =
     void Function(bool value, String remark, List<Attachment>? base64);
-typedef ApproveDetailCallback = void Function(int idWok);
+typedef ApproveDetailCallback = void Function(int idWork);
 typedef UnapproveChecklistCallback = void Function(int idWork);
 typedef UpdateApproveChecklistCallback =
     void Function(
@@ -276,8 +276,10 @@ class _CheckboxConfirmationDialogState
 
   // 🔥 NEW STATE
   List<String> _existingImages = [];
-  List<Attachment>? _newImages;
-  List<String> _deletedImages = [];
+  final List<Attachment> _newImages = [];
+  final Set<String> _deletedImages = {};
+
+  bool _isInitialized = false;
 
   @override
   void dispose() {
@@ -305,16 +307,13 @@ class _CheckboxConfirmationDialogState
               final detail = state.detailApproveResponse;
 
               // ✅ SET DATA (JANGAN DI INITSTATE karena async)
-              if (_remarkController.text.isEmpty) {
+              if (!_isInitialized) {
                 _remarkController.text = detail.remark;
-              }
-
-              if (_existingImages.isEmpty && detail.imgLinks.isNotEmpty) {
                 _existingImages = List<String>.from(detail.imgLinks);
+                _isInitialized = true;
               }
 
-              int totalImage =
-                  _existingImages.length + (_newImages?.length ?? 0);
+              int totalImage = _existingImages.length + _newImages.length;
 
               return Container(
                 padding: EdgeInsets.all(16.w),
@@ -366,57 +365,95 @@ class _CheckboxConfirmationDialogState
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
-                      children:
-                          _existingImages.map((img) {
-                            return Stack(
-                              children: [
-                                Image.network(
-                                  img,
-                                  width: 64.w,
-                                  height: 64.w,
-                                  fit: BoxFit.cover,
-                                ),
-                                Positioned(
-                                  right: 0,
-                                  top: 0,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        _existingImages.remove(img);
+                      children: [
+                        ...List.generate(_existingImages.length, (index) {
+                          final img = _existingImages[index];
 
-                                        // 🔥 kirim filename ke BE
-                                        // _deletedImages.add(img.split('/').last);
-                                        _deletedImages.add(img.split('/').last);
-                                      });
-                                    },
-                                    child: Container(
-                                      color: Colors.black54,
-                                      child: const Icon(
-                                        Icons.close,
-                                        color: Colors.white,
-                                        size: 16,
-                                      ),
+                          return Stack(
+                            children: [
+                              Image.network(
+                                img,
+                                width: 64.w,
+                                height: 64.w,
+                                fit: BoxFit.cover,
+                              ),
+                              Positioned(
+                                right: 0,
+                                top: 0,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _existingImages.removeAt(index);
+                                      _deletedImages.add(img.split('/').last);
+                                    });
+                                  },
+                                  child: Container(
+                                    color: Colors.black54,
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                      size: 16,
                                     ),
                                   ),
                                 ),
-                              ],
-                            );
-                          }).toList(),
-                    ),
+                              ),
+                            ],
+                          );
+                        }),
 
+                        ...List.generate(_newImages.length, (index) {
+                          final file = _newImages[index];
+
+                          return Stack(
+                            children: [
+                              Image.file(
+                                file.file,
+                                width: 64.w,
+                                height: 64.w,
+                                fit: BoxFit.cover,
+                              ),
+                              Positioned(
+                                right: 0,
+                                top: 0,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _newImages.removeAt(index);
+                                    });
+                                  },
+                                  child: Container(
+                                    color: Colors.black54,
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                      size: 16,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
+                      ],
+                    ),
                     SizedBox(height: 8.w),
 
                     if (totalImage < 3)
                       FileAttachmentPicker(
                         onAttachmentsChanged: (attachments) {
                           setState(() {
-                            _newImages ??= [];
+                            for (final attachment in attachments) {
+                              final isDuplicate = _newImages.any(
+                                (e) =>
+                                    e.name == attachment.name &&
+                                    e.base64 == attachment.base64,
+                              );
 
-                            for (var file in attachments) {
-                              if ((_existingImages.length +
-                                      _newImages!.length) <
-                                  3) {
-                                _newImages!.add(file);
+                              final totalImage =
+                                  _existingImages.length + _newImages.length;
+
+                              if (!isDuplicate && totalImage < 3) {
+                                _newImages.add(attachment);
                               }
                             }
                           });
@@ -444,7 +481,7 @@ class _CheckboxConfirmationDialogState
                               onPressed: () {
                                 widget.onConfirmed(
                                   _remarkController.text,
-                                  _newImages,
+                                  _newImages.isEmpty ? null : _newImages,
                                 );
                                 Navigator.pop(context);
                               },
@@ -474,8 +511,7 @@ class _CheckboxConfirmationDialogState
                               child: const Text('Update'),
                               onPressed: () {
                                 if (_existingImages.isEmpty &&
-                                    (_newImages == null ||
-                                        _newImages!.isEmpty)) {
+                                    _newImages.isEmpty) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(
@@ -488,8 +524,8 @@ class _CheckboxConfirmationDialogState
 
                                 widget.onUpdateChecklist?.call(
                                   _remarkController.text,
-                                  _newImages,
-                                  _deletedImages,
+                                  _newImages.isEmpty ? null : _newImages,
+                                  _deletedImages.toList(),
                                 );
                                 Navigator.pop(context);
                               },
