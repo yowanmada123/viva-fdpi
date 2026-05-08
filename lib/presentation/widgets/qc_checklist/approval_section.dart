@@ -197,10 +197,10 @@ class _FileAttachmentPickerState extends State<FileAttachmentPicker> {
               ],
             ),
           ),
-          IconButton(
-            icon: const Icon(Icons.close, size: 20),
-            onPressed: () => _removeAttachment(index),
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.close, size: 20),
+          //   onPressed: () => _removeAttachment(index),
+          // ),
         ],
       ),
     );
@@ -231,20 +231,20 @@ class _FileAttachmentPickerState extends State<FileAttachmentPicker> {
           ),
         ),
         const SizedBox(height: 16),
-        if (_attachments.isNotEmpty)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Uploaded Files',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 8),
-              ..._attachments.asMap().entries.map(
-                (entry) => _buildAttachmentItem(entry.value, entry.key),
-              ),
-            ],
-          ),
+        // if (_attachments.isNotEmpty)
+        //   Column(
+        //     crossAxisAlignment: CrossAxisAlignment.start,
+        //     children: [
+        //       Text(
+        //         'Uploaded Files',
+        //         style: Theme.of(context).textTheme.titleMedium,
+        //       ),
+        //       const SizedBox(height: 8),
+        //       ..._attachments.asMap().entries.map(
+        //         (entry) => _buildAttachmentItem(entry.value, entry.key),
+        //       ),
+        //     ],
+        //   ),
       ],
     );
   }

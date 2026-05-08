@@ -391,69 +391,88 @@ class _CheckboxConfirmationDialogState
                         ...List.generate(_existingImages.length, (index) {
                           final img = _existingImages[index];
 
-                          return Stack(
-                            children: [
-                              Image.network(
-                                img,
-                                width: 64.w,
-                                height: 64.w,
-                                fit: BoxFit.cover,
-                              ),
-                              Positioned(
-                                right: 0,
-                                top: 0,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _existingImages.removeAt(index);
-                                      _deletedImages.add(img.split('/').last);
-                                    });
-                                  },
-                                  child: Container(
-                                    color: Colors.black54,
-                                    child: const Icon(
-                                      Icons.close,
-                                      color: Colors.white,
-                                      size: 16,
+                          return Container(
+                            // width: double.infinity,
+                            margin: const EdgeInsets.only(bottom: 8),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[50],
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.grey[300]!),
+                            ),
+                            child: Stack(
+                              children: [
+                                Image.network(
+                                  img,
+                                  width: 64.w,
+                                  height: 64.w,
+                                  fit: BoxFit.cover,
+                                ),
+                                Positioned(
+                                  right: 0,
+                                  top: 0,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _existingImages.removeAt(index);
+                                        _deletedImages.add(img.split('/').last);
+                                      });
+                                    },
+                                    child: Container(
+                                      color: Colors.black54,
+                                      child: const Icon(
+                                        Icons.close,
+                                        color: Colors.white,
+                                        size: 16,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           );
                         }),
 
                         ...List.generate(_newImages.length, (index) {
                           final file = _newImages[index];
 
-                          return Stack(
-                            children: [
-                              Image.file(
-                                file.file,
-                                width: 64.w,
-                                height: 64.w,
-                                fit: BoxFit.cover,
-                              ),
-                              Positioned(
-                                right: 0,
-                                top: 0,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _newImages.removeAt(index);
-                                    });
-                                  },
-                                  child: Container(
-                                    color: Colors.black54,
-                                    child: const Icon(
-                                      Icons.close,
-                                      color: Colors.white,
-                                      size: 16,
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 8),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[50],
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.grey[300]!),
+                            ),
+                            child: Stack(
+                              children: [
+                                Image.file(
+                                  file.file,
+                                  width: 64.w,
+                                  height: 64.w,
+                                  fit: BoxFit.cover,
+                                ),
+                                Positioned(
+                                  right: 0,
+                                  top: 0,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _newImages.removeAt(index);
+                                      });
+                                    },
+                                    child: Container(
+                                      color: Colors.black54,
+                                      child: const Icon(
+                                        Icons.close,
+                                        color: Colors.white,
+                                        size: 16,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           );
                         }),
                       ],
