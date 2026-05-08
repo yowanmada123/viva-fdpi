@@ -153,13 +153,14 @@ class _CleaningProgressListScreenContentState
           style: TextStyle(fontSize: 20.sp),
         ),
       ),
-      body: BlocListener<ApproveChecklistBloc, ApproveChecklistState>(
+      body: BlocConsumer<ApproveChecklistBloc, ApproveChecklistState>(
         listener: (context, state) {
           if (state is ApproveChecklistLoadSuccess) {
             context.read<SprChecklistBloc>().add(
               LoadSprChecklist(qcTransId: widget.qcTransId),
             );
           }
+
           if (state is ApproveChecklistLoadFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -174,222 +175,310 @@ class _CleaningProgressListScreenContentState
             );
           }
         },
-        child: BlocBuilder<SprChecklistBloc, SprChecklistState>(
-          builder: (context, state) {
-            if (state is SprChecklistLoadSuccess) {
-              return SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.all(16.w),
-                  child: Column(
-                    children:
-                        state.sprChecklistItem.asMap().entries.map<Widget>((
-                          qcItem,
-                        ) {
-                          return CleanChecklistAccordion(
-                            index: qcItem.key,
-                            title: qcItem.value.itemName,
-                            onApproveDetail: (idWork) {
-                              loadApproveDetail(idWork, qcItem.value.idQcItem);
-                            },
-                            onUnapproveChecklist: (idWork) {
-                              unapproveChecklist(
-                                idWork,
-                                qcItem.value.idQcItem,
-                                context,
-                              );
-                            },
-                            onUpdateChecklist: (
-                              idWork,
-                              remark,
-                              fileImage,
-                              deleteImage,
-                            ) {
-                              updateChecklist(
-                                idWork,
-                                qcItem.value.idQcItem,
-                                context,
-                                remark,
-                                fileImage,
-                                deleteImage,
-                              );
-                            },
-                            onCheckboxApplicatorChanged:
-                                qcItem.value.statClosing == 'N'
-                                    ? (value, remark, fileImage) {
-                                      checkboxEvent(
-                                        1,
-                                        qcItem.value.idQcItem,
-                                        context,
-                                        value: value,
-                                        remark,
-                                        fileImage,
-                                      );
-                                    }
-                                    : null,
-                            onSave: (remark, fileImage, deleteImage) {
-                              saveChecklist(
-                                1,
-                                qcItem.value.idQcItem,
-                                context,
-                                remark,
-                                fileImage,
-                                deleteImage,
-                              );
-                            },
-                            showIcon: false,
-                            showCheckboxApplicator: true,
-                            checkboxApplicatorInitalValue:
-                                qcItem.value.dtAprv != null,
-                            content: SizedBox(
-                              width: double.infinity,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Attachment",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12.sp,
-                                      color: Color.fromARGB(255, 99, 99, 99),
-                                    ),
-                                  ),
-                                  SizedBox(height: 4.w),
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
+
+        builder: (context, approveState) {
+          return Stack(
+            children: [
+              /// CONTENT UTAMA
+              BlocBuilder<SprChecklistBloc, SprChecklistState>(
+                builder: (context, state) {
+                  if (state is SprChecklistLoadSuccess) {
+                    return SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.all(16.w),
+                        child: Column(
+                          children:
+                              state.sprChecklistItem.asMap().entries.map<
+                                Widget
+                              >((qcItem) {
+                                return CleanChecklistAccordion(
+                                  index: qcItem.key,
+                                  title: qcItem.value.itemName,
+                                  onApproveDetail: (idWork) {
+                                    loadApproveDetail(
+                                      idWork,
+                                      qcItem.value.idQcItem,
+                                    );
+                                  },
+                                  onUnapproveChecklist: (idWork) {
+                                    unapproveChecklist(
+                                      idWork,
+                                      qcItem.value.idQcItem,
+                                      context,
+                                    );
+                                  },
+                                  onUpdateChecklist: (
+                                    idWork,
+                                    remark,
+                                    fileImage,
+                                    deleteImage,
+                                  ) {
+                                    updateChecklist(
+                                      idWork,
+                                      qcItem.value.idQcItem,
+                                      context,
+                                      remark,
+                                      fileImage,
+                                      deleteImage,
+                                    );
+                                  },
+                                  onCheckboxApplicatorChanged:
+                                      qcItem.value.statClosing == 'N'
+                                          ? (value, remark, fileImage) {
+                                            checkboxEvent(
+                                              1,
+                                              qcItem.value.idQcItem,
+                                              context,
+                                              value: value,
+                                              remark,
+                                              fileImage,
+                                            );
+                                          }
+                                          : null,
+                                  onSave: (remark, fileImage, deleteImage) {
+                                    saveChecklist(
+                                      1,
+                                      qcItem.value.idQcItem,
+                                      context,
+                                      remark,
+                                      fileImage,
+                                      deleteImage,
+                                    );
+                                  },
+                                  showIcon: false,
+                                  showCheckboxApplicator: true,
+                                  checkboxApplicatorInitalValue:
+                                      qcItem.value.dtAprv != null,
+                                  content: SizedBox(
+                                    width: double.infinity,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        if (qcItem.value.imgLink.isEmpty &&
-                                            qcItem.value.imgLink2.isEmpty &&
-                                            qcItem.value.imgLink3.isEmpty)
-                                          Text(
-                                            "No Attachment",
-                                            style: TextStyle(
-                                              color: Colors.grey,
+                                        Text(
+                                          "Attachment",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12.sp,
+                                            color: Color.fromARGB(
+                                              255,
+                                              99,
+                                              99,
+                                              99,
                                             ),
                                           ),
-                                        if (qcItem.value.imgLink.isNotEmpty)
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                              right: 4.w,
-                                            ),
-                                            child: SizedBox(
-                                              width: 64.w,
-                                              height: 64.w,
-                                              child: Container(
-                                                clipBehavior: Clip.hardEdge,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(2),
-                                                  color: Colors.grey[300],
+                                        ),
+                                        SizedBox(height: 4.w),
+                                        SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            children: [
+                                              if (qcItem
+                                                      .value
+                                                      .imgLink
+                                                      .isEmpty &&
+                                                  qcItem
+                                                      .value
+                                                      .imgLink2
+                                                      .isEmpty &&
+                                                  qcItem.value.imgLink3.isEmpty)
+                                                Text(
+                                                  "No Attachment",
+                                                  style: TextStyle(
+                                                    color: Colors.grey,
+                                                  ),
                                                 ),
-                                                child: CachedNetworkImage(
-                                                  imageUrl:
-                                                      qcItem.value.imgLink,
-                                                  progressIndicatorBuilder:
-                                                      (
-                                                        context,
-                                                        url,
-                                                        progress,
-                                                      ) => Center(
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                              value:
-                                                                  progress
-                                                                      .progress,
+                                              if (qcItem
+                                                  .value
+                                                  .imgLink
+                                                  .isNotEmpty)
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    right: 4.w,
+                                                  ),
+                                                  child: SizedBox(
+                                                    width: 64.w,
+                                                    height: 64.w,
+                                                    child: Container(
+                                                      clipBehavior:
+                                                          Clip.hardEdge,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              2,
                                                             ),
+                                                        color: Colors.grey[300],
                                                       ),
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        if (qcItem.value.imgLink2.isNotEmpty)
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                              right: 4.w,
-                                            ),
-                                            child: SizedBox(
-                                              width: 64.w,
-                                              height: 64.w,
-                                              child: Container(
-                                                clipBehavior: Clip.hardEdge,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(2),
-                                                  color: Colors.grey[300],
-                                                ),
-                                                child: CachedNetworkImage(
-                                                  imageUrl:
-                                                      qcItem.value.imgLink2,
-                                                  progressIndicatorBuilder:
-                                                      (
-                                                        context,
-                                                        url,
-                                                        progress,
-                                                      ) => Center(
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                              value:
-                                                                  progress
-                                                                      .progress,
+                                                      child: CachedNetworkImage(
+                                                        imageUrl:
+                                                            qcItem
+                                                                .value
+                                                                .imgLink,
+                                                        progressIndicatorBuilder:
+                                                            (
+                                                              context,
+                                                              url,
+                                                              progress,
+                                                            ) => Center(
+                                                              child: CircularProgressIndicator(
+                                                                value:
+                                                                    progress
+                                                                        .progress,
+                                                              ),
                                                             ),
+                                                        fit: BoxFit.cover,
                                                       ),
-                                                  fit: BoxFit.cover,
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
-                                          ),
-                                        if (qcItem.value.imgLink3.isNotEmpty)
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                              right: 4.w,
-                                            ),
-                                            child: SizedBox(
-                                              width: 64.w,
-                                              height: 64.w,
-                                              child: Container(
-                                                clipBehavior: Clip.hardEdge,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(2),
-                                                  color: Colors.grey[300],
-                                                ),
-                                                child: CachedNetworkImage(
-                                                  imageUrl:
-                                                      qcItem.value.imgLink3,
-                                                  progressIndicatorBuilder:
-                                                      (
-                                                        context,
-                                                        url,
-                                                        progress,
-                                                      ) => Center(
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                              value:
-                                                                  progress
-                                                                      .progress,
+                                              if (qcItem
+                                                  .value
+                                                  .imgLink2
+                                                  .isNotEmpty)
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    right: 4.w,
+                                                  ),
+                                                  child: SizedBox(
+                                                    width: 64.w,
+                                                    height: 64.w,
+                                                    child: Container(
+                                                      clipBehavior:
+                                                          Clip.hardEdge,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              2,
                                                             ),
+                                                        color: Colors.grey[300],
                                                       ),
-                                                  fit: BoxFit.cover,
+                                                      child: CachedNetworkImage(
+                                                        imageUrl:
+                                                            qcItem
+                                                                .value
+                                                                .imgLink2,
+                                                        progressIndicatorBuilder:
+                                                            (
+                                                              context,
+                                                              url,
+                                                              progress,
+                                                            ) => Center(
+                                                              child: CircularProgressIndicator(
+                                                                value:
+                                                                    progress
+                                                                        .progress,
+                                                              ),
+                                                            ),
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
+                                              if (qcItem
+                                                  .value
+                                                  .imgLink3
+                                                  .isNotEmpty)
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    right: 4.w,
+                                                  ),
+                                                  child: SizedBox(
+                                                    width: 64.w,
+                                                    height: 64.w,
+                                                    child: Container(
+                                                      clipBehavior:
+                                                          Clip.hardEdge,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              2,
+                                                            ),
+                                                        color: Colors.grey[300],
+                                                      ),
+                                                      child: CachedNetworkImage(
+                                                        imageUrl:
+                                                            qcItem
+                                                                .value
+                                                                .imgLink3,
+                                                        progressIndicatorBuilder:
+                                                            (
+                                                              context,
+                                                              url,
+                                                              progress,
+                                                            ) => Center(
+                                                              child: CircularProgressIndicator(
+                                                                value:
+                                                                    progress
+                                                                        .progress,
+                                                              ),
+                                                            ),
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                            ],
                                           ),
+                                        ),
                                       ],
                                     ),
                                   ),
-                                ],
-                              ),
+                                );
+                              }).toList(),
+                        ),
+                      ),
+                    );
+                    ;
+                  }
+
+                  return Center(child: CircularProgressIndicator());
+                },
+              ),
+
+              /// LOADING OVERLAY
+              if (approveState is ApproveChecklistLoading)
+                Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: Colors.black.withOpacity(0.35),
+
+                  child: Center(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 24.w,
+                        vertical: 20.w,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12.w),
+                      ),
+
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: 28.w,
+                            height: 28.w,
+                            child: CircularProgressIndicator(strokeWidth: 3),
+                          ),
+
+                          SizedBox(height: 16.w),
+
+                          Text(
+                            "Processing...",
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
                             ),
-                          );
-                        }).toList(),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              );
-            }
-            return Center(child: CircularProgressIndicator());
-          },
-        ),
+            ],
+          );
+        },
       ),
     );
   }

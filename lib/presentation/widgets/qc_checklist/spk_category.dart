@@ -9,6 +9,14 @@ import 'approval_section.dart';
 
 typedef CheckboxCallback =
     void Function(bool value, String remark, List<Attachment>? base64);
+
+typedef SaveCallback =
+    void Function(
+      String remark,
+      List<Attachment>? attachments,
+      List<String> deleteImage,
+    );
+
 typedef ApproveDetailCallback = void Function(int idWok);
 typedef UnapproveChecklistCallback = void Function(int idWork);
 typedef UpdateApproveChecklistCallback =
@@ -39,6 +47,7 @@ class SpkChecklistAccordion extends StatelessWidget {
   final bool? checkboxInspectorInitalValue;
   final bool? checkboxQCInitalValue;
   final CheckboxCallback? onCheckboxApplicatorChanged;
+  final SaveCallback? onSave;
   final CheckboxCallback? onCheckboxQCChanged;
   final CheckboxCallback? onCheckboxInspectorChanged;
   final ApproveDetailCallback? onApproveDetail;
@@ -60,6 +69,7 @@ class SpkChecklistAccordion extends StatelessWidget {
     this.checkboxQCInitalValue,
     this.onCheckboxQCChanged,
     this.onCheckboxApplicatorChanged,
+    this.onSave,
     this.onCheckboxInspectorChanged,
     this.onApproveDetail,
     this.onUnapproveChecklist,
@@ -85,6 +95,7 @@ class SpkChecklistAccordion extends StatelessWidget {
         onCheckboxQCChanged: onCheckboxQCChanged,
         onCheckboxApplicatorChanged: onCheckboxApplicatorChanged,
         onCheckboxInspectorChanged: onCheckboxInspectorChanged,
+        onSave: onSave,
         onApproveDetail: onApproveDetail,
         onUnapproveChecklist: onUnapproveChecklist,
         onUpdateChecklist: onUpdateChecklist,
@@ -106,6 +117,7 @@ class _AccordionContent extends StatefulWidget {
   final bool? checkboxInspectorInitalValue;
   final bool? checkboxQCInitalValue;
   final CheckboxCallback? onCheckboxApplicatorChanged;
+  final SaveCallback? onSave;
   final CheckboxCallback? onCheckboxQCChanged;
   final CheckboxCallback? onCheckboxInspectorChanged;
   final ApproveDetailCallback? onApproveDetail;
@@ -125,6 +137,7 @@ class _AccordionContent extends StatefulWidget {
     this.checkboxInspectorInitalValue,
     this.checkboxQCInitalValue,
     this.onCheckboxQCChanged,
+    this.onSave,
     this.onCheckboxApplicatorChanged,
     this.onCheckboxInspectorChanged,
     this.onApproveDetail,
@@ -171,6 +184,7 @@ class _AccordionContentState extends State<_AccordionContent> {
           onApproveDetail: widget.onApproveDetail,
           onUnapproveChecklist: widget.onUnapproveChecklist,
           onUpdateChecklist: widget.onUpdateChecklist,
+          onSave: widget.onSave,
           onHeaderTap: () => setState(() => _isExpanded = !_isExpanded),
         ),
         _ContentSection(
@@ -196,6 +210,7 @@ class _HeaderSection extends StatelessWidget {
   final bool checkboxInspectorValue;
   final CheckboxCallback? onCheckboxQCChanged;
   final CheckboxCallback? onCheckboxApplicatorChanged;
+  final SaveCallback? onSave;
   final CheckboxCallback? onCheckboxInspectorChanged;
   final ApproveDetailCallback? onApproveDetail;
   final VoidCallback onHeaderTap;
@@ -220,6 +235,7 @@ class _HeaderSection extends StatelessWidget {
     required this.onHeaderTap,
     this.onUnapproveChecklist,
     this.onUpdateChecklist,
+    this.onSave,
   });
 
   @override
@@ -227,8 +243,16 @@ class _HeaderSection extends StatelessWidget {
     return InkWell(
       onTap: onHeaderTap,
       child: Container(
-        decoration: BoxDecoration(color: backgroundColor),
-        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(4.0),
+            topRight: const Radius.circular(4.0),
+            bottomLeft: Radius.circular(isExpanded ? 0 : 4.0),
+            bottomRight: Radius.circular(isExpanded ? 0 : 4.0),
+          ),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.w),
         child: Row(
           children: [
             Expanded(
@@ -237,7 +261,7 @@ class _HeaderSection extends StatelessWidget {
                   Expanded(
                     child: Text(
                       title,
-                      style: Theme.of(context).textTheme.titleMedium,
+                      style: Theme.of(context).textTheme.titleSmall,
                     ),
                   ),
                   if (showIcon)
@@ -255,6 +279,7 @@ class _HeaderSection extends StatelessWidget {
                 value: checkboxApplicatorValue,
                 label: 'Pelaksana',
                 authorizationKey: 'CEK_LIST_1',
+                onSave: onSave,
                 onChanged: onCheckboxApplicatorChanged,
                 onBeforeDialog: () => onApproveDetail?.call(1),
                 onUnapproveChecklist: () => onUnapproveChecklist?.call(1),
@@ -267,6 +292,7 @@ class _HeaderSection extends StatelessWidget {
                 value: checkboxInspectorValue,
                 label: 'Pemeriksa',
                 authorizationKey: 'CEK_LIST_2',
+                onSave: onSave,
                 onChanged: onCheckboxInspectorChanged,
                 onBeforeDialog: () => onApproveDetail?.call(2),
                 onUnapproveChecklist: () => onUnapproveChecklist?.call(2),
@@ -279,6 +305,7 @@ class _HeaderSection extends StatelessWidget {
                 value: checkboxQCValue,
                 label: 'QC',
                 authorizationKey: 'CEK_LIST_3',
+                onSave: onSave,
                 onChanged: onCheckboxQCChanged,
                 onBeforeDialog: () => onApproveDetail?.call(3),
                 onUnapproveChecklist: () => onUnapproveChecklist?.call(3),
@@ -298,6 +325,7 @@ class _AuthorizedCheckbox extends StatelessWidget {
   final String label;
   final String authorizationKey;
   final CheckboxCallback? onChanged;
+  final SaveCallback? onSave;
   final VoidCallback? onBeforeDialog;
   final VoidCallback? onUnapproveChecklist;
   final UpdateCallback? onUpdateChecklist;
@@ -307,6 +335,7 @@ class _AuthorizedCheckbox extends StatelessWidget {
     required this.label,
     required this.authorizationKey,
     this.onChanged,
+    this.onSave,
     this.onBeforeDialog,
     this.onUnapproveChecklist,
     this.onUpdateChecklist,
@@ -340,7 +369,15 @@ class _AuthorizedCheckbox extends StatelessWidget {
     final state = bloc.state;
     final approveDetailBloc = BlocProvider.of<ApproveDetailBloc>(context);
 
-    if (state is! CredentialsLoadSuccess) return;
+    if (state is! CredentialsLoadSuccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Authorization not available"),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
 
     if (state.credentials[authorizationKey] != "Y") {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -353,6 +390,7 @@ class _AuthorizedCheckbox extends StatelessWidget {
     }
 
     onBeforeDialog?.call();
+
     showDialog(
       context: context,
       builder:
@@ -360,10 +398,12 @@ class _AuthorizedCheckbox extends StatelessWidget {
             onConfirmed: (remark, attachments) {
               onChanged?.call(!value, remark, attachments);
             },
+            onSave: onSave,
             approveDetailBloc: approveDetailBloc,
             onUnapproveChecklist: onUnapproveChecklist,
             onUpdateChecklist: onUpdateChecklist,
             value: value,
+            isApproved: value,
           ),
     );
   }
@@ -371,17 +411,21 @@ class _AuthorizedCheckbox extends StatelessWidget {
 
 class _CheckboxConfirmationDialog extends StatefulWidget {
   final void Function(String remark, List<Attachment>? attachments) onConfirmed;
+  final void Function(String, List<Attachment>?, List<String>)? onSave;
   final ApproveDetailBloc approveDetailBloc;
-  final bool value;
   final VoidCallback? onUnapproveChecklist;
   final UpdateCallback? onUpdateChecklist;
+  final bool value;
+  final bool isApproved;
 
   const _CheckboxConfirmationDialog({
     required this.onConfirmed,
     required this.approveDetailBloc,
-    required this.value,
     required this.onUnapproveChecklist,
     required this.onUpdateChecklist,
+    required this.value,
+    this.onSave,
+    required this.isApproved,
   });
 
   @override
@@ -392,7 +436,12 @@ class _CheckboxConfirmationDialog extends StatefulWidget {
 class _CheckboxConfirmationDialogState
     extends State<_CheckboxConfirmationDialog> {
   final TextEditingController _remarkController = TextEditingController();
-  List<Attachment>? _attachments;
+
+  List<String> _existingImages = [];
+  final List<Attachment> _newImages = [];
+  final Set<String> _deletedImages = {};
+
+  bool _isInitialized = false;
 
   @override
   void dispose() {
@@ -417,7 +466,15 @@ class _CheckboxConfirmationDialogState
                 );
               }
 
-              _remarkController.text = state.detailApproveResponse.remark;
+              final detail = state.detailApproveResponse;
+
+              if (!_isInitialized) {
+                _remarkController.text = detail.remark;
+                _existingImages = List<String>.from(detail.imgLinks);
+                _isInitialized = true;
+              }
+
+              int totalImage = _existingImages.length + _newImages.length;
 
               return Container(
                 padding: EdgeInsets.all(16.w),
@@ -425,22 +482,30 @@ class _CheckboxConfirmationDialogState
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Approve',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Approve',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Icon(Icons.close, size: 30.w),
+                        ),
+                      ],
                     ),
+
                     SizedBox(height: 16.w),
-                    const Text(
+
+                    /// ================= REMARK =================
+                    Text(
                       'Remark',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
+
                     SizedBox(height: 8.w),
+
                     TextField(
                       controller: _remarkController,
                       maxLines: 3,
@@ -451,22 +516,138 @@ class _CheckboxConfirmationDialogState
                         ),
                       ),
                     ),
-                    SizedBox(height: 16.w),
-                    const Text(
-                      'Attachment',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+
                     SizedBox(height: 8.w),
-                    FileAttachmentPicker(
-                      onAttachmentsChanged: (attachments) {
-                        _attachments = attachments;
-                      },
+
+                    /// ================= ATTACHMENT =================
+                    Text(
+                      'Existing Attachment',
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
+
+                    SizedBox(height: 8.w),
+
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        ...List.generate(_existingImages.length, (index) {
+                          final img = _existingImages[index];
+
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 8),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[50],
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.grey[300]!),
+                            ),
+                            child: Stack(
+                              children: [
+                                Image.network(
+                                  img,
+                                  width: 64.w,
+                                  height: 64.w,
+                                  fit: BoxFit.cover,
+                                ),
+                                Positioned(
+                                  right: 0,
+                                  top: 0,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _existingImages.removeAt(index);
+                                        _deletedImages.add(img.split('/').last);
+                                      });
+                                    },
+                                    child: Container(
+                                      color: Colors.black54,
+                                      child: const Icon(
+                                        Icons.close,
+                                        color: Colors.white,
+                                        size: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+
+                        ...List.generate(_newImages.length, (index) {
+                          final file = _newImages[index];
+
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 8),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[50],
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.grey[300]!),
+                            ),
+                            child: Stack(
+                              children: [
+                                Image.file(
+                                  file.file,
+                                  width: 64.w,
+                                  height: 64.w,
+                                  fit: BoxFit.cover,
+                                ),
+                                Positioned(
+                                  right: 0,
+                                  top: 0,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _newImages.removeAt(index);
+                                      });
+                                    },
+                                    child: Container(
+                                      color: Colors.black54,
+                                      child: const Icon(
+                                        Icons.close,
+                                        color: Colors.white,
+                                        size: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+
+                    SizedBox(height: 8.w),
+
+                    if (totalImage < 3)
+                      FileAttachmentPicker(
+                        onAttachmentsChanged: (attachments) {
+                          setState(() {
+                            for (final attachment in attachments) {
+                              final isDuplicate = _newImages.any(
+                                (e) =>
+                                    e.name == attachment.name &&
+                                    e.base64 == attachment.base64,
+                              );
+
+                              final totalImage =
+                                  _existingImages.length + _newImages.length;
+
+                              if (!isDuplicate && totalImage < 3) {
+                                _newImages.add(attachment);
+                              }
+                            }
+                          });
+                        },
+                      ),
+
                     SizedBox(height: 16.w),
-                    if (!widget.value)
+
+                    /// ================= BUTTON =================
+                    if (!widget.isApproved)
                       Row(
                         children: [
                           Expanded(
@@ -474,26 +655,37 @@ class _CheckboxConfirmationDialogState
                               style: FilledButton.styleFrom(
                                 backgroundColor: const Color(0xFFAFAFAF),
                               ),
-                              child: const Text('Close'),
-                              onPressed: () => Navigator.pop(context),
+                              child: const Text('Save'),
+                              onPressed: () {
+                                widget.onSave?.call(
+                                  _remarkController.text,
+                                  _newImages.isEmpty ? null : _newImages,
+                                  _deletedImages.toList(),
+                                );
+
+                                Navigator.pop(context);
+                              },
                             ),
                           ),
                           SizedBox(width: 16.w),
+
                           Expanded(
                             child: FilledButton(
                               child: const Text('Approve'),
                               onPressed: () {
                                 widget.onConfirmed(
                                   _remarkController.text,
-                                  _attachments,
+                                  _newImages.isEmpty ? null : _newImages,
                                 );
+
                                 Navigator.pop(context);
                               },
                             ),
                           ),
                         ],
                       ),
-                    if (widget.value)
+
+                    if (widget.isApproved)
                       Row(
                         children: [
                           Expanded(
@@ -508,16 +700,19 @@ class _CheckboxConfirmationDialogState
                               },
                             ),
                           ),
+
                           SizedBox(width: 16.w),
+
                           Expanded(
                             child: FilledButton(
                               child: const Text('Update'),
                               onPressed: () {
                                 widget.onUpdateChecklist?.call(
                                   _remarkController.text,
-                                  _attachments,
-                                  [],
+                                  _newImages.isEmpty ? null : _newImages,
+                                  _deletedImages.toList(),
                                 );
+
                                 Navigator.pop(context);
                               },
                             ),
@@ -551,7 +746,17 @@ class _ContentSection extends StatelessWidget {
     return AnimatedSize(
       duration: const Duration(milliseconds: 300),
       child: Container(
-        decoration: BoxDecoration(color: backgroundColor),
+        padding:
+            isExpanded
+                ? const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0)
+                : const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(4.0),
+            bottomRight: Radius.circular(4.0),
+          ),
+        ),
         child: isExpanded ? content : const SizedBox.shrink(),
       ),
     );
