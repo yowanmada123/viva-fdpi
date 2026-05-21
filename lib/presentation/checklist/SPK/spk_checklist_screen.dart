@@ -64,6 +64,24 @@ class SpkChecklistFormState extends State<SpkChecklistForm> {
     Colors.green,
   ];
 
+  String normalizeImageUrl(String url) {
+    if (url.isEmpty) return url;
+
+    String fixed = Uri.decodeFull(url);
+
+    if (fixed.contains('https://') &&
+        fixed.indexOf('https://') != fixed.lastIndexOf('https://')) {
+      fixed = fixed.substring(fixed.lastIndexOf('https://'));
+    }
+
+    if (fixed.contains('http://') &&
+        fixed.indexOf('http://') != fixed.lastIndexOf('http://')) {
+      fixed = fixed.substring(fixed.lastIndexOf('http://'));
+    }
+
+    return fixed.trim();
+  }
+
   void checkboxEvent(
     int param,
     String id,
@@ -495,163 +513,700 @@ class SpkChecklistFormState extends State<SpkChecklistForm> {
                                                               SizedBox(
                                                                 height: 4.w,
                                                               ),
-                                                              SingleChildScrollView(
-                                                                scrollDirection:
-                                                                    Axis.horizontal,
-                                                                child: Row(
+                                                              // Ganti builder lama dengan ini
+                                                              ...qcItem.value.attachments.map((
+                                                                workAttachment,
+                                                              ) {
+                                                                final label =
+                                                                    workAttachment.idWork ==
+                                                                            1
+                                                                        ? 'Pelaksana'
+                                                                        : workAttachment.idWork ==
+                                                                            2
+                                                                        ? 'Pemeriksa'
+                                                                        : 'QC';
+
+                                                                return Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
                                                                   children: [
-                                                                    if (qcItem
-                                                                            .value
-                                                                            .imgLink
-                                                                            .isEmpty &&
-                                                                        qcItem
-                                                                            .value
-                                                                            .imgLink2
-                                                                            .isEmpty &&
-                                                                        qcItem
-                                                                            .value
-                                                                            .imgLink3
-                                                                            .isEmpty)
-                                                                      Container(
-                                                                        child: Text(
-                                                                          "No Attachment",
-                                                                        ),
+                                                                    Text(
+                                                                      label,
+                                                                      style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                        fontSize:
+                                                                            12.sp,
+                                                                        color:
+                                                                            Colors.grey[700],
                                                                       ),
-                                                                    if (qcItem
-                                                                        .value
-                                                                        .imgLink
-                                                                        .isNotEmpty)
-                                                                      Padding(
-                                                                        padding: EdgeInsets.only(
-                                                                          right:
-                                                                              4.w,
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height:
+                                                                          4.w,
+                                                                    ),
+                                                                    if (workAttachment
+                                                                        .images
+                                                                        .isEmpty)
+                                                                      Text(
+                                                                        "No Attachment",
+                                                                        style: TextStyle(
+                                                                          fontSize:
+                                                                              12.sp,
                                                                         ),
-                                                                        child: SizedBox(
-                                                                          width:
-                                                                              64.w,
-                                                                          height:
-                                                                              64.w,
-                                                                          child: Container(
-                                                                            clipBehavior:
-                                                                                Clip.hardEdge,
-                                                                            decoration: BoxDecoration(
-                                                                              borderRadius: BorderRadius.circular(
-                                                                                2,
-                                                                              ),
-                                                                              color:
-                                                                                  Colors.grey[300],
-                                                                            ),
-                                                                            child: CachedNetworkImage(
-                                                                              imageUrl:
-                                                                                  qcItem.value.imgLink,
-                                                                              progressIndicatorBuilder:
-                                                                                  (
+                                                                      )
+                                                                    else
+                                                                      GridView.builder(
+                                                                        shrinkWrap:
+                                                                            true,
+                                                                        physics:
+                                                                            NeverScrollableScrollPhysics(),
+                                                                        itemCount:
+                                                                            workAttachment.images.length >
+                                                                                    9
+                                                                                ? 9
+                                                                                : workAttachment.images.length,
+                                                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                                          crossAxisCount:
+                                                                              3,
+                                                                          crossAxisSpacing:
+                                                                              8.w,
+                                                                          mainAxisSpacing:
+                                                                              8.w,
+                                                                          childAspectRatio:
+                                                                              1,
+                                                                        ),
+                                                                        itemBuilder: (
+                                                                          context,
+                                                                          index,
+                                                                        ) {
+                                                                          final imageUrl =
+                                                                              workAttachment.images[index];
+                                                                          return GestureDetector(
+                                                                            onTap: () {
+                                                                              showDialog(
+                                                                                context:
                                                                                     context,
-                                                                                    url,
-                                                                                    progress,
-                                                                                  ) => Center(
-                                                                                    child: CircularProgressIndicator(
-                                                                                      value:
-                                                                                          progress.progress,
+                                                                                builder:
+                                                                                    (
+                                                                                      _,
+                                                                                    ) => Dialog(
+                                                                                      backgroundColor:
+                                                                                          Colors.black,
+                                                                                      insetPadding:
+                                                                                          EdgeInsets.zero,
+                                                                                      child: InteractiveViewer(
+                                                                                        minScale:
+                                                                                            0.5,
+                                                                                        maxScale:
+                                                                                            5,
+                                                                                        child: CachedNetworkImage(
+                                                                                          imageUrl: normalizeImageUrl(
+                                                                                            imageUrl,
+                                                                                          ),
+                                                                                          fit:
+                                                                                              BoxFit.contain,
+                                                                                          progressIndicatorBuilder:
+                                                                                              (
+                                                                                                context,
+                                                                                                url,
+                                                                                                progress,
+                                                                                              ) => Center(
+                                                                                                child: CircularProgressIndicator(
+                                                                                                  value:
+                                                                                                      progress.progress,
+                                                                                                ),
+                                                                                              ),
+                                                                                          errorWidget:
+                                                                                              (
+                                                                                                context,
+                                                                                                url,
+                                                                                                error,
+                                                                                              ) => Center(
+                                                                                                child: Icon(
+                                                                                                  Icons.broken_image,
+                                                                                                  color:
+                                                                                                      Colors.white,
+                                                                                                  size:
+                                                                                                      48,
+                                                                                                ),
+                                                                                              ),
+                                                                                        ),
+                                                                                      ),
                                                                                     ),
-                                                                                  ),
-                                                                              fit:
-                                                                                  BoxFit.cover,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    if (qcItem
-                                                                        .value
-                                                                        .imgLink2
-                                                                        .isNotEmpty)
-                                                                      Padding(
-                                                                        padding: EdgeInsets.only(
-                                                                          right:
-                                                                              4.w,
-                                                                        ),
-                                                                        child: SizedBox(
-                                                                          width:
-                                                                              64.w,
-                                                                          height:
-                                                                              64.w,
-                                                                          child: Container(
-                                                                            clipBehavior:
-                                                                                Clip.hardEdge,
-                                                                            decoration: BoxDecoration(
-                                                                              borderRadius: BorderRadius.circular(
-                                                                                2,
+                                                                              );
+                                                                            },
+                                                                            child: Container(
+                                                                              clipBehavior:
+                                                                                  Clip.hardEdge,
+                                                                              decoration: BoxDecoration(
+                                                                                borderRadius: BorderRadius.circular(
+                                                                                  4.w,
+                                                                                ),
+                                                                                color:
+                                                                                    Colors.grey[300],
                                                                               ),
-                                                                              color:
-                                                                                  Colors.grey[300],
-                                                                            ),
-                                                                            child: CachedNetworkImage(
-                                                                              imageUrl:
-                                                                                  qcItem.value.imgLink2,
-                                                                              progressIndicatorBuilder:
-                                                                                  (
-                                                                                    context,
-                                                                                    url,
-                                                                                    progress,
-                                                                                  ) => Center(
-                                                                                    child: CircularProgressIndicator(
-                                                                                      value:
-                                                                                          progress.progress,
+                                                                              child: CachedNetworkImage(
+                                                                                imageUrl: normalizeImageUrl(
+                                                                                  imageUrl,
+                                                                                ),
+                                                                                fit:
+                                                                                    BoxFit.cover,
+                                                                                progressIndicatorBuilder:
+                                                                                    (
+                                                                                      context,
+                                                                                      url,
+                                                                                      progress,
+                                                                                    ) => Center(
+                                                                                      child: CircularProgressIndicator(
+                                                                                        value:
+                                                                                            progress.progress,
+                                                                                      ),
                                                                                     ),
-                                                                                  ),
-                                                                              fit:
-                                                                                  BoxFit.cover,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    if (qcItem
-                                                                        .value
-                                                                        .imgLink3
-                                                                        .isNotEmpty)
-                                                                      Padding(
-                                                                        padding: EdgeInsets.only(
-                                                                          right:
-                                                                              4.w,
-                                                                        ),
-                                                                        child: SizedBox(
-                                                                          width:
-                                                                              64.w,
-                                                                          height:
-                                                                              64.w,
-                                                                          child: Container(
-                                                                            clipBehavior:
-                                                                                Clip.hardEdge,
-                                                                            decoration: BoxDecoration(
-                                                                              borderRadius: BorderRadius.circular(
-                                                                                2,
+                                                                                errorWidget:
+                                                                                    (
+                                                                                      context,
+                                                                                      url,
+                                                                                      error,
+                                                                                    ) => Icon(
+                                                                                      Icons.broken_image,
+                                                                                    ),
                                                                               ),
-                                                                              color:
-                                                                                  Colors.grey[300],
                                                                             ),
-                                                                            child: CachedNetworkImage(
-                                                                              imageUrl:
-                                                                                  qcItem.value.imgLink3,
-                                                                              progressIndicatorBuilder:
-                                                                                  (
-                                                                                    context,
-                                                                                    url,
-                                                                                    progress,
-                                                                                  ) => Center(
-                                                                                    child: CircularProgressIndicator(
-                                                                                      value:
-                                                                                          progress.progress,
-                                                                                    ),
-                                                                                  ),
-                                                                              fit:
-                                                                                  BoxFit.cover,
-                                                                            ),
-                                                                          ),
-                                                                        ),
+                                                                          );
+                                                                        },
                                                                       ),
+                                                                    SizedBox(
+                                                                      height:
+                                                                          8.w,
+                                                                    ),
                                                                   ],
-                                                                ),
-                                                              ),
+                                                                );
+                                                              }).toList(),
+                                                              // Builder(
+                                                              //   builder: (
+                                                              //     context,
+                                                              //   ) {
+                                                              //     final images =
+                                                              //         qcItem
+                                                              //             .value
+                                                              //             .attachments;
+
+                                                              //     if (images
+                                                              //         .isEmpty) {
+                                                              //       return Text(
+                                                              //         "No Attachment",
+                                                              //       );
+                                                              //     }
+
+                                                              //     return GridView.builder(
+                                                              //       shrinkWrap:
+                                                              //           true,
+                                                              //       physics:
+                                                              //           NeverScrollableScrollPhysics(),
+                                                              //       itemCount:
+                                                              //           images.length >
+                                                              //                   9
+                                                              //               ? 9
+                                                              //               : images.length,
+                                                              //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                              //         crossAxisCount:
+                                                              //             3,
+                                                              //         crossAxisSpacing:
+                                                              //             8.w,
+                                                              //         mainAxisSpacing:
+                                                              //             8.w,
+                                                              //         childAspectRatio:
+                                                              //             1,
+                                                              //       ),
+                                                              //       itemBuilder: (
+                                                              //         context,
+                                                              //         index,
+                                                              //       ) {
+                                                              //         final imageUrl =
+                                                              //             images[index];
+
+                                                              //         return GestureDetector(
+                                                              //           onTap: () {
+                                                              //             showDialog(
+                                                              //               context:
+                                                              //                   context,
+                                                              //               builder: (
+                                                              //                 _,
+                                                              //               ) {
+                                                              //                 return Dialog(
+                                                              //                   backgroundColor:
+                                                              //                       Colors.black,
+                                                              //                   insetPadding:
+                                                              //                       EdgeInsets.zero,
+                                                              //                   child: InteractiveViewer(
+                                                              //                     minScale:
+                                                              //                         0.5,
+                                                              //                     maxScale:
+                                                              //                         5,
+                                                              //                     child: CachedNetworkImage(
+                                                              //                       imageUrl: normalizeImageUrl(
+                                                              //                         imageUrl,
+                                                              //                       ),
+                                                              //                       fit:
+                                                              //                           BoxFit.contain,
+                                                              //                       progressIndicatorBuilder:
+                                                              //                           (
+                                                              //                             context,
+                                                              //                             url,
+                                                              //                             progress,
+                                                              //                           ) => Center(
+                                                              //                             child: CircularProgressIndicator(
+                                                              //                               value:
+                                                              //                                   progress.progress,
+                                                              //                             ),
+                                                              //                           ),
+                                                              //                       errorWidget: (
+                                                              //                         context,
+                                                              //                         url,
+                                                              //                         error,
+                                                              //                       ) {
+                                                              //                         return Center(
+                                                              //                           child: Icon(
+                                                              //                             Icons.broken_image,
+                                                              //                             color:
+                                                              //                                 Colors.white,
+                                                              //                             size:
+                                                              //                                 48,
+                                                              //                           ),
+                                                              //                         );
+                                                              //                       },
+                                                              //                     ),
+                                                              //                   ),
+                                                              //                 );
+                                                              //               },
+                                                              //             );
+                                                              //           },
+
+                                                              //           child: Container(
+                                                              //             clipBehavior:
+                                                              //                 Clip.hardEdge,
+                                                              //             decoration: BoxDecoration(
+                                                              //               borderRadius: BorderRadius.circular(
+                                                              //                 4.w,
+                                                              //               ),
+                                                              //               color:
+                                                              //                   Colors.grey[300],
+                                                              //             ),
+
+                                                              //             child: CachedNetworkImage(
+                                                              //               imageUrl: normalizeImageUrl(
+                                                              //                 imageUrl,
+                                                              //               ),
+                                                              //               fit:
+                                                              //                   BoxFit.cover,
+
+                                                              //               progressIndicatorBuilder:
+                                                              //                   (
+                                                              //                     context,
+                                                              //                     url,
+                                                              //                     progress,
+                                                              //                   ) => Center(
+                                                              //                     child: CircularProgressIndicator(
+                                                              //                       value:
+                                                              //                           progress.progress,
+                                                              //                     ),
+                                                              //                   ),
+
+                                                              //               errorWidget: (
+                                                              //                 context,
+                                                              //                 url,
+                                                              //                 error,
+                                                              //               ) {
+                                                              //                 return Icon(
+                                                              //                   Icons.broken_image,
+                                                              //                 );
+                                                              //               },
+                                                              //             ),
+                                                              //           ),
+                                                              //         );
+                                                              //       },
+                                                              //     );
+                                                              //   },
+                                                              // ),
+
+                                                              // SingleChildScrollView(
+                                                              //   scrollDirection:
+                                                              //       Axis.horizontal,
+                                                              //   child: Row(
+                                                              //     children: [
+                                                              //       if (qcItem
+                                                              //               .value
+                                                              //               .imgLink
+                                                              //               .isEmpty &&
+                                                              //           qcItem
+                                                              //               .value
+                                                              //               .imgLink2
+                                                              //               .isEmpty &&
+                                                              //           qcItem
+                                                              //               .value
+                                                              //               .imgLink3
+                                                              //               .isEmpty)
+                                                              //         Container(
+                                                              //           child: Text(
+                                                              //             "No Attachment",
+                                                              //           ),
+                                                              //         ),
+                                                              //       if (qcItem
+                                                              //           .value
+                                                              //           .imgLink
+                                                              //           .isNotEmpty)
+                                                              //         Padding(
+                                                              //           padding: EdgeInsets.only(
+                                                              //             right:
+                                                              //                 4.w,
+                                                              //           ),
+                                                              //           child: SizedBox(
+                                                              //             width:
+                                                              //                 64.w,
+                                                              //             height:
+                                                              //                 64.w,
+                                                              //             child: Container(
+                                                              //               clipBehavior:
+                                                              //                   Clip.hardEdge,
+                                                              //               decoration: BoxDecoration(
+                                                              //                 borderRadius: BorderRadius.circular(
+                                                              //                   2,
+                                                              //                 ),
+                                                              //                 color:
+                                                              //                     Colors.grey[300],
+                                                              //               ),
+                                                              //               child: GestureDetector(
+                                                              //                 onTap: () {
+                                                              //                   showDialog(
+                                                              //                     context:
+                                                              //                         context,
+                                                              //                     builder: (
+                                                              //                       _,
+                                                              //                     ) {
+                                                              //                       return Dialog(
+                                                              //                         backgroundColor:
+                                                              //                             Colors.black,
+                                                              //                         insetPadding: EdgeInsets.all(
+                                                              //                           0,
+                                                              //                         ),
+                                                              //                         child: InteractiveViewer(
+                                                              //                           minScale:
+                                                              //                               0.5,
+                                                              //                           maxScale:
+                                                              //                               5,
+                                                              //                           child: CachedNetworkImage(
+                                                              //                             imageUrl: normalizeImageUrl(
+                                                              //                               qcItem.value.imgLink,
+                                                              //                             ),
+                                                              //                             fit:
+                                                              //                                 BoxFit.contain,
+
+                                                              //                             progressIndicatorBuilder:
+                                                              //                                 (
+                                                              //                                   context,
+                                                              //                                   url,
+                                                              //                                   progress,
+                                                              //                                 ) => Center(
+                                                              //                                   child: CircularProgressIndicator(
+                                                              //                                     value:
+                                                              //                                         progress.progress,
+                                                              //                                   ),
+                                                              //                                 ),
+
+                                                              //                             errorWidget: (
+                                                              //                               context,
+                                                              //                               url,
+                                                              //                               error,
+                                                              //                             ) {
+                                                              //                               return Center(
+                                                              //                                 child: Icon(
+                                                              //                                   Icons.broken_image,
+                                                              //                                   color:
+                                                              //                                       Colors.white,
+                                                              //                                   size:
+                                                              //                                       48,
+                                                              //                                 ),
+                                                              //                               );
+                                                              //                             },
+                                                              //                           ),
+                                                              //                         ),
+                                                              //                       );
+                                                              //                     },
+                                                              //                   );
+                                                              //                 },
+
+                                                              //                 child: CachedNetworkImage(
+                                                              //                   imageUrl: normalizeImageUrl(
+                                                              //                     qcItem.value.imgLink,
+                                                              //                   ),
+                                                              //                   fit:
+                                                              //                       BoxFit.cover,
+
+                                                              //                   progressIndicatorBuilder:
+                                                              //                       (
+                                                              //                         context,
+                                                              //                         url,
+                                                              //                         progress,
+                                                              //                       ) => Center(
+                                                              //                         child: CircularProgressIndicator(
+                                                              //                           value:
+                                                              //                               progress.progress,
+                                                              //                         ),
+                                                              //                       ),
+
+                                                              //                   errorWidget: (
+                                                              //                     context,
+                                                              //                     url,
+                                                              //                     error,
+                                                              //                   ) {
+                                                              //                     return Icon(
+                                                              //                       Icons.broken_image,
+                                                              //                     );
+                                                              //                   },
+                                                              //                 ),
+                                                              //               ),
+                                                              //             ),
+                                                              //           ),
+                                                              //         ),
+                                                              //       if (qcItem
+                                                              //           .value
+                                                              //           .imgLink2
+                                                              //           .isNotEmpty)
+                                                              //         Padding(
+                                                              //           padding: EdgeInsets.only(
+                                                              //             right:
+                                                              //                 4.w,
+                                                              //           ),
+                                                              //           child: SizedBox(
+                                                              //             width:
+                                                              //                 64.w,
+                                                              //             height:
+                                                              //                 64.w,
+                                                              //             child: Container(
+                                                              //               clipBehavior:
+                                                              //                   Clip.hardEdge,
+                                                              //               decoration: BoxDecoration(
+                                                              //                 borderRadius: BorderRadius.circular(
+                                                              //                   2,
+                                                              //                 ),
+                                                              //                 color:
+                                                              //                     Colors.grey[300],
+                                                              //               ),
+                                                              //               child: GestureDetector(
+                                                              //                 onTap: () {
+                                                              //                   showDialog(
+                                                              //                     context:
+                                                              //                         context,
+                                                              //                     builder: (
+                                                              //                       _,
+                                                              //                     ) {
+                                                              //                       return Dialog(
+                                                              //                         backgroundColor:
+                                                              //                             Colors.black,
+                                                              //                         insetPadding: EdgeInsets.all(
+                                                              //                           0,
+                                                              //                         ),
+                                                              //                         child: InteractiveViewer(
+                                                              //                           minScale:
+                                                              //                               0.5,
+                                                              //                           maxScale:
+                                                              //                               5,
+                                                              //                           child: CachedNetworkImage(
+                                                              //                             imageUrl: normalizeImageUrl(
+                                                              //                               qcItem.value.imgLink2,
+                                                              //                             ),
+                                                              //                             fit:
+                                                              //                                 BoxFit.contain,
+
+                                                              //                             progressIndicatorBuilder:
+                                                              //                                 (
+                                                              //                                   context,
+                                                              //                                   url,
+                                                              //                                   progress,
+                                                              //                                 ) => Center(
+                                                              //                                   child: CircularProgressIndicator(
+                                                              //                                     value:
+                                                              //                                         progress.progress,
+                                                              //                                   ),
+                                                              //                                 ),
+
+                                                              //                             errorWidget: (
+                                                              //                               context,
+                                                              //                               url,
+                                                              //                               error,
+                                                              //                             ) {
+                                                              //                               return Center(
+                                                              //                                 child: Icon(
+                                                              //                                   Icons.broken_image,
+                                                              //                                   color:
+                                                              //                                       Colors.white,
+                                                              //                                   size:
+                                                              //                                       48,
+                                                              //                                 ),
+                                                              //                               );
+                                                              //                             },
+                                                              //                           ),
+                                                              //                         ),
+                                                              //                       );
+                                                              //                     },
+                                                              //                   );
+                                                              //                 },
+
+                                                              //                 child: CachedNetworkImage(
+                                                              //                   imageUrl: normalizeImageUrl(
+                                                              //                     qcItem.value.imgLink2,
+                                                              //                   ),
+                                                              //                   fit:
+                                                              //                       BoxFit.cover,
+
+                                                              //                   progressIndicatorBuilder:
+                                                              //                       (
+                                                              //                         context,
+                                                              //                         url,
+                                                              //                         progress,
+                                                              //                       ) => Center(
+                                                              //                         child: CircularProgressIndicator(
+                                                              //                           value:
+                                                              //                               progress.progress,
+                                                              //                         ),
+                                                              //                       ),
+
+                                                              //                   errorWidget: (
+                                                              //                     context,
+                                                              //                     url,
+                                                              //                     error,
+                                                              //                   ) {
+                                                              //                     return Icon(
+                                                              //                       Icons.broken_image,
+                                                              //                     );
+                                                              //                   },
+                                                              //                 ),
+                                                              //               ),
+                                                              //             ),
+                                                              //           ),
+                                                              //         ),
+                                                              //       if (qcItem
+                                                              //           .value
+                                                              //           .imgLink3
+                                                              //           .isNotEmpty)
+                                                              //         Padding(
+                                                              //           padding: EdgeInsets.only(
+                                                              //             right:
+                                                              //                 4.w,
+                                                              //           ),
+                                                              //           child: SizedBox(
+                                                              //             width:
+                                                              //                 64.w,
+                                                              //             height:
+                                                              //                 64.w,
+                                                              //             child: Container(
+                                                              //               clipBehavior:
+                                                              //                   Clip.hardEdge,
+                                                              //               decoration: BoxDecoration(
+                                                              //                 borderRadius: BorderRadius.circular(
+                                                              //                   2,
+                                                              //                 ),
+                                                              //                 color:
+                                                              //                     Colors.grey[300],
+                                                              //               ),
+                                                              //               child: GestureDetector(
+                                                              //                 onTap: () {
+                                                              //                   showDialog(
+                                                              //                     context:
+                                                              //                         context,
+                                                              //                     builder: (
+                                                              //                       _,
+                                                              //                     ) {
+                                                              //                       return Dialog(
+                                                              //                         backgroundColor:
+                                                              //                             Colors.black,
+                                                              //                         insetPadding: EdgeInsets.all(
+                                                              //                           0,
+                                                              //                         ),
+                                                              //                         child: InteractiveViewer(
+                                                              //                           minScale:
+                                                              //                               0.5,
+                                                              //                           maxScale:
+                                                              //                               5,
+                                                              //                           child: CachedNetworkImage(
+                                                              //                             imageUrl: normalizeImageUrl(
+                                                              //                               qcItem.value.imgLink3,
+                                                              //                             ),
+                                                              //                             fit:
+                                                              //                                 BoxFit.contain,
+
+                                                              //                             progressIndicatorBuilder:
+                                                              //                                 (
+                                                              //                                   context,
+                                                              //                                   url,
+                                                              //                                   progress,
+                                                              //                                 ) => Center(
+                                                              //                                   child: CircularProgressIndicator(
+                                                              //                                     value:
+                                                              //                                         progress.progress,
+                                                              //                                   ),
+                                                              //                                 ),
+
+                                                              //                             errorWidget: (
+                                                              //                               context,
+                                                              //                               url,
+                                                              //                               error,
+                                                              //                             ) {
+                                                              //                               return Center(
+                                                              //                                 child: Icon(
+                                                              //                                   Icons.broken_image,
+                                                              //                                   color:
+                                                              //                                       Colors.white,
+                                                              //                                   size:
+                                                              //                                       48,
+                                                              //                                 ),
+                                                              //                               );
+                                                              //                             },
+                                                              //                           ),
+                                                              //                         ),
+                                                              //                       );
+                                                              //                     },
+                                                              //                   );
+                                                              //                 },
+
+                                                              //                 child: CachedNetworkImage(
+                                                              //                   imageUrl: normalizeImageUrl(
+                                                              //                     qcItem.value.imgLink3,
+                                                              //                   ),
+                                                              //                   fit:
+                                                              //                       BoxFit.cover,
+
+                                                              //                   progressIndicatorBuilder:
+                                                              //                       (
+                                                              //                         context,
+                                                              //                         url,
+                                                              //                         progress,
+                                                              //                       ) => Center(
+                                                              //                         child: CircularProgressIndicator(
+                                                              //                           value:
+                                                              //                               progress.progress,
+                                                              //                         ),
+                                                              //                       ),
+
+                                                              //                   errorWidget: (
+                                                              //                     context,
+                                                              //                     url,
+                                                              //                     error,
+                                                              //                   ) {
+                                                              //                     return Icon(
+                                                              //                       Icons.broken_image,
+                                                              //                     );
+                                                              //                   },
+                                                              //                 ),
+                                                              //               ),
+                                                              //             ),
+                                                              //           ),
+                                                              //         ),
+                                                              //     ],
+                                                              //   ),
+                                                              // ),
                                                             ],
                                                           ),
                                                         ),
