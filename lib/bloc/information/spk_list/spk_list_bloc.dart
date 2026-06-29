@@ -1,25 +1,25 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fdpi_app/data/repository/spk_repository.dart';
-
-import '../../../models/QC/SPK.dart';
+import 'package:fdpi_app/models/fdpi/spk_review/spk.dart';
 
 part 'spk_list_event.dart';
 part 'spk_list_state.dart';
 
 class SpkListBloc extends Bloc<SpkListEvent, SpkListState> {
   final SPKRepository spkRepository;
+
   SpkListBloc({required this.spkRepository}) : super(SpkListInitial()) {
-    on<GetSPKList>(_getSPKList);
+    on<GetSpkList>(_getSpkList);
   }
 
-  Future<void> _getSPKList(GetSPKList event, Emitter<SpkListState> emit) async {
+  Future<void> _getSpkList(GetSpkList event, Emitter<SpkListState> emit) async {
     emit(SpkListLoading());
-    final result = await spkRepository.getSPKListApproval(
-      idVendor: event.idVendor,
+    final result = await spkRepository.getSPKList(
       idSite: event.idSite,
       idCluster: event.idCluster,
       idHouse: event.idHouse,
+      spkType: event.spkType,
     );
     result.fold(
       (failure) =>

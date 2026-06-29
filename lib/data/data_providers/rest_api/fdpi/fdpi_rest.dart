@@ -3,6 +3,9 @@ import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:fdpi_app/models/fdpi/house_item.dart';
+import 'package:fdpi_app/models/fdpi/spk_review/spk_contractor.dart';
+import 'package:fdpi_app/models/fdpi/spk_review/spk_employee.dart';
+import 'package:fdpi_app/models/fdpi/spk_review/spk_type.dart';
 
 import '../../../../models/errors/custom_exception.dart';
 import '../../../../models/fdpi/city.dart';
@@ -159,6 +162,95 @@ class FdpiRest {
     }
   }
 
+  Future<Either<CustomException, List<SpkType>>> getSpkTypes(
+    String? keyCode,
+  ) async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log(
+        'Request to ${http.options.baseUrl}api/fpi/master/getApplConstant (POST)',
+      );
+      final body = {"key_code": keyCode ?? ""};
+      final response = await http.post(
+        "api/fpi/master/getApplConstant",
+        data: body,
+      );
+      log('Response getSpkTypes: ${response.data}');
+      if (response.statusCode == 200) {
+        // log('Response body: ${response.data}');
+        final body = response.data;
+        final spkTypes = List<SpkType>.from(
+          body['data'].map((e) {
+            return SpkType.fromMap(e);
+          }),
+        );
+        return Right(spkTypes);
+      } else {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
+  Future<Either<CustomException, List<Employee>>> getEmployee() async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log('Request to ${http.options.baseUrl}api/fpi/spk/getEmployee (POST)');
+      final response = await http.post("api/fpi/spk/getEmployee", data: {});
+      log('Response getEmployee: ${response.data}');
+      if (response.statusCode == 200) {
+        // log('Response body: ${response.data}');
+        final body = response.data;
+        final employees = List<Employee>.from(
+          body['data'].map((e) {
+            return Employee.fromMap(e);
+          }),
+        );
+        return Right(employees);
+      } else {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
+  Future<Either<CustomException, List<Contractor>>> getContractor() async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log('Request to ${http.options.baseUrl}api/fpi/spk/getKontraktor (POST)');
+      final response = await http.post("api/fpi/spk/getKontraktor", data: {});
+      log('Response getContractor: ${response.data}');
+      if (response.statusCode == 200) {
+        // log('Response body: ${response.data}');
+        final body = response.data;
+        final contractors = List<Contractor>.from(
+          body['data'].map((e) {
+            return Contractor.fromMap(e);
+          }),
+        );
+        return Right(contractors);
+      } else {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+    } on DioException catch (e) {
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
   Future<Either<CustomException, List<Coordinates>>> getCoordinatess(
     String? idCluster,
     String? idSite,
@@ -262,7 +354,7 @@ class FdpiRest {
         data: body,
       );
       if (response.statusCode == 200) {
-        log('Response body: ${response.data}');
+        log('Response House Unit: ${response.data}');
         final body = response.data;
         final houseItems = List<HouseItem>.from(
           body['data'].map((e) {

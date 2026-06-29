@@ -1,4 +1,7 @@
 import 'package:dartz/dartz.dart';
+import 'package:fdpi_app/models/fdpi/spk_review/spk_contractor.dart';
+import 'package:fdpi_app/models/fdpi/spk_review/spk_employee.dart';
+import 'package:fdpi_app/models/fdpi/spk_review/spk_type.dart';
 
 import '../../models/errors/custom_exception.dart';
 import '../../models/fdpi/city.dart';
@@ -38,6 +41,20 @@ class FdpiRepository {
     String status,
   ) async {
     return fdpiRest.getResidences(idProv, idCity, idSite, status);
+  }
+
+  Future<Either<CustomException, List<SpkType>>> getSpkTypes(
+    String keyCode,
+  ) async {
+    return fdpiRest.getSpkTypes(keyCode);
+  }
+
+  Future<Either<CustomException, List<Employee>>> getEmployee() async {
+    return fdpiRest.getEmployee();
+  }
+
+  Future<Either<CustomException, List<Contractor>>> getContractor() async {
+    return fdpiRest.getContractor();
   }
 
   Future<Either<CustomException, List<Coordinates>>> getCoordinatess(

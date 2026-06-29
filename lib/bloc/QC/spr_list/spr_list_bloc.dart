@@ -16,7 +16,7 @@ class SprListBloc extends Bloc<SprListEvent, SprListState> {
 
   Future<void> _getSPRList(GetSPRList event, Emitter<SprListState> emit) async {
     emit(SprListLoading());
-    final result = await spkRepository.getSPRList(
+    final result = await spkRepository.getSPRListApproval(
       idSite: event.idSite,
       idCluster: event.idCluster,
       idHouse: event.idHouse,

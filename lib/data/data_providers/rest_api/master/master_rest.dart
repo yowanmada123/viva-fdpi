@@ -17,9 +17,7 @@ class MasterRest {
   Future<Either<CustomException, List<Bank>>> getBank() async {
     try {
       dio.options.headers['requiresToken'] = true;
-      log(
-        'Request to dios://v2.kencana.org/api/fpi/master/getbankaccount (POST)',
-      );
+      log('Request to ${dio.options.baseUrl}fpi/master/getbankaccount (POST)');
       final response = await dio.post("api/fpi/master/getbankaccount");
       if (response.statusCode == 200) {
         log('Response body: ${response.data}');
@@ -45,7 +43,7 @@ class MasterRest {
   Future<Either<CustomException, List<Vendor>>> getVendor() async {
     try {
       dio.options.headers['requiresToken'] = true;
-      log('Request to dios://v2.kencana.org/api/fpi/master/getVendor (POST)');
+      log('Request to ${dio.options.baseUrl}fpi/master/getVendor (POST)');
       final response = await dio.post("api/fpi/master/getVendor");
       if (response.statusCode == 200) {
         log('Response body: ${response.data}');
@@ -71,9 +69,7 @@ class MasterRest {
   Future<Either<CustomException, List<LoanType>>> getLoanType() async {
     try {
       dio.options.headers['requiresToken'] = true;
-      log(
-        'Request to dios://v2.kencana.org/api/fpi/master/getApplConstant (POST)',
-      );
+      log('Request to ${dio.options.baseUrl}fpi/master/getApplConstant (POST)');
 
       final payload = {"key_code": "KASBON"};
 

@@ -3,6 +3,7 @@ import 'package:fdpi_app/models/QC/Cleaning.dart';
 import 'package:fdpi_app/models/QC/detail_approve.dart';
 import 'package:fdpi_app/models/attachment.dart';
 import 'package:fdpi_app/models/checklistCleaningProgress.dart';
+import 'package:fdpi_app/models/fdpi/spk_review/spk.dart';
 
 import '../../models/QC/SPK.dart';
 import '../../models/QC/SPR.dart';
@@ -18,14 +19,15 @@ class SPKRepository {
 
   SPKRepository({required this.spkRest});
 
-  // Future<Either<CustomException, List<SPK>>> getSPKList({
-  Future<Either<CustomException, List<SPKGroupedByClusterHome>>> getSPKList({
+  // Future<Either<CustomException, List<SPK>>> getSPKListApproval({
+  Future<Either<CustomException, List<SPKGroupedByClusterHome>>>
+  getSPKListApproval({
     required String idVendor,
     required String idSite,
     required String idCluster,
     required String idHouse,
   }) async {
-    return spkRest.getSPKList(
+    return spkRest.getSPKListApproval(
       idVendor: idVendor,
       idSite: idSite,
       idCluster: idCluster,
@@ -33,24 +35,38 @@ class SPKRepository {
     );
   }
 
-  Future<Either<CustomException, List<Cleaning>>> getCleaningList({
+  Future<Either<CustomException, List<Cleaning>>> getCleaningListApproval({
     required String idSite,
     required String idCluster,
     required String idHouse,
   }) async {
-    return spkRest.getCleaningList(
+    return spkRest.getCleaningListApproval(
       idSite: idSite,
       idCluster: idCluster,
       idHouse: idHouse,
     );
   }
 
-  Future<Either<CustomException, List<SPR>>> getSPRList({
+  Future<Either<CustomException, List<Spk>>> getSPKList({
+    required String idSite,
+    required String idCluster,
+    required String idHouse,
+    required String spkType,
+  }) async {
+    return spkRest.getSPKList(
+      idSite: idSite,
+      idCluster: idCluster,
+      idHouse: idHouse,
+      spkType: spkType,
+    );
+  }
+
+  Future<Either<CustomException, List<SPR>>> getSPRListApproval({
     required String idSite,
     required String idCluster,
     required String idHouse,
   }) async {
-    return spkRest.getSPRList(
+    return spkRest.getSPRListApproval(
       idSite: idSite,
       idCluster: idCluster,
       idHouse: idHouse,

@@ -4,6 +4,7 @@ import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:fdpi_app/presentation/approval/pr/approval_pr_screen.dart';
 import 'package:fdpi_app/presentation/approval/spr/approval_spr_screen.dart';
 import 'package:fdpi_app/presentation/checklist/clean/clean_list_screen.dart';
+import 'package:fdpi_app/presentation/information/spk_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -139,6 +140,14 @@ class MyGridLayout extends StatelessWidget {
         'description': 'Kasbon',
         'route': LoanScreen(title: submenu.menu_caption),
       },
+      // NEWEST
+      'viewSPK': {
+        'icon': Icons.request_quote,
+        'text': 'View SPK',
+        'description': 'View SPK',
+        'route': ViewSPKScreen(title: submenu.menu_caption),
+      },
+
       // 'testing-ui-spk': {
       //   'icon': Icons.edit_document,
       //   'text': 'Approval Pengajuan',

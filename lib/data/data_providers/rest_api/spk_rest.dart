@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:fdpi_app/models/QC/Cleaning.dart';
 import 'package:fdpi_app/models/checklistCleaningProgress.dart';
+import 'package:fdpi_app/models/fdpi/spk_review/spk.dart';
 
 import '../../../models/QC/SPK.dart';
 import '../../../models/QC/SPR.dart';
@@ -24,7 +25,7 @@ class SPKRest {
 
   SPKRest(this.http);
 
-  Future<Either<CustomException, List<SPR>>> getSPRList({
+  Future<Either<CustomException, List<SPR>>> getSPRListApproval({
     required String idSite,
     required String idCluster,
     required String idHouse,
@@ -42,7 +43,7 @@ class SPKRest {
         "doc_type": "SPR",
       };
 
-      log("Request body getSPRList: $body");
+      log("Request body getSPRListApproval: $body");
 
       final response = await http.post(
         "api/fpi/checklist/getCheckListHdr",
@@ -71,7 +72,7 @@ class SPKRest {
     }
   }
 
-  Future<Either<CustomException, List<Cleaning>>> getCleaningList({
+  Future<Either<CustomException, List<Cleaning>>> getCleaningListApproval({
     required String idSite,
     required String idCluster,
     required String idHouse,
@@ -122,8 +123,53 @@ class SPKRest {
     }
   }
 
-  // Future<Either<CustomException, List<SPK>>> getSPKList({
-  Future<Either<CustomException, List<SPKGroupedByClusterHome>>> getSPKList({
+  Future<Either<CustomException, List<Spk>>> getSPKList({
+    required String idSite,
+    required String idCluster,
+    required String idHouse,
+    required String spkType,
+  }) async {
+    try {
+      http.options.headers['requiresToken'] = true;
+      log('Request to ${http.options.baseUrl}fpi/spk/getListSPK (POST)');
+
+      final body = {
+        "id_site": idSite,
+        "id_cluster": idCluster,
+        "id_house_unit": idHouse,
+        "spk_type": spkType,
+      };
+
+      log("Request body getListSPK: $body");
+
+      final response = await http.post("api/fpi/spk/getListSPK", data: body);
+
+      log('Response getListSPK: ${response.data}');
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+
+        final List<Spk> items =
+            List<Spk>.from(data['data'].map((e) => Spk.fromMap(e))).toList();
+
+        return Right(items);
+      } else {
+        return Left(NetUtils.parseErrorResponse(response: response.data));
+      }
+    } on DioException catch (e) {
+      log("This is the exception A : $e");
+      return Left(NetUtils.parseDioException(e));
+    } on Exception catch (e) {
+      log("This is the exception B: $e");
+      return Future.value(Left(CustomException(message: e.toString())));
+    } catch (e) {
+      log("This is the exception C : $e");
+      return Left(CustomException(message: e.toString()));
+    }
+  }
+
+  Future<Either<CustomException, List<SPKGroupedByClusterHome>>>
+  getSPKListApproval({
     required String idVendor,
     required String idSite,
     required String idCluster,
@@ -143,14 +189,14 @@ class SPKRest {
         "doc_type": "SPK",
       };
 
-      log("Request body getSPKList: $body");
+      log("Request body getSPKListApproval: $body");
 
       final response = await http.post(
         "api/fpi/checklist/getCheckListHdr",
         data: body,
       );
 
-      log('Response getSPKList: ${response.data}');
+      log('Response getSPKListApproval: ${response.data}');
 
       if (response.statusCode == 200) {
         final data = response.data;
@@ -261,7 +307,6 @@ class SPKRest {
       );
 
       log('Response getSprChecklistItem A: ${response.data}');
-      log(" Yes True, this is the function!!!");
       if (response.statusCode == 200) {
         final data = response.data;
 
@@ -272,8 +317,6 @@ class SPKRest {
 
           for (final category in categories) {
             final items = category['items'] as List<dynamic>;
-
-            // Add each item with company and category info
             for (final item in items) {
               allItems.add(ChecklistSprItem.fromMap(item));
             }
@@ -321,7 +364,6 @@ class SPKRest {
           for (final category in categories) {
             final items = category['items'] as List<dynamic>;
 
-            // Add each item with company and category info
             for (final item in items) {
               allItems.add(ChecklistCleaningItem.fromMap(item));
             }
@@ -346,7 +388,7 @@ class SPKRest {
     try {
       http.options.headers['requiresToken'] = true;
       log(
-        'Request to https://v2.kencana.org/api/fpi/checklist/getCheckListDtl (POST)',
+        'Request to ${http.options.baseUrl}api/fpi/checklist/getCheckListDtl (POST)',
       );
 
       final body = {"qc_trans_id": qcTransId};
@@ -390,9 +432,8 @@ class SPKRest {
     try {
       http.options.headers['requiresToken'] = true;
       http.options.contentType = Headers.formUrlEncodedContentType;
-      // http.options.contentType = 'multipart/form-data';
       log(
-        'Request to https://v2.kencana.org/api/fpi/checklist/aprvCheckList (POST)',
+        'Request to ${http.options.baseUrl}api/fpi/checklist/aprvCheckList (POST)',
       );
 
       final fileAttachmentList = fileImage?.map((e) => e.file).toList();
@@ -405,7 +446,6 @@ class SPKRest {
             );
           }).toList();
 
-      // log("fileAttachmentList: $fileAttachmentList");
       log("Attachments: ${fileAttachmentList?.map((e) => e.path)}");
 
       final FormData formData = FormData.fromMap({
@@ -414,24 +454,11 @@ class SPKRest {
         "id_work": idWork,
         "remark": remark,
         "img[]": files != null ? await Future.wait(files) : [],
-        // "img[]": fileAttachmentList,
         "longitude": longitude,
         "latitude": latitude,
       });
 
       log("FormData fields: ${formData.fields}");
-
-      // log("Request body: $formData");
-
-      // final body = {
-      //   "qc_trans_id": qcTransId,
-      //   "id_qc_item": idQcItem,
-      //   "id_work": idWork,
-      //   "remark": remark,
-      //   "img": fileImage,
-      // };
-
-      // log("Request body: $body");
 
       final response = await http.post(
         "api/fpi/checklist/aprvCheckList",
@@ -459,7 +486,7 @@ class SPKRest {
     try {
       http.options.headers['requiresToken'] = true;
       log(
-        'Request to https://api-fpi.kencana.org/api/fpi/checklist/getCheckListVendor (POST)',
+        'Request to ${http.options.baseUrl}api/fpi/checklist/getCheckListVendor (POST)',
       );
 
       final response = await http.post("api/fpi/checklist/getCheckListVendor");

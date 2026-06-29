@@ -148,10 +148,7 @@ class _CleaningProgressListScreenContentState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Kebersihansss Check List',
-          style: TextStyle(fontSize: 20.sp),
-        ),
+        title: Text('Kebersihan Check List', style: TextStyle(fontSize: 20.sp)),
       ),
       body: BlocConsumer<ApproveChecklistBloc, ApproveChecklistState>(
         listener: (context, state) {

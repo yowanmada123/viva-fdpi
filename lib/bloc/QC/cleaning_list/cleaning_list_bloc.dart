@@ -20,7 +20,7 @@ class CleaningListBloc extends Bloc<CleaningListEvent, CleaningListState> {
     Emitter<CleaningListState> emit,
   ) async {
     emit(CleaningListLoading());
-    final result = await cleaningRepository.getCleaningList(
+    final result = await cleaningRepository.getCleaningListApproval(
       idSite: event.idSite,
       idCluster: event.idCluster,
       idHouse: event.idHouse,
