@@ -549,7 +549,7 @@ class _SpkDetailScreenState extends State<SpkDetailScreen> {
                           decoration: pw.TextDecoration.underline,
                         ),
                       ),
-                      pw.Text('Direktur', style: ts),
+                      if (showBU) pw.Text('Direktur', style: ts),
                     ],
                   ),
                   pw.Column(
@@ -563,7 +563,7 @@ class _SpkDetailScreenState extends State<SpkDetailScreen> {
                           decoration: pw.TextDecoration.underline,
                         ),
                       ),
-                      pw.Text('Direktur', style: ts),
+                      if (showBU) pw.Text('Direktur', style: ts),
                     ],
                   ),
                 ],
@@ -1110,7 +1110,11 @@ class _SpkDetailScreenState extends State<SpkDetailScreen> {
                               decoration: TextDecoration.underline,
                             ),
                           ),
-                          Text('Direktur', style: TextStyle(fontSize: 11.sp)),
+                          if (showBU)
+                            Text(
+                              'Direktur',
+                              style: TextStyle(fontSize: 11.sp),
+                            ),
                         ],
                       ),
                     ),
@@ -1129,11 +1133,12 @@ class _SpkDetailScreenState extends State<SpkDetailScreen> {
                               decoration: TextDecoration.underline,
                             ),
                           ),
-                          Text(
-                            'Direktur',
-                            textAlign: TextAlign.right,
-                            style: TextStyle(fontSize: 11.sp),
-                          ),
+                          if (showBU)
+                            Text(
+                              'Direktur',
+                              textAlign: TextAlign.right,
+                              style: TextStyle(fontSize: 11.sp),
+                            ),
                         ],
                       ),
                     ),
