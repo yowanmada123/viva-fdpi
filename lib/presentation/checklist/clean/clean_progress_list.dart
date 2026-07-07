@@ -306,24 +306,107 @@ class _CleaningProgressListScreenContentState
                                                             ),
                                                         color: Colors.grey[300],
                                                       ),
-                                                      child: CachedNetworkImage(
-                                                        imageUrl:
-                                                            qcItem
-                                                                .value
-                                                                .imgLink,
-                                                        progressIndicatorBuilder:
-                                                            (
-                                                              context,
-                                                              url,
-                                                              progress,
-                                                            ) => Center(
-                                                              child: CircularProgressIndicator(
-                                                                value:
-                                                                    progress
-                                                                        .progress,
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          showDialog(
+                                                            context: context,
+                                                            builder: (_) {
+                                                              return Dialog(
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black,
+                                                                insetPadding:
+                                                                    EdgeInsets
+                                                                        .zero,
+
+                                                                child: Stack(
+                                                                  children: [
+                                                                    InteractiveViewer(
+                                                                      minScale:
+                                                                          0.5,
+                                                                      maxScale:
+                                                                          5,
+
+                                                                      child: Center(
+                                                                        child: CachedNetworkImage(
+                                                                          imageUrl:
+                                                                              qcItem.value.imgLink,
+
+                                                                          progressIndicatorBuilder:
+                                                                              (
+                                                                                context,
+                                                                                url,
+                                                                                progress,
+                                                                              ) => Center(
+                                                                                child: CircularProgressIndicator(
+                                                                                  value:
+                                                                                      progress.progress,
+                                                                                ),
+                                                                              ),
+
+                                                                          fit:
+                                                                              BoxFit.contain,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+
+                                                                    Positioned(
+                                                                      top: 40,
+                                                                      right: 20,
+                                                                      child: GestureDetector(
+                                                                        onTap:
+                                                                            () => Navigator.pop(
+                                                                              context,
+                                                                            ),
+
+                                                                        child: Container(
+                                                                          padding:
+                                                                              EdgeInsets.all(
+                                                                                8,
+                                                                              ),
+                                                                          decoration: BoxDecoration(
+                                                                            color:
+                                                                                Colors.black54,
+                                                                            shape:
+                                                                                BoxShape.circle,
+                                                                          ),
+
+                                                                          child: Icon(
+                                                                            Icons.close,
+                                                                            color:
+                                                                                Colors.white,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              );
+                                                            },
+                                                          );
+                                                        },
+
+                                                        child: CachedNetworkImage(
+                                                          imageUrl:
+                                                              qcItem
+                                                                  .value
+                                                                  .imgLink,
+
+                                                          progressIndicatorBuilder:
+                                                              (
+                                                                context,
+                                                                url,
+                                                                progress,
+                                                              ) => Center(
+                                                                child: CircularProgressIndicator(
+                                                                  value:
+                                                                      progress
+                                                                          .progress,
+                                                                ),
                                                               ),
-                                                            ),
-                                                        fit: BoxFit.cover,
+
+                                                          fit: BoxFit.cover,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
@@ -349,24 +432,107 @@ class _CleaningProgressListScreenContentState
                                                             ),
                                                         color: Colors.grey[300],
                                                       ),
-                                                      child: CachedNetworkImage(
-                                                        imageUrl:
-                                                            qcItem
-                                                                .value
-                                                                .imgLink2,
-                                                        progressIndicatorBuilder:
-                                                            (
-                                                              context,
-                                                              url,
-                                                              progress,
-                                                            ) => Center(
-                                                              child: CircularProgressIndicator(
-                                                                value:
-                                                                    progress
-                                                                        .progress,
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          showDialog(
+                                                            context: context,
+                                                            builder: (_) {
+                                                              return Dialog(
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black,
+                                                                insetPadding:
+                                                                    EdgeInsets
+                                                                        .zero,
+
+                                                                child: Stack(
+                                                                  children: [
+                                                                    InteractiveViewer(
+                                                                      minScale:
+                                                                          0.5,
+                                                                      maxScale:
+                                                                          5,
+
+                                                                      child: Center(
+                                                                        child: CachedNetworkImage(
+                                                                          imageUrl:
+                                                                              qcItem.value.imgLink2,
+
+                                                                          progressIndicatorBuilder:
+                                                                              (
+                                                                                context,
+                                                                                url,
+                                                                                progress,
+                                                                              ) => Center(
+                                                                                child: CircularProgressIndicator(
+                                                                                  value:
+                                                                                      progress.progress,
+                                                                                ),
+                                                                              ),
+
+                                                                          fit:
+                                                                              BoxFit.contain,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+
+                                                                    Positioned(
+                                                                      top: 40,
+                                                                      right: 20,
+                                                                      child: GestureDetector(
+                                                                        onTap:
+                                                                            () => Navigator.pop(
+                                                                              context,
+                                                                            ),
+
+                                                                        child: Container(
+                                                                          padding:
+                                                                              EdgeInsets.all(
+                                                                                8,
+                                                                              ),
+                                                                          decoration: BoxDecoration(
+                                                                            color:
+                                                                                Colors.black54,
+                                                                            shape:
+                                                                                BoxShape.circle,
+                                                                          ),
+
+                                                                          child: Icon(
+                                                                            Icons.close,
+                                                                            color:
+                                                                                Colors.white,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              );
+                                                            },
+                                                          );
+                                                        },
+
+                                                        child: CachedNetworkImage(
+                                                          imageUrl:
+                                                              qcItem
+                                                                  .value
+                                                                  .imgLink2,
+
+                                                          progressIndicatorBuilder:
+                                                              (
+                                                                context,
+                                                                url,
+                                                                progress,
+                                                              ) => Center(
+                                                                child: CircularProgressIndicator(
+                                                                  value:
+                                                                      progress
+                                                                          .progress,
+                                                                ),
                                                               ),
-                                                            ),
-                                                        fit: BoxFit.cover,
+
+                                                          fit: BoxFit.cover,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
@@ -392,24 +558,107 @@ class _CleaningProgressListScreenContentState
                                                             ),
                                                         color: Colors.grey[300],
                                                       ),
-                                                      child: CachedNetworkImage(
-                                                        imageUrl:
-                                                            qcItem
-                                                                .value
-                                                                .imgLink3,
-                                                        progressIndicatorBuilder:
-                                                            (
-                                                              context,
-                                                              url,
-                                                              progress,
-                                                            ) => Center(
-                                                              child: CircularProgressIndicator(
-                                                                value:
-                                                                    progress
-                                                                        .progress,
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          showDialog(
+                                                            context: context,
+                                                            builder: (_) {
+                                                              return Dialog(
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black,
+                                                                insetPadding:
+                                                                    EdgeInsets
+                                                                        .zero,
+
+                                                                child: Stack(
+                                                                  children: [
+                                                                    InteractiveViewer(
+                                                                      minScale:
+                                                                          0.5,
+                                                                      maxScale:
+                                                                          5,
+
+                                                                      child: Center(
+                                                                        child: CachedNetworkImage(
+                                                                          imageUrl:
+                                                                              qcItem.value.imgLink3,
+
+                                                                          progressIndicatorBuilder:
+                                                                              (
+                                                                                context,
+                                                                                url,
+                                                                                progress,
+                                                                              ) => Center(
+                                                                                child: CircularProgressIndicator(
+                                                                                  value:
+                                                                                      progress.progress,
+                                                                                ),
+                                                                              ),
+
+                                                                          fit:
+                                                                              BoxFit.contain,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+
+                                                                    Positioned(
+                                                                      top: 40,
+                                                                      right: 20,
+                                                                      child: GestureDetector(
+                                                                        onTap:
+                                                                            () => Navigator.pop(
+                                                                              context,
+                                                                            ),
+
+                                                                        child: Container(
+                                                                          padding:
+                                                                              EdgeInsets.all(
+                                                                                8,
+                                                                              ),
+                                                                          decoration: BoxDecoration(
+                                                                            color:
+                                                                                Colors.black54,
+                                                                            shape:
+                                                                                BoxShape.circle,
+                                                                          ),
+
+                                                                          child: Icon(
+                                                                            Icons.close,
+                                                                            color:
+                                                                                Colors.white,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              );
+                                                            },
+                                                          );
+                                                        },
+
+                                                        child: CachedNetworkImage(
+                                                          imageUrl:
+                                                              qcItem
+                                                                  .value
+                                                                  .imgLink3,
+
+                                                          progressIndicatorBuilder:
+                                                              (
+                                                                context,
+                                                                url,
+                                                                progress,
+                                                              ) => Center(
+                                                                child: CircularProgressIndicator(
+                                                                  value:
+                                                                      progress
+                                                                          .progress,
+                                                                ),
                                                               ),
-                                                            ),
-                                                        fit: BoxFit.cover,
+
+                                                          fit: BoxFit.cover,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),

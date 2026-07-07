@@ -1,11 +1,13 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import '../utils/datetime_convertion.dart';
 
 class ChecklistSpkProgress {
   final int comId;
   final String comDesc;
-  final List<ChecklistCategory> checklistCategories; // Equivalent to data
+  final List<ChecklistCategory> checklistCategories;
+
   ChecklistSpkProgress({
     required this.comId,
     required this.comDesc,
@@ -33,14 +35,21 @@ class ChecklistSpkProgress {
   }
 
   factory ChecklistSpkProgress.fromMap(Map<String, dynamic> data) {
-    return ChecklistSpkProgress(
-      comId: data['com_id'] ?? "",
-      comDesc: data['com_desc'] ?? '',
-      checklistCategories:
-          (data['categories'] as List<dynamic>).map((e) {
-            return ChecklistCategory.fromMap(e as Map<String, dynamic>);
-          }).toList(),
-    );
+    try {
+      return ChecklistSpkProgress(
+        comId: data['com_id'] ?? 0,
+        comDesc: data['com_desc'] ?? '',
+        checklistCategories:
+            (data['categories'] as List<dynamic>).map((e) {
+              return ChecklistCategory.fromMap(e as Map<String, dynamic>);
+            }).toList(),
+      );
+    } catch (e, stack) {
+      log('ERROR ChecklistSpkItem.fromMap: $e');
+      log('stack: $stack');
+      log('problematic map: $data');
+      rethrow;
+    }
   }
 
   String toJson() => json.encode(toMap());
@@ -55,7 +64,6 @@ class ChecklistSpkProgress {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-
     return other is ChecklistSpkProgress &&
         other.comId == comId &&
         other.comDesc == comDesc &&
@@ -67,11 +75,11 @@ class ChecklistSpkProgress {
       comId.hashCode ^ comDesc.hashCode ^ checklistCategories.hashCode;
 }
 
-// ChecklistCategory
 class ChecklistCategory {
   final int catId;
   final String catName;
   final List<ChecklistSpkItem> checklistItems;
+
   ChecklistCategory({
     required this.catId,
     required this.catName,
@@ -105,7 +113,7 @@ class ChecklistCategory {
       checklistItems:
           (data['items'] as List).map((e) {
             return ChecklistSpkItem.fromMap(e);
-          }).toList(), // ← Add .toList() here
+          }).toList(),
     );
   }
 
@@ -121,7 +129,6 @@ class ChecklistCategory {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-
     return other is ChecklistCategory &&
         other.catId == catId &&
         other.catName == catName &&
@@ -133,7 +140,6 @@ class ChecklistCategory {
       catId.hashCode ^ catName.hashCode ^ checklistItems.hashCode;
 }
 
-// Checklist Item
 class ChecklistSpkItem {
   final String idQcItem;
   final String itemName;
@@ -148,6 +154,8 @@ class ChecklistSpkItem {
   final String imgLink;
   final String imgLink2;
   final String imgLink3;
+  final List<ChecklistWorkAttachment> attachments;
+
   ChecklistSpkItem({
     required this.idQcItem,
     required this.itemName,
@@ -162,8 +170,10 @@ class ChecklistSpkItem {
     required this.imgLink,
     required this.imgLink2,
     required this.imgLink3,
+    required this.attachments,
   });
 
+  // ✅ FIX: tipe attachments sudah benar
   ChecklistSpkItem copyWith({
     String? idQcItem,
     String? itemName,
@@ -178,6 +188,7 @@ class ChecklistSpkItem {
     String? imgLink,
     String? imgLink2,
     String? imgLink3,
+    List<ChecklistWorkAttachment>? attachments,
   }) {
     return ChecklistSpkItem(
       idQcItem: idQcItem ?? this.idQcItem,
@@ -193,14 +204,11 @@ class ChecklistSpkItem {
       imgLink: imgLink ?? this.imgLink,
       imgLink2: imgLink2 ?? this.imgLink2,
       imgLink3: imgLink3 ?? this.imgLink3,
+      attachments: attachments ?? this.attachments,
     );
   }
 
-  static String _generateUrlImage(String path) {
-    if (path.isEmpty) return '';
-    return 'https://v2.kencana.org/storage/${path}';
-  }
-
+  // ✅ Tidak perlu _generateUrlImage lagi — URL sudah lengkap dari backend
   Map<String, dynamic> toMap() {
     return {
       'id_qc_item': idQcItem,
@@ -216,6 +224,7 @@ class ChecklistSpkItem {
       'img_link': imgLink,
       'img_link2': imgLink2,
       'img_link3': imgLink3,
+      'attachments': attachments.map((e) => e.toMap()).toList(),
     };
   }
 
@@ -223,7 +232,7 @@ class ChecklistSpkItem {
     return ChecklistSpkItem(
       idQcItem: map['id_qc_item'] ?? '',
       itemName: map['item_name'] ?? '',
-      catId: map['cat_id'] ?? '',
+      catId: map['cat_id']?.toString() ?? '',
       catName: map['cat_name'] ?? '',
       dtAprv: parseDateTime(map['dt_aprv']),
       dtAprv2: parseDateTime(map['dt_aprv2']),
@@ -231,9 +240,17 @@ class ChecklistSpkItem {
       statClosing: map['stat_closing'] ?? '',
       statClosing2: map['stat_closing2'] ?? '',
       statClosing3: map['stat_closing3'] ?? '',
-      imgLink: _generateUrlImage(map['img_link']),
-      imgLink2: _generateUrlImage(map['img_link2']),
-      imgLink3: _generateUrlImage(map['img_link3']),
+      // ✅ URL sudah lengkap dari backend, tidak perlu _generateUrlImage
+      imgLink: map['img_link'] ?? '',
+      imgLink2: map['img_link2'] ?? '',
+      imgLink3: map['img_link3'] ?? '',
+      attachments:
+          (map['attachments'] as List<dynamic>? ?? [])
+              .map(
+                (e) =>
+                    ChecklistWorkAttachment.fromMap(e as Map<String, dynamic>),
+              )
+              .toList(),
     );
   }
 
@@ -244,13 +261,15 @@ class ChecklistSpkItem {
 
   @override
   String toString() {
-    return 'ChecklistSpkItem(idQcItem: $idQcItem, itemName: $itemName, catId: $catId, catName: $catName, dtAprv: $dtAprv, dtAprv2: $dtAprv2, dtAprv3: $dtAprv3, statClosing: $statClosing, statClosing2: $statClosing2, statClosing3: $statClosing3, imgLink: $imgLink, imgLink2: $imgLink2, imgLink3: $imgLink3)';
+    return 'ChecklistSpkItem(idQcItem: $idQcItem, itemName: $itemName, '
+        'catId: $catId, catName: $catName, dtAprv: $dtAprv, dtAprv2: $dtAprv2, '
+        'dtAprv3: $dtAprv3, statClosing: $statClosing, statClosing2: $statClosing2, '
+        'statClosing3: $statClosing3, attachments: $attachments)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-
     return other is ChecklistSpkItem &&
         other.idQcItem == idQcItem &&
         other.itemName == itemName &&
@@ -262,9 +281,7 @@ class ChecklistSpkItem {
         other.statClosing == statClosing &&
         other.statClosing2 == statClosing2 &&
         other.statClosing3 == statClosing3 &&
-        other.imgLink == imgLink &&
-        other.imgLink2 == imgLink2 &&
-        other.imgLink3 == imgLink3;
+        other.attachments == attachments;
   }
 
   @override
@@ -279,8 +296,32 @@ class ChecklistSpkItem {
         statClosing.hashCode ^
         statClosing2.hashCode ^
         statClosing3.hashCode ^
-        imgLink.hashCode ^
-        imgLink2.hashCode ^
-        imgLink3.hashCode;
+        attachments.hashCode;
   }
+}
+
+class ChecklistWorkAttachment {
+  final int idWork;
+  final List<String> images;
+
+  ChecklistWorkAttachment({required this.idWork, required this.images});
+
+  factory ChecklistWorkAttachment.fromMap(Map<String, dynamic> map) {
+    return ChecklistWorkAttachment(
+      idWork: map['id_work'] ?? 0,
+      images:
+          (map['images'] as List<dynamic>? ?? [])
+              .map((e) => e.toString())
+              .where((e) => e.isNotEmpty)
+              .toList(),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {'id_work': idWork, 'images': images};
+  }
+
+  @override
+  String toString() =>
+      'ChecklistWorkAttachment(idWork: $idWork, images: $images)';
 }
