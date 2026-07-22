@@ -49,19 +49,19 @@ class ApprovalScreenState extends State<ApprovalScreen> {
     final loan = loanList[index];
 
     if (loan.userAprv1.trim().isEmpty) {
-      context.read<ApproveLoanBloc>().add(
-        ApproveLoanLoad(
-          trId: loan.trId,
-          typeAprv: "approve1",
-          status: "approve",
-        ),
-      );
-      // if (credentialState is CredentialsLoadSuccess &&
-      //     credentialState.credentials["APPROVALBON1"] == "Y") {
-      // } else {
-      //   _showNoPermissionSnackBar(context);
-      //   return;
-      // }
+      if (credentialState is CredentialsLoadSuccess &&
+          credentialState.credentials["APPROVALBON1"] == "Y") {
+        context.read<ApproveLoanBloc>().add(
+          ApproveLoanLoad(
+            trId: loan.trId,
+            typeAprv: "approve1",
+            status: "approve",
+          ),
+        );
+      } else {
+        _showNoPermissionSnackBar(context);
+        return;
+      }
     } else if (loan.userAprv2.trim().isEmpty) {
       if (credentialState is CredentialsLoadSuccess &&
           credentialState.credentials["APPROVALBON2"] == "Y") {
